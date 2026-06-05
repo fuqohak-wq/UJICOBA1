@@ -101,7 +101,7 @@
     <!-- INTERFACE EXTRA: MODAL LOADING & SPINNER SPAMGUARD DENGAN CERITA ISLAMI -->
     <div id="loadingSpamGuard" class="fixed inset-0 bg-slate-950/95 z-[9999] hidden flex-col justify-center items-center text-center p-6">
         <div class="w-14 h-14 border-4 border-slate-800 border-t-amber-400 rounded-full animate-spin"></div>
-        <div class="mt-4 text-amber-400 font-black text-sm tracking-wide px-4" id="spamGuardText">SINKRONISASI SERVER...</div>
+        <div class="mt-4 text-amber-400 font-black text-sm tracking-wide px-4 leading-relaxed" id="spamGuardText">WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...</div>
         <div class="text-xs text-slate-400 mt-1" id="spamGuardSubtext">Mohon tunggu sejenak.</div>
         
         <!-- Wadah Render Kisah Hikmah Islami dari Spreadsheet -->
@@ -139,7 +139,7 @@
 
         window.onload = async function() {
             if (localStorage.getItem("admin_logged_in_permanen_v2") === "true") { bukaPanelAdminTanPop(); }
-            tampilkanSpinnerGuard(true, "MEMUAT DATA...", "Sinkronisasi database...");
+            tampilkanSpinnerGuard(true, "WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...", "Sinkronisasi database...");
             try {
                 const res = await fetch(API_URL);
                 const hasil = await res.json();
@@ -199,7 +199,7 @@
 
         function prosesKompresiGambar(input) {
             if(input.files.length === 0) return;
-            tampilkanSpinnerGuard(true, "MEMBACA GAMBAR...", "Mengompresi dokumen agar hemat kuota...");
+            tampilkanSpinnerGuard(true, "WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...", "Mengompresi dokumen...");
             
             const file = input.files[0];
             const reader = new FileReader();
@@ -237,13 +237,11 @@
             const inputManualUang = document.getElementById('nominal-manual-user').value;
             
             btn.disabled = true;
-            // PEMBARUAN BAHASA NOTIFIKASI SESUAI INSTRUKSI BAPAK
-            tampilkanSpinnerGuard(true, "WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...", "Memproses validasi dan verifikasi dokumen keamanan...");
+            tampilkanSpinnerGuard(true, "WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...", "");
 
             let nominalKetikManual = parseInt(inputManualUang.replace(/[^0-9]/g, "")) || 0;
 
             try {
-                // PARAMETER DIGITAL STAMP GUNA MENGUNCI POTENSI NO REF DUPLIKAT/BURAM
                 const payload = {
                     aksi: "simpanTransaksiOtomatisPenuh",
                     nik: santriTerpilih.nik,
@@ -260,14 +258,13 @@
                 const response = await fetch(API_URL, {
                     method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(payload)
                 });
-                const hasil = await response.json();
+                await response.json();
                 
-                // BERI JEDA AGAR KISAH ISLAMI DI SCREEN BISA SELESAI DIBACA DULU
                 setTimeout(() => {
                     tampilkanSpinnerGuard(false);
-                    alert("WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...\n\nSistem mengonfirmasi: " + hasil.message);
+                    alert("WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...");
                     location.reload();
-                }, 5000); // Tahan screen selama 5 detik untuk membaca kisah hikmah
+                }, 5000); 
 
             } catch(e) { alert("Terjadi gangguan jaringan."); btn.disabled = false; tampilkanSpinnerGuard(false); }
         }
@@ -379,7 +376,7 @@
             const tanya = confirm("Yakin Mas Admin?");
             if(!tanya) return;
 
-            tampilkanSpinnerGuard(true, "MEMBATALKAN...", "Menolak berkas ilegal...");
+            tampilkanSpinnerGuard(true, "WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...", "Menolak berkas...");
             try {
                 await fetch(API_URL, { 
                     method: "POST", 
@@ -396,7 +393,7 @@
         async function prosesSetujuAdmin(id, role, kd) {
             const val = document.getElementById(`fee-koreksi-${id}`).value.replace(/[^0-9]/g, "");
             if(!val) return alert("Isi nominal!"); adminSedangNgetikUang = false;
-            tampilkanSpinnerGuard(true, "MEMPROSES...", "Menyetujui manual...");
+            tampilkanSpinnerGuard(true, "WALISANTRI TERHORMAT MOHON MENUNGGU KAMI SEDANG MENYESUAIKAN...", "Menyetujui manual...");
             try {
                 await fetch(API_URL, { method: "POST", body: JSON.stringify({ aksi: "luluskanTransaksiOlehAdmin", id_transaksi: id, nominal_koreksi: val, status_role: role, kode_unik_anak: kd, pin_admin: PIN_ADMIN_SYSTEM })});
                 pullDataAdminDariServer();
