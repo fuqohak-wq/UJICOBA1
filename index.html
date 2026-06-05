@@ -200,8 +200,8 @@
 </div>
 
 <script>
-    // URL WEB APP APPS SCRIPT ASLI MILIK BAPAK (SUDAH DIKUNCI & DIUPDATE)
-    const URL_GAS_SYSTEM = "https://script.google.com/macros/s/AKfycbzpK04TsH4GJQyWZAHthJ0_lMVZhe_c-CE59biUz4hKREuEPFkv2hBJVq76n2pmNaQ79g/exec"; 
+    // URL Web App GAS Bapak (Ganti dengan URL eksekusi milik Bapak jika diperlukan)
+    const URL_GAS_SYSTEM = "https://script.google.com/macros/s/AKfycbwqZ-KbyqVq8A6uR8X07C3hHsh77kIeNfC4v_RREtHw7F22G7I5oT5v7fM2o4Rz_o4P/exec"; 
 
     // Load Data Otomatis saat halaman dibuka
     document.addEventListener("DOMContentLoaded", muatDataAdminSistem);
@@ -218,19 +218,12 @@
                 document.getElementById("badge-count").innerText = res.antrean.length;
                 renderAntreanKeLayar(res.antrean);
             } else {
-                document.getElementById("area-antrean-list").innerHTML = `<p style="color:red; text-align:center; padding:10px;">Gagal ambil data: ${res.message}</p>`;
+                document.getElementById("area-antrean-list").innerHTML = `<p style="color:red">Gagal ambil data: ${res.message}</p>`;
             }
         })
         .catch(err => {
             document.getElementById("loading-status").style.display = "none";
-            document.getElementById("area-antrean-list").innerHTML = `
-                <p style="color:#ff4d4d; text-align:center; font-weight:bold; padding:10px; margin:0;">
-                    Eror Jaringan Server: TypeError: Failed to fetch
-                </p>
-                <p style="color:#aaa; font-size:12px; text-align:center; margin:0 0 10px 0; padding:0 10px;">
-                    Catatan: Jika error ini tetap muncul, pastikan pengaturan Deploy di Apps Script Bapak sudah disetel ke <b>"Anyone"</b> (Siapa Saja) agar Vercel diberi izin akses.
-                </p>
-            `;
+            document.getElementById("area-antrean-list").innerHTML = `<p style="color:red">Eror Jaringan Server: ${err.toString()}</p>`;
         });
     }
 
