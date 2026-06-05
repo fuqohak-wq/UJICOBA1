@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SISTEM TRANSFER - YAYASAN YAHYAWIYYAH</title>
     
+    <!-- Pustaka CSS Utama -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=600;700;800;900&display=swap" rel="stylesheet">
     
@@ -42,9 +43,10 @@
 
     <div class="wadah-ponsel flex flex-col min-height-screen relative shadow-2xl">
         
+        <!-- HEADER UTAMA -->
         <header class="p-4 bg-slate-900/80 border-b border-white/5 flex justify-between items-center sticky top-0 z-40 backdrop-blur-md">
             <div>
-                <h1 class="text-xs font-black tracking-widest text-amber-400">SISTEM TRANSFER PPMU YAHYAWIYYAH V4.3</h1>
+                <h1 class="text-xs font-black tracking-widest text-amber-400">SISTEM TRANSFER PPMU YAHYAWIYYAH V4.5</h1>
                 <p class="text-[10px] font-bold text-slate-400 tracking-wider">KHIDMAH MADRASAH & PESANTREN</p>
             </div>
             <button onclick="bukaPanelAdmin()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs px-3 py-1.5 rounded-lg transition-all duration-200 shadow-md active:scale-95 flex items-center gap-1">
@@ -53,10 +55,13 @@
             </button>
         </header>
 
+        <!-- AREA UTAMA APLIKASI (DYNAMIC VIEW) -->
         <main id="kontenUtama" class="flex-grow p-4 space-y-4 pb-24">
             
+            <!-- VIEW 1: FORM INPUT WALISANTRI (DEFAULT) -->
             <div id="viewWalisantri" class="space-y-4">
                 
+                <!-- KOTAK CARI NAMA SANTRI -->
                 <div class="card-custom rounded-2xl p-4 space-y-3">
                     <label class="block text-xs font-extrabold text-slate-300 uppercase tracking-wider">1. Cari Nama Santri / Ustadz</label>
                     <div class="relative">
@@ -65,8 +70,10 @@
                     </div>
                 </div>
 
+                <!-- KOTAK FORM TRANSFER DATA (MUNCUL SETELAH NAMA DI-KLIK) -->
                 <div id="formUploadStruk" class="hidden space-y-4">
                     
+                    <!-- KARTU INDENTITAS TARGET -->
                     <div class="bg-gradient-to-r from-emerald-950 to-teal-900 border border-emerald-500/20 rounded-2xl p-4 flex justify-between items-center">
                         <div>
                             <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Tujuan Transfer</p>
@@ -79,6 +86,7 @@
                         </div>
                     </div>
 
+                    <!-- KOTAK METODE REKENING -->
                     <div class="card-custom rounded-2xl p-4 space-y-2 text-xs font-semibold text-slate-300">
                         <p class="text-[10px] font-bold text-amber-500 uppercase">Silakan Transfer Ke Rekening Resmi:</p>
                         <div class="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-white/5">
@@ -91,6 +99,7 @@
                         </div>
                     </div>
 
+                    <!-- KOTAK INPUT NOMINAL & FILE KAMERA -->
                     <div class="card-custom rounded-2xl p-4 space-y-4">
                         <div class="space-y-1.5">
                             <label class="block text-xs font-extrabold text-slate-300 uppercase">2. Masukkan Nominal Uang</label>
@@ -120,39 +129,40 @@
                 </div>
             </div>
 
+            <!-- VIEW 2: MEJA KERJA ADMIN PANEL -->
             <div id="viewAdmin" class="hidden space-y-4">
                 <div class="flex justify-between items-center">
                     <h2 class="text-sm font-black text-white uppercase tracking-wider">Meja Kerja Ruang Admin</h2>
                     <button onclick="keluarPanelAdmin()" class="text-xs font-bold text-red-400 hover:underline">← Keluar</button>
                 </div>
 
+                <!-- TAB NAVIGASI PANEL ADMIN -->
                 <div class="flex border-b border-white/10 text-xs font-bold">
                     <button id="tabAntrean" onclick="pindahTabAdmin('antrean')" class="flex-1 py-3 text-center border-b-2 border-amber-500 text-amber-400">Antrean Pending</button>
                     <button id="tabRiwayat" onclick="pindahTabAdmin('riwayat')" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400">Log Riwayat</button>
                 </div>
 
+                <!-- DAFTAR ITEM KARTU TRANSAKSI -->
                 <div id="kontainerListAdmin" class="space-y-3"></div>
             </div>
 
         </main>
 
+        <!-- LAYAR DETEKSI SPAM / LOADING SPINNER GUARD -->
         <div id="spinnerGuard" class="hidden fixed inset-0 bg-slate-950/90 z-50 flex flex-col items-center justify-center p-6 text-center animate-fade-in">
             <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
             <h3 id="judulLoading" class="text-sm font-black text-amber-400 uppercase tracking-widest">Memproses Berkas Gambar...</h3>
-            <p id="subLoading" class="text-xs text-slate-400 mt-1 max-w-xs font-medium">Jangan menutup browser, sedang mengompresi dokumen resolusi tinggi...</p>
-            <div class="mt-6 bg-emerald-950/40 border border-emerald-500/20 p-4 rounded-xl max-w-xs">
-                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">💡 Kisah Khidmah Pagi</p>
-                <p class="text-[11px] font-semibold text-slate-300 italic">"Barangsiapa yang mempermudah urusan orang yang sedang kesulitan, niscaya Allah akan mempermudah urusannya di dunia dan di akhirat."</p>
-            </div>
+            <p id="subLoading" class="text-xs text-slate-400 mt-1 max-w-xs font-medium">Jangan menutup browser, sedang mengompresi dokumen...</p>
         </div>
 
     </div>
 
+    <!-- SCRIPT UTAMA INTEGRASI CORE -->
     <script>
         // ====================================================================
-        // ISI CONFIG UTAMA - SAMBUNGKAN KE DEPLOY WEB APP URL ANDA
+        // SILAKAN MASUKKAN URL WEB APP ANDA DI SINI
         // ====================================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzpK04TsH4GJQyWZAHthJ0_lMVZhe_c-CE59biUz4hKREuEPFkv2hBJVq76n2pmNaQ79g/exec"; 
+        const API_URL = "ISI_DENGAN_URL_WEB_APP_GAS_ANDA"; 
         const PIN_ADMIN_SYSTEM = "adminppmuy2026"; 
 
         let MASTER_SANTRI = [];
@@ -160,7 +170,6 @@
         let STOK_ANTREAN_ADMIN = [];
         let STOK_RIWAYAT_ADMIN = [];
 
-        // Inisialisasi Ambil Data Default
         window.addEventListener('DOMContentLoaded', async () => {
             tampilkanSpinnerGuard(true, "MENGHUBUNGKAN SERVER...", "Mengunduh database identitas santri & ustadz...");
             try {
@@ -172,14 +181,11 @@
                     document.getElementById('norekYayasan').innerText = data.rekening.nomor;
                     document.getElementById('anYayasan').innerText = "A.N " + data.rekening.atas_nama;
                 }
-                
-                // Tarik data antrean admin diam-diam untuk cek badge
                 await pullDataAdminSiluman();
             } catch(e) { alert("Gagal memuat konfigurasi server awal."); }
             finally { tampilkanSpinnerGuard(false); }
         });
 
-        // Penanganan Filter Kolom Pencarian
         function filterNamaSantri(query) {
             const dropdown = document.getElementById('dropdownSaran');
             if(!query || query.length < 2) { dropdown.classList.add('hidden'); return; }
@@ -211,7 +217,6 @@
             valitasiTombolEksekusi();
         }
 
-        // Format Ribuan Kolom Input Manual Uang
         function formatUangRupiah(input) {
             let nilai = input.value.replace(/[^0-9]/g, '');
             if (nilai) {
@@ -220,7 +225,6 @@
             valitasiTombolEksekusi();
         }
 
-        // Pratinjau File Kamera HP / Galeri
         function prosesPratinjauGambar(input) {
             const preview = document.getElementById('previewStruk');
             const slotText = document.getElementById('isiSlotFoto');
@@ -248,11 +252,10 @@
             } else {
                 btn.setAttribute('disabled', 'true');
                 btn.className = "w-full bg-slate-800 text-slate-500 font-black py-4 rounded-xl text-sm uppercase tracking-wider transition-all cursor-not-allowed";
-                btn.innerText = "Isi Form Terlebih Dahulu";
+                btn.innerText = "Isi Form Terlevel Lebih Dahulu";
             }
         }
 
-        // Eksekusi Kompresi dan Pengiriman Data Walisantri ke Google Sheet
         async function eksekusiKirimStrukWalisantri() {
             tampilkanSpinnerGuard(true, "MENGOMPRES DATA STRUK...", "Memadatkan ukuran berkas gambar tanpa mengurangi ketajaman teks...");
             
@@ -261,9 +264,7 @@
             const nominalMurni = document.getElementById('inputNominal').value.replace(/[^0-9]/g, '');
             
             try {
-                // Konversi Gambar ke Base64 via Canvas (Auto-Kompres)
                 const base64Kompres = await perkecilUkuranGambar(file);
-                
                 tampilkanSpinnerGuard(true, "MENGIRIM KE DATABASE...", "Menyimpan data antrean pengenal AI. Mohon tunggu sejenak...");
                 
                 const idTrxUnik = "TRX-Y4-" + Date.now() + Math.floor(1000 + Math.random() * 9000);
@@ -277,7 +278,7 @@
                         nama: DATA_SELECTED_SANTRI.nama,
                         nominal_total: nominalMurni,
                         kode_unik_anak: DATA_SELECTED_SANTRI.kode,
-                        mime_type: file.type,
+                        mime_type: "image/jpeg",
                         berkas_gambar: base64Kompres.split(',')[1]
                     })
                 });
@@ -289,7 +290,7 @@
             } finally { tampilkanSpinnerGuard(false); }
         }
 
-        // Helper Kompresi Gambar Menggunakan Canvas Sisi Klien
+        // FIX: PERBAIKAN TOTAL LOGIKA CANVAS DRAWING ANTI BLUR/CORRUPT
         function perkecilUkuranGambar(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -299,7 +300,7 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 800; // Dikunci maks 800px demi hemat kuota storage Drive
+                        const MAX_WIDTH = 1000; // Dinaikkan ke 1000px agar tulisan No. Ref sekecil apapun terlihat tajam oleh AI
                         let width = img.width;
                         let height = img.height;
 
@@ -309,16 +310,16 @@
                         }
                         canvas.width = width;
                         canvas.height = height;
-                        const ctx = canvas.getContext('2document-canvas-context-not-needed');
-                        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.75)); // Quality 75%
+                        
+                        const ctx = canvas.getContext('2d'); // FIX: Pemanggilan context 2d yang benar
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.85)); // Kualitas ditingkatkan ke 85% untuk akurasi OCR tertinggi
                     };
                 };
                 reader.onerror = error => reject(error);
             });
         }
 
-        // Switch Tampilan Layar Utama
         function bukaPanelAdmin() {
             const pin = prompt("Masukkan Kode PIN Khusus Otoritas Admin:");
             if(pin !== PIN_ADMIN_SYSTEM) { alert("PIN Otoritas Ditolak!"); return; }
@@ -341,11 +342,8 @@
                 if(data.status === "success") {
                     STOK_ANTREAN_ADMIN = data.antrean;
                     STOK_RIWAYAT_ADMIN = data.riwayat;
-                    
-                    // Default render tab antrean
                     pindahTabAdmin('antrean');
                     
-                    // Set status badge
                     const badge = document.getElementById('badgeAntrean');
                     if(STOK_ANTREAN_ADMIN.length > 0) { badge.classList.remove('hidden'); }
                     else { badge.classList.add('hidden'); }
@@ -367,7 +365,6 @@
         function pindahTabAdmin(jenis) {
             const btnAntrean = document.getElementById('tabAntrean');
             const btnRiwayat = document.getElementById('tabRiwayat');
-            const wadah = document.getElementById('kontainerListAdmin');
 
             if(jenis === 'antrean') {
                 btnAntrean.className = "flex-1 py-3 text-center border-b-2 border-amber-500 text-amber-400";
@@ -420,7 +417,6 @@
             }).join('');
         }
 
-        // Eksekusi Tombol Otoritas Meja Admin
         async function prosesLulusAdmin(idTrx, nominalTotalAwal) {
             const nominalBaru = prompt("Koreksi / Pastikan nominal total yang valid sesuai gambar struk asli bank:", nominalTotalAwal);
             if(nominalBaru === null) return;
@@ -463,7 +459,6 @@
             finally { tampilkanSpinnerGuard(false); }
         }
 
-        // Control HUD Spinner Screen
         function tampilkanSpinnerGuard(status, judul = "", sub = "") {
             const guard = document.getElementById('spinnerGuard');
             if(status) {
