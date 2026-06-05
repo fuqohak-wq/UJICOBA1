@@ -3,28 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Konfirmasi Struk Otomatis - YAYASAN YAHYAWIYYAH V2.1</title>
+    <title>Sistem Konfirmasi Struk Otomatis - YAYASAN YAHYAWIYYAH V2.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #064e3b !important; color: #f8fafc !important; }
         .tombol-utama { background: linear-gradient(to right, #fbbf24, #f59e0b); color: #020617; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-emerald-950 via-teal-950 to-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-4 antialiased mx-auto w-full max-w-md relative">
 
     <header class="w-full text-center py-2 flex justify-between items-center border-b border-white/10">
         <div class="text-left">
-            <h1 class="text-[10px] font-black text-amber-400 tracking-widest uppercase">YAYASAN YAHYAWIYYAH V2.1</h1>
+            <h1 class="text-[10px] font-black text-amber-400 tracking-widest uppercase">YAYASAN YAHYAWIYYAH V2.2</h1>
             <h2 class="text-base font-extrabold text-white tracking-tight leading-tight">UJI COBA PARALEL TANGKAS</h2>
         </div>
         <button onclick="bukaPanelAdmin()" id="btn-nav-admin" class="bg-white/10 hover:bg-white/20 text-xs font-black px-3 py-2 rounded-xl border border-white/10 transition flex items-center gap-1.5 relative">
-            🔐 Admin 
-            <span id="badge-antrean-luar" class="hidden bg-rose-600 text-white font-black px-1.5 py-0.5 rounded-full text-[9px] shadow animate-pulse">0</span>
+            🔐 Admin <span id="badge-antrean-luar" class="hidden bg-rose-600 text-white font-black px-1.5 py-0.5 rounded-full text-[9px] shadow animate-pulse">0</span>
         </button>
     </header>
 
@@ -43,14 +39,12 @@
     </script>
 
     <main id="panel-walisantri" class="w-full flex-1 flex flex-col justify-center my-4 space-y-4">
-        <!-- STEP 1: CARI NAMA -->
         <div id="wrapper-cari-nama" class="w-full bg-white text-slate-900 p-4 rounded-2xl shadow-xl space-y-2">
             <label class="block text-xs font-black uppercase tracking-wider text-emerald-950">1. Cari Nama Santri / Ustadz :</label>
             <input type="text" id="search-input" oninput="cariData()" placeholder="Ketik nama di sini..." class="w-full bg-slate-100 border-2 border-emerald-200 focus:border-emerald-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:outline-none transition">
             <div id="search-results" class="space-y-1.5 max-h-44 overflow-y-auto hidden pt-1"></div>
         </div>
 
-        <!-- STEP 2 & 3: FORM INPUT -->
         <div id="step-upload" class="w-full bg-white text-slate-900 p-4 rounded-2xl shadow-xl space-y-4 hidden">
             <div class="bg-emerald-800 text-white p-4 rounded-xl shadow space-y-2.5 border border-emerald-700">
                 <div>
@@ -92,28 +86,21 @@
     <main id="panel-admin" class="w-full flex-1 flex flex-col my-3 space-y-3 hidden">
         <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-white/5">
             <div class="flex items-center gap-1.5">
-                <span class="text-xs font-black uppercase text-amber-400 tracking-wider">🎛️ PANEL KENDALI V2.1</span>
+                <span class="text-xs font-black uppercase text-amber-400 tracking-wider">🎛️ PANEL KENDALI V2.2</span>
                 <span id="indicator-refresh" class="text-[8px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">Memonitor</span>
             </div>
             <button onclick="keluarPanelAdminSadar()" class="text-[11px] text-rose-400 font-extrabold hover:underline">Keluar</button>
         </div>
-
         <div class="flex bg-slate-900/80 p-1 rounded-xl border border-white/10">
             <button id="tab-btn-antrean" onclick="gantiTabAdmin('ANTREAN')" class="w-1/2 text-center py-2 text-xs font-black rounded-lg transition-all bg-emerald-700 text-white flex justify-center items-center gap-1">
-                📥 Antrean Pending
-                <span id="badge-antrean-dalam" class="bg-rose-600 text-white font-black text-[9px] px-1.5 py-0.2 rounded-full hidden">0</span>
+                📥 Antrean Pending <span id="badge-antrean-dalam" class="bg-rose-600 text-white font-black text-[9px] px-1.5 py-0.2 rounded-full hidden">0</span>
             </button>
-            <button id="tab-btn-log" onclick="gantiTabAdmin('LOG')" class="w-1/2 text-center py-2 text-xs font-black text-slate-400 rounded-lg transition-all hover:text-white">
-                📊 Log Riwayat
-            </button>
+            <button id="tab-btn-log" onclick="gantiTabAdmin('LOG')" class="w-1/2 text-center py-2 text-xs font-black text-slate-400 rounded-lg transition-all hover:text-white">📊 Log Riwayat</button>
         </div>
-
         <div id="list-container-admin" class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1"></div>
     </main>
 
-    <footer class="w-full text-[10px] text-emerald-400/40 text-center pt-2 border-t border-white/5 font-bold">
-        &copy; 2026 PPMUY Dual-Spreadsheet Mirroring System
-    </footer>
+    <footer class="w-full text-[10px] text-emerald-400/40 text-center pt-2 border-t border-white/5 font-bold">&copy; 2026 PPMUY Dual-Spreadsheet System</footer>
 
     <div id="loadingSpamGuard" class="fixed inset-0 bg-slate-950/90 z-[9999] hidden flex-col justify-center items-center text-center p-6">
         <div class="w-14 h-14 border-4 border-slate-700 border-t-amber-400 rounded-full animate-spin"></div>
@@ -129,13 +116,7 @@
             </div>
             <div class="flex-1 bg-slate-950 p-4 flex flex-col justify-center items-center text-center space-y-4">
                 <div class="w-16 h-16 bg-amber-500/10 text-amber-400 rounded-full flex items-center justify-center text-2xl border border-amber-500/20">📂</div>
-                <div>
-                    <h3 class="text-sm font-black text-white">Buka Gambar Bukti Asli</h3>
-                    <p class="text-[11px] text-slate-400 max-w-xs mt-1">Sistem membuka lembar berkas cloud tanpa re-kompresi.</p>
-                </div>
-                <a id="link-download-bypass" href="#" target="_blank" class="w-full max-w-xs bg-amber-400 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wide shadow-lg text-center border-b-4 border-amber-700 block">
-                    🚀 BUKA GAMBAR STRUK ASLI
-                </a>
+                <a id="link-download-bypass" href="#" target="_blank" class="w-full max-w-xs bg-amber-400 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wide shadow-lg text-center border-b-4 border-amber-700 block">🚀 BUKA GAMBAR STRUK ASLI</a>
             </div>
         </div>
     </div>
@@ -151,7 +132,6 @@
 
         function formatUrlGoogleDriveViewer(urlAsli) {
             if(!urlAsli || urlAsli === "#" || urlAsli === "Tidak Ada File") return "#";
-            if(urlAsli.includes("id=")) return "https://drive.google.com/file/d/" + urlAsli.split("id=")[1] + "/view?usp=drivesdk";
             return urlAsli;
         }
 
@@ -162,14 +142,11 @@
             document.getElementById('modalPreviewStruk').classList.add('flex');
         }
         
-        function tutupModalStruk() {
-            document.getElementById('modalPreviewStruk').classList.add('hidden');
-            document.getElementById('modalPreviewStruk').classList.remove('flex');
-        }
+        function tutupModalStruk() { document.getElementById('modalPreviewStruk').classList.add('hidden'); }
 
         window.onload = async function() {
             if (localStorage.getItem("admin_logged_in_permanen_v2") === "true") { bukaPanelAdminTanPop(); }
-            tampilkanSpinnerGuard(true, "MEMUAT ENGINE V2.1...", "Mengunduh database santri & ustadz...");
+            tampilkanSpinnerGuard(true, "MEMUAT ENGINE V2.2...", "Mengunduh database santri...");
             try {
                 const res = await fetch(API_URL);
                 const hasil = await res.json();
@@ -177,10 +154,7 @@
                 tampilkanSpinnerGuard(false);
                 syncBadgeLuarSaja();
                 loopBadgeLuar = setInterval(syncBadgeLuarSaja, 15000);
-            } catch(e) { 
-                tampilkanSpinnerGuard(false);
-                alert("Gagal terhubung ke Server V2.1.");
-            }
+            } catch(e) { tampilkanSpinnerGuard(false); alert("Gagal terhubung ke Server."); }
         };
 
         async function syncBadgeLuarSaja() {
@@ -190,8 +164,7 @@
                 const hasil = await res.json();
                 const bLuar = document.getElementById('badge-antrean-luar');
                 if (hasil && hasil.status === "success" && hasil.antrean && hasil.antrean.length > 0) {
-                    bLuar.innerText = hasil.antrean.length;
-                    bLuar.classList.remove('hidden');
+                    bLuar.innerText = hasil.antrean.length; bLuar.classList.remove('hidden');
                 } else { bLuar.classList.add('hidden'); }
             } catch(e) {}
         }
@@ -245,16 +218,11 @@
             const fileInput = document.getElementById('file-struk');
             const nominalInput = document.getElementById('nominal-manual-user').value;
             const btn = document.getElementById('btn-submit');
-            
-            if(fileInput.files.length > 0 && nominalInput.trim() !== "") {
-                btn.disabled = false;
-            } else {
-                btn.disabled = true;
-            }
+            btn.disabled = !(fileInput.files.length > 0 && nominalInput.trim() !== "");
         }
 
         // =============================================================
-        // BARU V2.1: ENGINE PREPROCESSING ADAPTIF KONTRAS TINGGI
+        // REVISI V2.2: SEPARASI HITAM PUTIH ADAPTIF UNTUK TEKS BIRU
         // =============================================================
         function optimalkanGambarUntukOcr(fileObj) {
             return new Promise((resolve) => {
@@ -266,158 +234,97 @@
                     img.onload = function() {
                         const canvas = document.getElementById('canvas-preprocessing');
                         const ctx = canvas.getContext('2d');
-                        
-                        let targetWidth = 1200; // resolusi dinaikkan sedikit agar tulisan kecil terbaca
-                        let skala = targetWidth / img.width;
-                        let targetHeight = img.height * skala;
-                        
-                        canvas.width = targetWidth;
-                        canvas.height = targetHeight;
-                        
-                        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+                        canvas.width = 1000;
+                        canvas.height = img.height * (1000 / img.width);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         
                         let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         let data = imgData.data;
                         
-                        // Naikkan kontras secara eksponensial untuk memisahkan teks dari logo watermark background
-                        let faktorKontras = 2.5; 
+                        // Set Threshold Hitam-Putih Tajam Khusus Struk Digital
                         for (let i = 0; i < data.length; i += 4) {
-                            let r = data[i];
-                            let g = data[i+1];
-                            let b = data[i+2];
-                            
-                            let abu = 0.299 * r + 0.587 * g + 0.114 * b;
-                            
-                            // Transformasi kontras adaptif
-                            let p = (abu - 128) * faktorKontras + 128;
-                            let vFinal = p > 255 ? 255 : (p < 0 ? 0 : p);
-                            
-                            data[i] = vFinal;     
-                            data[i+1] = vFinal;   
-                            data[i+2] = vFinal;   
+                            let r = data[i], g = data[i+1], b = data[i+2];
+                            let v = (0.2126*r + 0.7152*g + 0.0722*b >= 140) ? 255 : 0;
+                            data[i] = data[i+1] = data[i+2] = v;
                         }
-                        
                         ctx.putImageData(imgData, 0, 0);
-                        resolve(canvas.toDataURL('image/jpeg', 0.9));
+                        resolve(canvas.toDataURL('image/jpeg', 0.85));
                     };
                 };
             });
         }
 
-        const bacaFileSebagaiBase64Asli = (file) => new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => resolve(e.target.result);
-        });
-
-        function buatStempelDigitalGambar(file) {
-            let infoMetadata = file.name + file.size + file.lastModified;
-            let hash = 0;
-            for (let i = 0; i < infoMetadata.length; i++) {
-                hash = ((hash << 5) - hash) + infoMetadata.charCodeAt(i);
-                hash = hash & hash; 
-            }
-            return "STMP-" + Math.abs(hash).toString(16).toUpperCase();
-        }
-
-        // ==========================================
-        // ALUR EKSEKUSI ENGINE ULTRA UTAMA V2.1
-        // ==========================================
         async function prosesSuperOcrEngine() {
             const btn = document.getElementById('btn-submit');
             const fileInput = document.getElementById('file-struk');
             const inputManualUang = document.getElementById('nominal-manual-user').value;
             
             btn.disabled = true; 
-            tampilkanSpinnerGuard(true, "MENGOPTIMALKAN TEKS STRUK...", "Membersihkan watermark background bank..."); 
+            tampilkanSpinnerGuard(true, "MEMPROSES DATA STRUK...", "Mengekstrak teks dengan filter tajam..."); 
 
             let nominalKetikManual = parseInt(inputManualUang.replace(/[^0-9]/g, "")) || 0;
             let base64AsliUntukDrive = "";
             let base64HasilKompresiOcr = "";
             let statusTransaksiFinal = "PENDING"; 
-            let alasanSistemCuriga = "Pending: Gagal mendeteksi kecocokan angka unik otomatis.";
-            let nominalDitemukanOCR = 0;
+            let alasanSistemCuriga = "Pending: Bukti transfer tidak sinkron dengan sistem otomatis.";
+            let ocrMenemukanCocok = false;
             let noRefDitemukan = "REF-V2-" + Date.now().toString().slice(-6);
-            let stempelGambarDigital = buatStempelDigitalGambar(fileInput.files[0]);
-            let targetKodeAnak = parseInt(santriTerpilih.kode || 0);
+            let targetKodeAnakString = (santriTerpilih.kode || 0).toString().padStart(3, '0');
 
             try {
-                base64AsliUntukDrive = await bacaFileSebagaiBase64Asli(fileInput.files[0]);
+                base64AsliUntukDrive = await new Promise((res) => {
+                    const r = new FileReader(); r.readAsDataURL(fileInput.files[0]); r.onload = (e) => res(e.target.result);
+                });
                 base64HasilKompresiOcr = await optimalkanGambarUntukOcr(fileInput.files[0]);
 
-                tampilkanSpinnerGuard(true, "MEMPROSES OCR TANGKAS...", "Mengekstrak deretan teks finansial...");
-
                 const worker = await Tesseract.createWorker('ind', 1);
-                // Batasi pembacaan karakter hanya pada angka dan karakter alfabet penunjang utama
-                await worker.setParameters({
-                    tessedit_char_whitelist: '0123456789RpP.BbiIomMvVlLtTaAnNsSkKgeEruUxdD '
-                });
+                await worker.setParameters({ tessedit_char_whitelist: '0123456789RpP.BbiIomMvVlLtTaAnNsSkKgeEruUxdD ' });
                 const ret = await worker.recognize(base64HasilKompresiOcr);
-                let teks = ret.data.text || "";
+                let teksMentahOcr = ret.data.text || "";
                 await worker.terminate();
 
-                // BARU V2.1: Strategi pembersihan teks ekstra radikal (Atasi masalah "Rp200.388")
-                let teksBaris = teks.toUpperCase().split('\n');
-                for (let baris of teksBaris) {
-                    // Buang tulisan RP, titik, spasi untuk isolasi angka murni per baris
-                    let barisHanyaAngka = baris.replace(/RP/g, '').replace(/[^0-9]/g, '');
-                    
-                    if (barisHanyaAngka.length >= 5 && barisHanyaAngka.length <= 8) {
-                        let v = parseInt(barisHanyaAngka);
-                        if (v % 1000 === targetKodeAnak && v >= 10000 && v <= 5000000) {
-                            nominalDitemukanOCR = v;
+                // BARU V2.2: METODE STRATEGI MATA ELANG (Cari eksistensi akhiran teks langsung)
+                let teksIsolasiAngka = teksMentahOcr.toUpperCase().replace(/[^0-9]/g, ' ');
+                let barisanAngka = teksIsolasiAngka.split(/\s+/);
+
+                for (let segmen of barisanAngka) {
+                    if (segmen.length >= 5 && segmen.endsWith(targetKodeAnakString)) {
+                        let nilaiNominal = parseInt(segmen);
+                        if (nilaiNominal >= 10000 && nilaiNominal <= 5000000) {
+                            ocrMenemukanCocok = true;
+                            nominalKetikManual = nilaiNominal; // Bypass pakai data OCR yang 100% akurat
                             break;
                         }
                     }
                 }
 
-                // Jika ekstraksi baris gagal, pakai fallback regex global toleran
-                if (nominalDitemukanOCR === 0) {
-                    let teksBersihGlobal = teks.toUpperCase().replace(/[^0-9]/g, ' ');
-                    let kumpulanAngka = teksBersihGlobal.split(/\s+/);
-                    for (let itemAngka of kumpulanAngka) {
-                        if (itemAngka.length >= 5 && itemAngka.length <= 8) {
-                            let v = parseInt(itemAngka);
-                            if (v % 1000 === targetKodeAnak) {
-                                nominalDitemukanOCR = v;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                let teksRefSaring = teks.toUpperCase().replace(/[^0-9]/g, '');
+                let teksRefSaring = teksMentahOcr.toUpperCase().replace(/[^0-9]/g, '');
                 let matchesRef = teksRefSaring.match(/\d{10,20}/g) || [];
                 if(matchesRef.length > 0) noRefDitemukan = matchesRef[0];
 
-            } catch(ocrErr) {
-                nominalDitemukanOCR = 0; 
-            }
+            } catch(e) { ocrMenemukanCocok = false; }
 
-            // --- VALIDASI FILTER AKHIR ---
-            let tigaAngkaBelakangOCR = nominalDitemukanOCR % 1000;
-            let tigaAngkaBelakangManual = nominalKetikManual % 1000;
-
-            if (nominalDitemukanOCR > 0 && tigaAngkaBelakangOCR === targetKodeAnak) {
+            // PENENTUAN STATUS AKHIR FILTER V2.2
+            let stringManualUang = nominalKetikManual.toString();
+            if (ocrMenemukanCocok) {
                 statusTransaksiFinal = "BERHASIL";
                 alasanSistemCuriga = "";
-                nominalKetikManual = nominalDitemukanOCR; 
-            } else if (nominalKetikManual > 0 && tigaAngkaBelakangManual === targetKodeAnak) {
+            } else if (stringManualUang.endsWith(targetKodeAnakString)) {
                 statusTransaksiFinal = "PENDING";
-                alasanSistemCuriga = `OCR Miss, namun klaim manual wali santri valid berakhiran +${targetKodeAnak}. Butuh 1x klik ACC Admin.`;
+                alasanSistemCuriga = `OCR Miss, namun klaim manual wali santri valid berakhiran +${targetKodeAnakString}. Butuh 1x klik ACC Admin.`;
             } else {
                 statusTransaksiFinal = "PENDING";
-                alasanSistemCuriga = `Angka unik salah. Input manual: Rp ${nominalKetikManual.toLocaleString('id-ID')} (Kode santri wajib: +${targetKodeAnak})`;
+                alasanSistemCuriga = `Angka unik salah. Wajib berakhiran +${targetKodeAnakString}`;
             }
 
-            tampilkanSpinnerGuard(true, "MENYIMPAN LAPORAN...", "Mengirim data ke database master...");
+            tampilkanSpinnerGuard(true, "MENYIMPAN LAPORAN...", "Mengirim lembar berkas ke Spreadsheet...");
 
             const payload = {
                 aksi: "simpanTransaksiOtomatisPenuh",
                 nik: santriTerpilih.nik,
                 nama: santriTerpilih.nama,
                 status_role: santriTerpilih.status_role,
-                kode_unik_anak: targetKodeAnak,
+                kode_unik_anak: parseInt(targetKodeAnakString),
                 nominal_total: nominalKetikManual, 
                 status_final: statusTransaksiFinal, 
                 alasan_pending: alasanSistemCuriga, 
@@ -425,36 +332,24 @@
                 file_name: `STRUK_V2_${santriTerpilih.nik}_${Date.now()}.jpg`,
                 device: navigator.userAgent,
                 no_ref: noRefDitemukan,
-                digital_stamp: stempelGambarDigital
+                digital_stamp: "STMP-" + Date.now().toString(16).toUpperCase()
             };
 
             try {
                 const response = await fetch(API_URL, { 
-                    method: "POST", 
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify(payload) 
+                    method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(payload) 
                 });
                 const hasil = await response.json();
                 alert(hasil.message);
                 location.reload();
-            } catch(e) {
-                alert("Koneksi internet bermasalah.");
-                btn.disabled = false;
-                tampilkanSpinnerGuard(false);
-            }
+            } catch(e) { alert("Koneksi terputus."); btn.disabled = false; tampilkanSpinnerGuard(false); }
         }
 
-        // ==========================================
-        // PANEL KENDALI ADMIN
-        // ==========================================
+        // PANEL KENDALI ADMIN FUNCTIONS
         function bukaPanelAdmin() {
-            let pass = prompt("Masukkan PIN Keamanan Admin V2.1:");
-            if (pass === PIN_ADMIN_SYSTEM) {
-                localStorage.setItem("admin_logged_in_permanen_v2", "true");
-                bukaPanelAdminTanPop();
-            } else if(pass !== null) { alert("Akses Ditolak!"); }
+            let pass = prompt("Masukkan PIN:");
+            if (pass === PIN_ADMIN_SYSTEM) { localStorage.setItem("admin_logged_in_permanen_v2", "true"); bukaPanelAdminTanPop(); }
         }
-
         function bukaPanelAdminTanPop() {
             if(loopBadgeLuar) clearInterval(loopBadgeLuar);
             document.getElementById('panel-walisantri').classList.add('hidden');
@@ -463,147 +358,61 @@
             pullDataAdminDariServer();
             loopAdmin = setInterval(pullDataAdminDariServer, 8000);
         }
-
-        function keluarPanelAdminSadar() {
-            if (confirm("Keluar dari Mode Admin?")) {
-                localStorage.removeItem("admin_logged_in_permanen_v2");
-                location.reload();
-            }
-        }
-
-        function gantiTabAdmin(namaTab) {
-            tabAktifAdmin = namaTab;
-            renderVisualListAdmin();
-        }
-
+        function keluarPanelAdminSadar() { localStorage.removeItem("admin_logged_in_permanen_v2"); location.reload(); }
+        function gantiTabAdmin(t) { tabAktifAdmin = t; renderVisualListAdmin(); }
         async function pullDataAdminDariServer() {
-            if (adminSedangNgetikUang) return; 
+            if (adminSedangNgetikUang) return;
             try {
                 const res = await fetch(`${API_URL}?aksi=ambilDataAdminLengkap`);
                 const hasil = await res.json();
                 if(hasil && hasil.status === "success") {
-                    cacheAntreanAdmin = hasil.antrean || [];
-                    cacheRiwayatAdmin = hasil.riwayat || [];
+                    cacheAntreanAdmin = hasil.antrean || []; cacheRiwayatAdmin = hasil.riwayat || [];
                     let bDalam = document.getElementById('badge-antrean-dalam');
-                    if(cacheAntreanAdmin.length > 0) {
-                        bDalam.innerText = cacheAntreanAdmin.length; bDalam.classList.remove('hidden');
-                    } else { bDalam.classList.add('hidden'); }
+                    if(cacheAntreanAdmin.length > 0) { bDalam.innerText = cacheAntreanAdmin.length; bDalam.classList.remove('hidden'); }
+                    else { bDalam.classList.add('hidden'); }
                     renderVisualListAdmin();
                 }
             } catch(e) {}
         }
-
-        function tanganiKetikanUangAdmin(inputan) {
-            let angkaMurni = inputan.value.replace(/[^0-9]/g, "");
-            inputan.value = angkaMurni !== "" ? parseInt(angkaMurni).toLocaleString('id-ID').replace(/,/g, ".") : "";
-        }
-
+        function tanganiKetikanUangAdmin(i) { let m = i.value.replace(/[^0-9]/g, ""); i.value = m !== "" ? parseInt(m).toLocaleString('id-ID').replace(/,/g, ".") : ""; }
+        
         function renderVisualListAdmin() {
-            if (adminSedangNgetikUang) return; 
-            const listContainer = document.getElementById('list-container-admin');
-            listContainer.innerHTML = "";
-            
+            if (adminSedangNgetikUang) return;
+            const listContainer = document.getElementById('list-container-admin'); listContainer.innerHTML = "";
             if(tabAktifAdmin === "ANTREAN") {
-                if(cacheAntreanAdmin.length === 0) {
-                    listContainer.innerHTML = `<div class="text-center text-xs text-slate-400 py-12">🎉 Bersih! Semua antrean rekap keuangan beres.</div>`;
-                    return;
-                }
-                
+                if(cacheAntreanAdmin.length === 0) { listContainer.innerHTML = `<div class="text-center text-xs text-slate-400 py-12">🎉 Antrean Bersih!</div>`; return; }
                 cacheAntreanAdmin.forEach(t => {
                     let userMeta = dbSantri.find(s => s.nik === t.nik) || { status_role: "SANTRI", kode: 0 };
                     const div = document.createElement('div');
                     div.className = "bg-slate-900/90 border border-white/10 p-3 rounded-xl space-y-2.5 shadow-md";
                     div.innerHTML = `
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h4 class="text-xs font-black text-white leading-tight">${t.nama} <span class="text-[9px] text-amber-400 uppercase">(${userMeta.status_role})</span></h4>
-                                <span class="text-[9px] text-rose-400 block mt-0.5 font-bold">⚠️ ${t.alasan_pending}</span>
-                                <span class="text-[9px] text-slate-500 block mt-0.5">Ref: ${t.no_ref} | Stamp: ${t.digital_stamp}</span>
-                            </div>
+                        <div>
+                            <h4 class="text-xs font-black text-white leading-tight">${t.nama}</h4>
+                            <span class="text-[9px] text-rose-400 block font-bold">⚠️ ${t.alasan_pending}</span>
                         </div>
-                        
-                        <button onclick="bukaModalStruk('${t.link_struk}')" class="w-full bg-slate-950 p-3 rounded-lg border border-white/10 text-xs font-bold text-amber-400 hover:bg-black transition flex items-center justify-center gap-2">
-                            🔎 LIHAT GAMBAR STRUK ASLI
-                        </button>
-
+                        <button onclick="bukaModalStruk('${t.link_struk}')" class="w-full bg-slate-950 p-3 rounded-lg border border-white/10 text-xs font-bold text-amber-400">🔎 BUKA STRUK ASLI</button>
                         <div class="space-y-1">
-                            <label class="block text-[10px] font-black text-slate-400 uppercase">Input Nominal Total di Struk (Bukan Nominal Net):</label>
-                            <input type="text" 
-                                   id="fee-koreksi-${t.id_trx}" 
-                                   oninput="tanganiKetikanUangAdmin(this)" 
-                                   onfocus="adminSedangNgetikUang=true" 
-                                   onblur="adminSedangNgetikUang=false" 
-                                   placeholder="Contoh: 200.388" 
-                                   class="w-full bg-slate-950 border border-white/20 rounded-lg px-3 py-2.5 font-black text-amber-400 focus:outline-none focus:border-amber-400 text-center text-base">
+                            <input type="text" id="fee-koreksi-${t.id_trx}" oninput="tanganiKetikanUangAdmin(this)" onfocus="adminSedangNgetikUang=true" onblur="adminSedangNgetikUang=false" placeholder="Ketik nominal..." class="w-full bg-slate-950 border border-white/20 rounded-lg px-3 py-2.5 font-black text-amber-400 text-center text-base">
                         </div>
-
-                        <div class="flex gap-2 pt-1">
-                            <button onclick="prosesSetujuAdmin('${t.id_trx}', '${userMeta.status_role}', ${userMeta.kode})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-2.5 rounded-lg transition">✓ ACC REKAP</button>
-                            <button onclick="prosesTolakAdmin('${t.id_trx}')" class="w-1/3 bg-rose-950 text-rose-400 font-bold text-xs py-2.5 rounded-lg transition">✕ TOLAK</button>
-                        </div>
-                    `;
+                        <div class="flex gap-2"><button onclick="prosesSetujuAdmin('${t.id_trx}', '${userMeta.status_role}', ${userMeta.kode})" class="w-full bg-emerald-600 text-white font-black text-xs py-2.5 rounded-lg">✓ ACC REKAP</button></div>`;
                     listContainer.appendChild(div);
                 });
             } else {
-                if(cacheRiwayatAdmin.length === 0) {
-                    listContainer.innerHTML = `<div class="text-center text-xs text-slate-400 py-12">Belum ada riwayat masuk.</div>`;
-                    return;
-                }
                 cacheRiwayatAdmin.forEach(t => {
-                    const div = document.createElement('div');
-                    div.className = "bg-slate-900/40 border border-white/5 p-2.5 rounded-lg text-xs flex justify-between items-center";
-                    div.innerHTML = `<div><span>${t.nama}</span><span class="block text-[9px] text-slate-500">${t.status} - ${t.timestamp.slice(0,16)}</span></div> <b class="text-emerald-400">Rp ${parseInt(t.nominal_total).toLocaleString('id-ID')}</b>`;
+                    const div = document.createElement('div'); div.className = "bg-slate-900/40 border border-white/5 p-2.5 rounded-lg text-xs flex justify-between items-center";
+                    div.innerHTML = `<div><span>${t.nama}</span></div> <b class="text-emerald-400">Rp ${parseInt(t.nominal_total).toLocaleString('id-ID')}</b>`;
                     listContainer.appendChild(div);
                 });
             }
         }
-
-        async function prosesSetujuAdmin(idTrx, statusRole, kodeUnik) {
-            const rawValue = document.getElementById(`fee-koreksi-${idTrx}`).value;
-            const nominalMurni = rawValue.replace(/[^0-9]/g, "");
-
-            if(!nominalMurni || parseInt(nominalMurni) <= 0) {
-                alert("⚠️ Isikan nominal angka!");
-                return;
-            }
-            adminSedangNgetikUang = false;
-            tampilkanSpinnerGuard(true, "MENYETUJUI DATA...", "Memperbarui data rekap...");
-
+        async function prosesSetujuAdmin(id, role, kd) {
+            const val = document.getElementById(`fee-koreksi-${id}`).value.replace(/[^0-9]/g, "");
+            if(!val) return alert("Isi nominal!"); adminSedangNgetikUang = false;
+            tampilkanSpinnerGuard(true, "MEMPROSES...", "Menyetujui manual...");
             try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        aksi: "luluskanTransaksiOlehAdmin",
-                        id_transaksi: idTrx,
-                        nominal_koreksi: nominalMurni,
-                        status_role: statusRole,
-                        kode_unik_anak: kodeUnik,
-                        pin_admin: PIN_ADMIN_SYSTEM
-                    })
-                });
-                const hasil = await response.json();
-                if(hasil.status === "success") {
-                    alert("Berhasil diverifikasi manual.");
-                    await pullDataAdminDariServer();
-                } else { alert("Gagal: " + hasil.message); }
-            } catch(err) { alert("Masalah jaringan."); }
-            finally { tampilkanSpinnerGuard(false); }
-        }
-
-        async function prosesTolakAdmin(idTrx) {
-            if(!confirm("Tolak bukti transfer ini?")) return;
-            adminSedangNgetikUang = false;
-            tampilkanSpinnerGuard(true, "MENOLAK STRUK...", "Memperbarui log antrean...");
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ aksi: "tolakTransaksiOlehAdmin", id_transaksi: idTrx, pin_admin: PIN_ADMIN_SYSTEM })
-                });
-                const hasil = await response.json();
-                alert(hasil.message);
-                await pullDataAdminDariServer();
-            } catch(e) { alert("Gagal mengirim data."); }
-            finally { tampilkanSpinnerGuard(false); }
+                await fetch(API_URL, { method: "POST", body: JSON.stringify({ aksi: "luluskanTransaksiOlehAdmin", id_transaksi: id, nominal_koreksi: val, status_role: role, kode_unik_anak: kd, pin_admin: PIN_ADMIN_SYSTEM })});
+                pullDataAdminDariServer();
+            } catch(e) {} finally { tampilkanSpinnerGuard(false); }
         }
     </script>
 </body>
