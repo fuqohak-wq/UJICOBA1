@@ -43,28 +43,35 @@
     </script>
 
     <main id="panel-walisantri" class="w-full flex-1 flex flex-col justify-center my-4 space-y-4">
+        <!-- STEP 1: CARI NAMA -->
         <div id="wrapper-cari-nama" class="w-full bg-white text-slate-900 p-4 rounded-2xl shadow-xl space-y-2">
             <label class="block text-xs font-black uppercase tracking-wider text-emerald-950">1. Cari Nama Santri / Ustadz :</label>
             <input type="text" id="search-input" oninput="cariData()" placeholder="Ketik nama di sini..." class="w-full bg-slate-100 border-2 border-emerald-200 focus:border-emerald-600 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 focus:outline-none transition">
             <div id="search-results" class="space-y-1.5 max-h-44 overflow-y-auto hidden pt-1"></div>
         </div>
 
-        <div id="step-upload" class="w-full bg-white text-slate-900 p-4 rounded-2xl shadow-xl space-y-3 hidden">
+        <!-- STEP 2 & 3: FORM INPUT -->
+        <div id="step-upload" class="w-full bg-white text-slate-900 p-4 rounded-2xl shadow-xl space-y-4 hidden">
             <div class="bg-emerald-800 text-white p-4 rounded-xl shadow space-y-2.5 border border-emerald-700">
                 <div>
                     <span id="target-nama" class="text-base font-black block leading-tight">Nama</span>
                     <span id="label-role-akun" class="text-[10px] uppercase font-bold text-amber-300 block mt-0.5">Status: SANTRI</span>
                 </div>
                 <div class="border-t border-emerald-700/60 pt-2 text-center bg-emerald-950/40 p-2 rounded-lg border border-amber-500/30">
-                    <span class="text-[11px] font-black text-amber-400 uppercase tracking-wide block">⚠️ WAJIB AKAN DI-SCAN KODE UNIK:</span>
+                    <span class="text-[11px] font-black text-amber-400 uppercase tracking-wide block">⚠️ WAJIB TRANSFER DENGAN AKHIRAN KODE UNIK:</span>
                     <div class="mt-2 inline-block bg-amber-400 text-emerald-950 text-base font-black px-4 py-1.5 rounded-full shadow-md">
                         +Rp <span id="target-kode-unik">000</span>
                     </div>
                 </div>
             </div>
 
+            <div class="space-y-1">
+                <label class="block text-xs font-black uppercase tracking-wider text-slate-700">2. Nominal Yang Ditransfer (Sesuai Struk):</label>
+                <input type="text" id="nominal-manual-user" oninput="tanganiKetikanUangUser(this)" placeholder="Contoh: 200.388" class="w-full bg-slate-100 border-2 border-emerald-200 focus:border-emerald-600 rounded-xl px-4 py-3 text-base font-black text-emerald-950 text-center focus:outline-none transition">
+            </div>
+
             <div class="space-y-1.5 pt-1">
-                <span class="block text-xs font-black uppercase tracking-wider text-slate-700">2. Foto Gambar Struk Bukti :</span>
+                <span class="block text-xs font-black uppercase tracking-wider text-slate-700">3. Foto / Screenshot Struk Bukti :</span>
                 <label for="file-struk" class="flex flex-col items-center justify-center border-2 border-dashed border-emerald-600 bg-emerald-50 hover:bg-emerald-100/50 rounded-2xl p-5 cursor-pointer transition text-center group">
                     <span id="icon-upload" class="text-3xl mb-1">📸</span>
                     <span id="text-upload-label" class="text-sm font-black text-emerald-950">Klik Ambil Gambar Struk</span>
@@ -74,11 +81,14 @@
         </div>
 
         <div id="area-tombol-submit" class="hidden space-y-2">
-            <button onclick="prosesZeroFailureOcr()" id="btn-submit" class="w-full tombol-utama font-black py-4 rounded-2xl text-sm shadow-lg uppercase flex flex-col justify-center items-center border-b-4 border-amber-700 active:border-b-0 transition" disabled>
+            <button onclick="prosesSuperOcrEngine()" id="btn-submit" class="w-full tombol-utama font-black py-4 rounded-2xl text-sm shadow-lg uppercase flex flex-col justify-center items-center border-b-4 border-amber-700 active:border-b-0 transition" disabled>
                 <span id="btn-text" class="text-sm font-black tracking-wide">Kirim Verifikasi Struk</span>
             </button>
         </div>
     </main>
+
+    <!-- KANVAS TERSEMBUNYI UNTUK PROSES OLAH GAMBAR (ANTI-CRASH) -->
+    <canvas id="canvas-preprocessing" class="hidden"></canvas>
 
     <main id="panel-admin" class="w-full flex-1 flex flex-col my-3 space-y-3 hidden">
         <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-white/5">
@@ -106,12 +116,14 @@
         &copy; 2026 PPMUY Dual-Spreadsheet Mirroring System
     </footer>
 
+    <!-- POPUP SPAM GUARD / WAITING BLOCK -->
     <div id="loadingSpamGuard" class="fixed inset-0 bg-slate-950/90 z-[9999] hidden flex-col justify-center items-center text-center p-6">
         <div class="w-14 h-14 border-4 border-slate-700 border-t-amber-400 rounded-full animate-spin"></div>
         <div class="mt-4 text-white font-black text-sm tracking-wide" id="spamGuardText">SINKRONISASI SERVER...</div>
         <div class="text-xs text-slate-400 mt-1" id="spamGuardSubtext">Mohon tunggu sejenak.</div>
     </div>
 
+    <!-- MODAL PREVIEW STRUK -->
     <div id="modalPreviewStruk" class="fixed inset-0 bg-slate-950/95 z-[9998] hidden flex-col justify-between p-2">
         <div class="bg-slate-900 text-slate-100 rounded-2xl w-full max-w-md mx-auto flex flex-col h-[90vh] shadow-2xl border border-white/10">
             <div class="px-4 py-3 border-b border-white/10 bg-slate-950 flex justify-between items-center shrink-0 rounded-t-2xl">
@@ -143,7 +155,6 @@
         function formatUrlGoogleDriveViewer(urlAsli) {
             if(!urlAsli || urlAsli === "#" || urlAsli === "Tidak Ada File") return "#";
             if(urlAsli.includes("id=")) return "https://drive.google.com/file/d/" + urlAsli.split("id=")[1] + "/view?usp=drivesdk";
-            if(urlAsli.includes("/d/")) return "https://drive.google.com/file/d/" + urlAsli.split("/d/")[1].split("/")[0] + "/view?usp=drivesdk";
             return urlAsli;
         }
 
@@ -171,7 +182,7 @@
                 loopBadgeLuar = setInterval(syncBadgeLuarSaja, 15000);
             } catch(e) { 
                 tampilkanSpinnerGuard(false);
-                alert("Gagal terhubung ke Server V2. Cek kembali URL deployment Anda.");
+                alert("Gagal terhubung ke Server V2.");
             }
         };
 
@@ -216,15 +227,86 @@
             document.getElementById('target-nama').innerText = santri.nama;
             document.getElementById('label-role-akun').innerText = "Status: " + santri.status_role;
             document.getElementById('target-kode-unik').innerText = santri.kode ? santri.kode.toString().padStart(3, '0') : "000";
-            document.getElementById('btn-submit').disabled = true;
+            cekValiditasInputUser();
+        }
+
+        function tanganiKetikanUangUser(inputan) {
+            let angkaMurni = inputan.value.replace(/[^0-9]/g, "");
+            inputan.value = angkaMurni !== "" ? parseInt(angkaMurni).toLocaleString('id-ID').replace(/,/g, ".") : "";
+            cekValiditasInputUser();
         }
 
         function fileKenaInput(input) {
             if(input.files.length > 0) {
                 document.getElementById('icon-upload').innerText = "✅";
-                document.getElementById('text-upload-label').innerText = "Struk Terkunci, Siap Kirim!";
-                document.getElementById('btn-submit').disabled = false;
+                document.getElementById('text-upload-label').innerText = "Struk Terkunci!";
+                cekValiditasInputUser();
             }
+        }
+
+        function cekValiditasInputUser() {
+            const fileInput = document.getElementById('file-struk');
+            const nominalInput = document.getElementById('nominal-manual-user').value;
+            const btn = document.getElementById('btn-submit');
+            
+            if(fileInput.files.length > 0 && nominalInput.trim() !== "") {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // ========================================================
+        // MODUL ENGINE PREPROCESSING (RESIZE, GRAYSCALE, CONTRAST)
+        // ========================================================
+        function optimalkanGambarUntukOcr(fileObj) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(fileObj);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        const canvas = document.getElementById('canvas-preprocessing');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // 1. Trik Resize Maksimal Lebar 1000px (Anti Memory Overload)
+                        let targetWidth = 1000;
+                        let skala = targetWidth / img.width;
+                        let targetHeight = img.height * skala;
+                        
+                        canvas.width = targetWidth;
+                        canvas.height = targetHeight;
+                        
+                        // Gambar ulang di kanvas mini
+                        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+                        
+                        // 2. Piksel Filter Manipulasi: Hitam-Putih Tinggi Kontras
+                        let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        let data = imgData.data;
+                        
+                        for (let i = 0; i < data.length; i += 4) {
+                            let r = data[i];
+                            let g = data[i+1];
+                            let b = data[i+2];
+                            
+                            // Rumus Grayscale Internasional
+                            let abuAbu = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                            
+                            // Efek Binarization Kontras Tinggi Ekstrim (Hitam / Putih Pekat)
+                            let hasilFilter = abuAbu > 130 ? 255 : 0;
+                            
+                            data[i] = hasilFilter;     // R
+                            data[i+1] = hasilFilter;   // G
+                            data[i+2] = hasilFilter;   // B
+                        }
+                        
+                        ctx.putImageData(imgData, 0, 0);
+                        // Kembalikan gambar dalam wujud base64 super ringan
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
+                    };
+                };
+            });
         }
 
         const bacaFileSebagaiBase64Asli = (file) => new Promise((resolve) => {
@@ -237,69 +319,84 @@
             let infoMetadata = file.name + file.size + file.lastModified;
             let hash = 0;
             for (let i = 0; i < infoMetadata.length; i++) {
-                let char = infoMetadata.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
+                hash = ((hash << 5) - hash) + infoMetadata.charCodeAt(i);
                 hash = hash & hash; 
             }
             return "STMP-" + Math.abs(hash).toString(16).toUpperCase();
         }
 
-        async function prosesZeroFailureOcr() {
+        // ==========================================
+        // ALUR EKSEKUSI ENGINE ULTRA UTAMA
+        // ==========================================
+        async function prosesSuperOcrEngine() {
             const btn = document.getElementById('btn-submit');
             const fileInput = document.getElementById('file-struk');
+            const inputManualUang = document.getElementById('nominal-manual-user').value;
+            
             btn.disabled = true; 
-            tampilkanSpinnerGuard(true, "MEMPROSES STRUK...", "Mengekstrak teks & mendeteksi rupiah..."); 
+            tampilkanSpinnerGuard(true, "MENGOPTIMALKAN STRUK...", "Mengecilkan resolusi & menajamkan huruf teks..."); 
 
-            let base64Asli = "";
+            let nominalKetikManual = parseInt(inputManualUang.replace(/[^0-9]/g, "")) || 0;
+            let base64AsliUntukDrive = "";
+            let base64HasilKompresiOcr = "";
             let statusTransaksiFinal = "PENDING"; 
-            let alasanSistemCuriga = "Pending: Masuk Antrean Manual Admin";
-            let nominalDitemukan = 0;
-            let noRefDitemukan = "";
+            let alasanSistemCuriga = "Pending: Gagal mendeteksi kecocokan angka unik otomatis.";
+            let nominalDitemukanOCR = 0;
+            let noRefDitemukan = "REF-V2-" + Date.now().toString().slice(-6);
             let stempelGambarDigital = buatStempelDigitalGambar(fileInput.files[0]);
+            let targetKodeAnak = parseInt(santriTerpilih.kode || 0);
 
             try {
-                base64Asli = await bacaFileSebagaiBase64Asli(fileInput.files[0]);
+                // Ambil base64 asli untuk disimpan di Google Drive agar Admin tetap lihat gambar jernih
+                base64AsliUntukDrive = await bacaFileSebagaiBase64Asli(fileInput.files[0]);
+                
+                // Panggil Modul Preprocessing Khusus untuk diserahkan ke Tesseract OCR
+                base64HasilKompresiOcr = await optimalkanGambarUntukOcr(fileInput.files[0]);
+
+                tampilkanSpinnerGuard(true, "MEMBACA DATA STRUK...", "Engine OCR menganalisis teks nominal...");
+
+                // Jalankan Tesseract dengan file hasil kompresi hitam-putih yang sangat ringan
                 const worker = await Tesseract.createWorker('ind', 1);
-                const ret = await worker.recognize(base64Asli);
+                const ret = await worker.recognize(base64HasilKompresiOcr);
                 let teks = ret.data.text || "";
                 await worker.terminate();
 
-                // Bersihkan teks: hilangkan separator titik/koma agar angka menyatu
                 let teksBersih = teks.toUpperCase().replace(/[,.]/g, ''); 
-                
-                // Ambil semua kumpulan angka dengan rentang panjang 5-7 digit (Rp 10.000 s/d Rp 9.999.999)
                 let matchesNominal = teksBersih.match(/\d{5,7}/g) || [];
                 
                 for(let m of matchesNominal) {
                     let v = parseInt(m);
                     if (v >= 10000 && v <= 5000000) { 
-                        nominalDitemukan = v; 
-                        let targetKodeAnak = parseInt(santriTerpilih.kode || 0);
-                        // Prioritaskan angka yang ekornya pas dengan kode unik
-                        if (v % 1000 === targetKodeAnak) {
+                        if (v % 1000 === targetKodeAnak) { 
+                            nominalDitemukanOCR = v;
                             break; 
                         }
                     }
                 }
-
                 let matchesRef = teksBersih.match(/\d{8,20}/g) || [];
-                noRefDitemukan = matchesRef.length > 0 ? matchesRef[0] : "REF-V2-" + Date.now().toString().slice(-6);
+                if(matchesRef.length > 0) noRefDitemukan = matchesRef[0];
 
-                let targetKodeAnak = parseInt(santriTerpilih.kode || 0);
-                let tigaAngkaBelakangUang = nominalDitemukan % 1000;
-
-                if (nominalDitemukan > 0 && tigaAngkaBelakangUang === targetKodeAnak) {
-                    statusTransaksiFinal = "BERHASIL";
-                    alasanSistemCuriga = ""; 
-                } else if (nominalDitemukan > 0 && tigaAngkaBelakangUang !== targetKodeAnak) {
-                    alasanSistemCuriga = `Nominal Rp ${nominalDitemukan.toLocaleString('id-ID')} tidak cocok angka unik anak (+${targetKodeAnak})`;
-                } else {
-                    alasanSistemCuriga = "Gagal membaca teks angka rupiah pada gambar";
-                }
             } catch(ocrErr) {
-                nominalDitemukan = 0;
-                noRefDitemukan = "REF-ERR-" + Date.now().toString().slice(-6);
-                alasanSistemCuriga = "Crash Engine OCR: Butuh verifikasi manual.";
+                // Skenario penyelamatan cadangan jika internet terputus mendadak
+                nominalDitemukanOCR = 0; 
+            }
+
+            // --- VALIDASI FILTER SUPER AMAN ---
+            let tigaAngkaBelakangOCR = nominalDitemukanOCR % 1000;
+            let tigaAngkaBelakangManual = nominalKetikManual % 1000;
+
+            // Aturan Sakral: Harus bermuara pada kesamaan Kode Unik!
+            if (nominalDitemukanOCR > 0 && tigaAngkaBelakangOCR === targetKodeAnak) {
+                statusTransaksiFinal = "BERHASIL";
+                alasanSistemCuriga = "";
+                nominalKetikManual = nominalDitemukanOCR; 
+            } else if (nominalKetikManual > 0 && tigaAngkaBelakangManual === targetKodeAnak) {
+                // Jika OCR tidak sengaja melewatkan teks tapi ketikan wali santri terbukti pas kode uniknya
+                statusTransaksiFinal = "PENDING";
+                alasanSistemCuriga = `OCR Miss, namun klaim manual wali santri valid berakhiran +${targetKodeAnak}. Butuh 1x klik ACC Admin.`;
+            } else {
+                statusTransaksiFinal = "PENDING";
+                alasanSistemCuriga = `Angka unik salah. Input manual: Rp ${nominalKetikManual.toLocaleString('id-ID')} (Kode santri wajib: +${targetKodeAnak})`;
             }
 
             tampilkanSpinnerGuard(true, "MENGIRIM LOG V2...", "Menulis data sinkronisasi...");
@@ -307,13 +404,13 @@
             const payload = {
                 aksi: "simpanTransaksiOtomatisPenuh",
                 nik: santriTerpilih.nik,
-                nama: santriTerpilih.nama,
+                nama: santriTerpilled || santriTerpilih.nama,
                 status_role: santriTerpilih.status_role,
-                kode_unik_anak: santriTerpilih.kode ? parseInt(santriTerpilih.kode) : 0,
-                nominal_total: nominalDitemukan,
+                kode_unik_anak: targetKodeAnak,
+                nominal_total: nominalKetikManual, 
                 status_final: statusTransaksiFinal, 
                 alasan_pending: alasanSistemCuriga, 
-                image_base64: base64Asli, 
+                image_base64: base64AsliUntukDrive, // Tetap simpan resolusi asli ke Drive Bapak
                 file_name: `STRUK_V2_${santriTerpilih.nik}_${Date.now()}.jpg`,
                 device: navigator.userAgent,
                 no_ref: noRefDitemukan,
@@ -330,12 +427,15 @@
                 alert(hasil.message);
                 location.reload();
             } catch(e) {
-                alert("Koneksi internet bermasalah atau respon server terputus.");
+                alert("Koneksi internet bermasalah.");
                 btn.disabled = false;
                 tampilkanSpinnerGuard(false);
             }
         }
 
+        // ==========================================
+        // FITUR PANEL KENDALI ADMIN (TIDAK BERUBAH)
+        // ==========================================
         function bukaPanelAdmin() {
             let pass = prompt("Masukkan PIN Keamanan Admin V2:");
             if (pass === PIN_ADMIN_SYSTEM) {
@@ -422,7 +522,7 @@
                                    oninput="tanganiKetikanUangAdmin(this)" 
                                    onfocus="adminSedangNgetikUang=true" 
                                    onblur="adminSedangNgetikUang=false" 
-                                   placeholder="Contoh: 150.129" 
+                                   placeholder="Contoh: 200.388" 
                                    class="w-full bg-slate-950 border border-white/20 rounded-lg px-3 py-2.5 font-black text-amber-400 focus:outline-none focus:border-amber-400 text-center text-base">
                         </div>
 
@@ -452,12 +552,11 @@
             const nominalMurni = rawValue.replace(/[^0-9]/g, "");
 
             if(!nominalMurni || parseInt(nominalMurni) <= 0) {
-                alert("⚠️ Isikan nominal angka total yang tertera di kertas struk!");
+                alert("⚠️ Isikan nominal angka!");
                 return;
             }
-
             adminSedangNgetikUang = false;
-            tampilkanSpinnerGuard(true, "MENYETUJUI DATA...", "Sistem sedang menghitung potongan admin & melempar ke Spreadsheet 2...");
+            tampilkanSpinnerGuard(true, "MENYETUJUI DATA...", "Memperbarui data rekap...");
 
             try {
                 const response = await fetch(API_URL, {
@@ -473,10 +572,10 @@
                 });
                 const hasil = await response.json();
                 if(hasil.status === "success") {
-                    alert("Berhasil! Data net terpotong otomatis dan masuk ke Spreadsheet 2.");
+                    alert("Berhasil diverifikasi manual.");
                     await pullDataAdminDariServer();
                 } else { alert("Gagal: " + hasil.message); }
-            } catch(err) { alert("Masalah jaringan internet."); }
+            } catch(err) { alert("Masalah jaringan."); }
             finally { tampilkanSpinnerGuard(false); }
         }
 
