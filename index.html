@@ -103,13 +103,13 @@
             color: #ffffff;
         }
         .alert-box {
-            background-color: rgba(255, 51, 51, 0.1);
+            background-color: rgba(255, 51, 51, 0.15);
             border: 1px dashed #ff3333;
             color: #ff7675;
-            padding: 10px;
+            padding: 12px;
             border-radius: 6px;
-            font-size: 12px;
-            line-height: 1.4;
+            font-size: 13px;
+            line-height: 1.5;
             margin-bottom: 15px;
             font-weight: 600;
         }
@@ -159,11 +159,35 @@
             color: white;
         }
         .btn-acc:hover { background-color: #0b754f; }
+        
+        /* Grup Tombol Khusus Fraud */
+        .fraud-action-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 8px;
+        }
         .btn-tolak-keras {
             background-color: #b33939;
             color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
         }
         .btn-tolak-keras:hover { background-color: #ff5252; }
+        
+        .btn-cancel-view {
+            background-color: #4b4b4b;
+            color: #ffffff;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-cancel-view:hover { background-color: #777777; }
+
         .loading {
             text-align: center;
             color: #f39c12;
@@ -186,7 +210,7 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn tab-pending" id="btn-tab-pending">
+        <button class="tab-btn tab-pending" id="btn-tab-pending" onclick="muatDataAdminSistem()">
             📥 Antrean Pending <span class="tab-badge" id="badge-count">0</span>
         </button>
         <button class="tab-btn tab-riwayat" id="btn-tab-riwayat" onclick="alert('Fitur Log Riwayat Standar Aktif')">
@@ -200,10 +224,10 @@
 </div>
 
 <script>
-    // URL WEB APP APPS SCRIPT ASLI MILIK BAPAK (SUDAH DIKUNCI & DIUPDATE)
+    // URL WEB APP APPS SCRIPT ASLI REKENING BAPAK
     const URL_GAS_SYSTEM = "https://script.google.com/macros/s/AKfycbzpK04TsH4GJQyWZAHthJ0_lMVZhe_c-CE59biUz4hKREuEPFkv2hBJVq76n2pmNaQ79g/exec"; 
 
-    // Load Data Otomatis saat halaman dibuka
+    // Jalankan otomatis saat web dibuka
     document.addEventListener("DOMContentLoaded", muatDataAdminSistem);
 
     function muatDataAdminSistem() {
@@ -227,8 +251,8 @@
                 <p style="color:#ff4d4d; text-align:center; font-weight:bold; padding:10px; margin:0;">
                     Eror Jaringan Server: TypeError: Failed to fetch
                 </p>
-                <p style="color:#aaa; font-size:12px; text-align:center; margin:0 0 10px 0; padding:0 10px;">
-                    Catatan: Jika error ini tetap muncul, pastikan pengaturan Deploy di Apps Script Bapak sudah disetel ke <b>"Anyone"</b> (Siapa Saja) agar Vercel diberi izin akses.
+                <p style="color:#aaa; font-size:12px; text-align:center; margin:0;">
+                    Pastikan status Deploy Apps Script Bapak sudah disetel ke akses <b>"Anyone"</b>.
                 </p>
             `;
         });
@@ -245,27 +269,33 @@
             let infoBlokirHtml = "";
             let areaKontrolAksiHtml = "";
 
-            // -------------------------------------------------------------
-            // ENGINE ANTI HUMAN ERROR - DETEKSI FLAG "BLOKIR HARD" DARI GAS V3.9
-            // -------------------------------------------------------------
-            if (item.alasan_pending && item.alasan_pending.includes("BLOKIR HARD")) {
+            // ----------------------------------------------------------------------
+            // EVALUASI STRUK FRAUD / DUPLIKAT (MEMBACA DATA VARIABEL NAMA DARI GAS V3.9)
+            // ----------------------------------------------------------------------
+            if (item.alasan_pending && (item.alasan_pending.includes("BLOKIR HARD") || item.alasan_pending.includes("DUPLIKAT"))) {
                 
-                // 1. Desain Box Alert Bahaya (Merah Menyala)
+                // 1. MEMUNCULKAN NOTIF KEBOCORAN DAN MENAMPILKAN NAMA PEMILIK ASLINYA SECARA JELAS
                 infoBlokirHtml = `
                     <div class="alert-box">
-                        ⚠️ 🚨 ${item.alasan_pending}
+                        ⚠️ 🚨 <b>SISTEM MENGUNCI OTOMATIS:</b><br>
+                        ${item.alasan_pending}
                     </div>
                 `;
 
-                // 2. Kunci Total Tombol ACC, Ganti Paksa Jadi Tombol Tolak Fraud
+                // 2. KUNCI TOMBOL ACC & SEDIAKAN PILIHAN TOLAK / CANCEL (BATAL PROSES)
                 areaKontrolAksiHtml = `
-                    <button class="btn-action btn-tolak-keras" onclick="prosesTolakFraud('${item.id_trx}')">
-                        🔴 TOLAK & HAPUS DATA FRAUD
-                    </button>
+                    <div class="fraud-action-group">
+                        <button class="btn-tolak-keras" onclick="prosesTolakFraud('${item.id_trx}')">
+                            🔴 TOLAK FRAUD
+                        </button>
+                        <button class="btn-cancel-view" onclick="batalkanTampilanKartu(this)">
+                            ⚪ CANCEL
+                        </button>
+                    </div>
                 `;
 
             } else {
-                // KONDISI NORMAL (Jika transaksi aman atau hanya butuh 1x konfirmasi nominal)
+                // TAMPILAN JIKA KONDISI TRANSAKSI NORMAL ATAU HANYA ANTRIAN BIASA
                 if (item.status === "ANTRIAN_AI") {
                     infoBlokirHtml = `<div class="alert-box-warn">⏳ AI sedang membaca struk di latar belakang... Mohon tunggu 1 menit.</div>`;
                 } else {
@@ -280,9 +310,9 @@
                 `;
             }
 
-            // Gabungkan Komponen ke dalam Card Tampilan sesuai layout asli Bapak
+            // Membangun Kerangka Card Layout
             const HTML_CARD = `
-                <div class="card">
+                <div class="card" id="card_trx_${item.id_trx}">
                     <div class="nama-santri">${item.nama.toLowerCase()}</div>
                     ${infoBlokirHtml}
                     
@@ -297,7 +327,23 @@
         });
     }
 
-    // Fungsi Aksi 1: ACC Transaksi Normal
+    // Fungsi Pembatalan Visual: Menyembunyikan kartu tanpa merusak data Google Sheets
+    function batalkanTampilanKartu(tombol) {
+        const cardSasar = tombol.closest('.card');
+        if (cardSasar) {
+            cardSasar.style.transition = "all 0.3s ease";
+            cardSasar.style.opacity = "0";
+            setTimeout(() => {
+                cardSasar.remove();
+                // Update badge jumlah antrean sementara di layar
+                const badge = document.getElementById("badge-count");
+                let nilaiSekarang = parseInt(badge.innerText || 0);
+                if (nilaiSekarang > 0) badge.innerText = nilaiSekarang - 1;
+            }, 300);
+        }
+    }
+
+    // Fungsi Eksekusi ACC Ke Server GAS
     function prosesAccManual(idTrx, kodeUnikAnak) {
         const nominalInput = document.getElementById(`input_koreksi_${idTrx}`).value;
         const pin = prompt("Masukkan PIN Keamanan Admin:");
@@ -311,12 +357,12 @@
         });
     }
 
-    // Fungsi Aksi 2: Tolak Mutlak Transaksi Penipuan/Iseng (Anti-Human Error)
+    // Fungsi Eksekusi Tolak Fraud Ke Server GAS
     function prosesTolakFraud(idTrx) {
-        const konfirmasi = confirm("Sistem mendeteksi ini struk palsu/kembar milik orang lain. Anda yakin ingin MENOLAK dan MEMBLOKIR transaksi ini?");
+        const konfirmasi = confirm("Sistem mendeteksi ini struk palsu/kembar milik orang lain. Anda yakin ingin MENOLAK transaksi ini?");
         if (!konfirmasi) return;
 
-        const pin = prompt("PERINGATAN TINGGI! Masukkan PIN Admin untuk membuang kecurangan:");
+        const pin = prompt("PERINGATAN! Masukkan PIN Admin untuk membuang kecurangan:");
         if (!pin) return;
 
         eksekusiAksiBackend("tolakTransaksiOlehAdmin", {
@@ -325,7 +371,7 @@
         });
     }
 
-    // Core Engine Bridge ke Google Apps Script
+    // Bridge Ajax Post Data
     function eksekusiAksiBackend(namaAksi, payloadData) {
         payloadData.aksi = namaAksi;
         
@@ -339,7 +385,7 @@
         .then(r => r.json())
         .then(hasil => {
             alert(hasil.message);
-            muatDataAdminSistem(); // Refresh data otomatis
+            muatDataAdminSistem();
         })
         .catch(e => {
             alert("Gagal memproses aksi: " + e.toString());
