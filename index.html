@@ -270,7 +270,6 @@
                         const canvas = document.getElementById('canvas-preprocessing');
                         const ctx = canvas.getContext('2d');
                         
-                        // 1. Trik Resize Maksimal Lebar 1000px (Anti Memory Overload)
                         let targetWidth = 1000;
                         let skala = targetWidth / img.width;
                         let targetHeight = img.height * skala;
@@ -278,10 +277,8 @@
                         canvas.width = targetWidth;
                         canvas.height = targetHeight;
                         
-                        // Gambar ulang di kanvas mini
                         ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
                         
-                        // 2. Piksel Filter Manipulasi: Hitam-Putih Tinggi Kontras
                         let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         let data = imgData.data;
                         
@@ -290,19 +287,15 @@
                             let g = data[i+1];
                             let b = data[i+2];
                             
-                            // Rumus Grayscale Internasional
                             let abuAbu = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                            
-                            // Efek Binarization Kontras Tinggi Ekstrim (Hitam / Putih Pekat)
                             let hasilFilter = abuAbu > 130 ? 255 : 0;
                             
-                            data[i] = hasilFilter;     // R
-                            data[i+1] = hasilFilter;   // G
-                            data[i+2] = hasilFilter;   // B
+                            data[i] = hasilFilter;     
+                            data[i+1] = hasilFilter;   
+                            data[i+2] = hasilFilter;   
                         }
                         
                         ctx.putImageData(imgData, 0, 0);
-                        // Kembalikan gambar dalam wujud base64 super ringan
                         resolve(canvas.toDataURL('image/jpeg', 0.8));
                     };
                 };
@@ -326,7 +319,7 @@
         }
 
         // ==========================================
-        // ALUR EKSEKUSI ENGINE ULTRA UTAMA
+        // ALUR EKSEKUSI ENGINE ULTRA UTAMA (FIXED)
         // ==========================================
         async function prosesSuperOcrEngine() {
             const btn = document.getElementById('btn-submit');
@@ -347,15 +340,11 @@
             let targetKodeAnak = parseInt(santriTerpilih.kode || 0);
 
             try {
-                // Ambil base64 asli untuk disimpan di Google Drive agar Admin tetap lihat gambar jernih
                 base64AsliUntukDrive = await bacaFileSebagaiBase64Asli(fileInput.files[0]);
-                
-                // Panggil Modul Preprocessing Khusus untuk diserahkan ke Tesseract OCR
                 base64HasilKompresiOcr = await optimalkanGambarUntukOcr(fileInput.files[0]);
 
                 tampilkanSpinnerGuard(true, "MEMBACA DATA STRUK...", "Engine OCR menganalisis teks nominal...");
 
-                // Jalankan Tesseract dengan file hasil kompresi hitam-putih yang sangat ringan
                 const worker = await Tesseract.createWorker('ind', 1);
                 const ret = await worker.recognize(base64HasilKompresiOcr);
                 let teks = ret.data.text || "";
@@ -377,7 +366,6 @@
                 if(matchesRef.length > 0) noRefDitemukan = matchesRef[0];
 
             } catch(ocrErr) {
-                // Skenario penyelamatan cadangan jika internet terputus mendadak
                 nominalDitemukanOCR = 0; 
             }
 
@@ -385,13 +373,11 @@
             let tigaAngkaBelakangOCR = nominalDitemukanOCR % 1000;
             let tigaAngkaBelakangManual = nominalKetikManual % 1000;
 
-            // Aturan Sakral: Harus bermuara pada kesamaan Kode Unik!
             if (nominalDitemukanOCR > 0 && tigaAngkaBelakangOCR === targetKodeAnak) {
                 statusTransaksiFinal = "BERHASIL";
                 alasanSistemCuriga = "";
                 nominalKetikManual = nominalDitemukanOCR; 
             } else if (nominalKetikManual > 0 && tigaAngkaBelakangManual === targetKodeAnak) {
-                // Jika OCR tidak sengaja melewatkan teks tapi ketikan wali santri terbukti pas kode uniknya
                 statusTransaksiFinal = "PENDING";
                 alasanSistemCuriga = `OCR Miss, namun klaim manual wali santri valid berakhiran +${targetKodeAnak}. Butuh 1x klik ACC Admin.`;
             } else {
@@ -401,16 +387,17 @@
 
             tampilkanSpinnerGuard(true, "MENGIRIM LOG V2...", "Menulis data sinkronisasi...");
 
+            // PERBAIKAN FATAL: Nama variabel disesuaikan agar tidak typo & macet loading lagi
             const payload = {
                 aksi: "simpanTransaksiOtomatisPenuh",
                 nik: santriTerpilih.nik,
-                nama: santriTerpilled || santriTerpilih.nama,
+                nama: santriTerpilih.nama,
                 status_role: santriTerpilih.status_role,
                 kode_unik_anak: targetKodeAnak,
                 nominal_total: nominalKetikManual, 
                 status_final: statusTransaksiFinal, 
                 alasan_pending: alasanSistemCuriga, 
-                image_base64: base64AsliUntukDrive, // Tetap simpan resolusi asli ke Drive Bapak
+                image_base64: base64AsliUntukDrive, 
                 file_name: `STRUK_V2_${santriTerpilih.nik}_${Date.now()}.jpg`,
                 device: navigator.userAgent,
                 no_ref: noRefDitemukan,
@@ -434,7 +421,7 @@
         }
 
         // ==========================================
-        // FITUR PANEL KENDALI ADMIN (TIDAK BERUBAH)
+        // FITUR PANEL KENDALI ADMIN
         // ==========================================
         function bukaPanelAdmin() {
             let pass = prompt("Masukkan PIN Keamanan Admin V2:");
