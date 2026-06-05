@@ -29,9 +29,6 @@
     </header>
 
     <script>
-        // ====================================================================
-        // PASTE URL WEB APP BARU ANDA YANG BERAKHIRAN /exec DI SINI
-        // ====================================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbzpK04TsH4GJQyWZAHthJ0_lMVZhe_c-CE59biUz4hKREuEPFkv2hBJVq76n2pmNaQ79g/exec";
         const PIN_ADMIN_SYSTEM = "adminppmuy2026";
         
@@ -325,9 +322,6 @@
             }
         }
 
-        // ====================================================================
-        // BACKOFFICE PANEL ADMIN WORKSPACE
-        // ====================================================================
         function bukaPanelAdmin() {
             let pass = prompt("Masukkan PIN Keamanan Admin V2:");
             if (pass === PIN_ADMIN_SYSTEM) {
@@ -390,7 +384,6 @@
                     return;
                 }
                 
-                // Ambil daftar user untuk mencocokkan status role ketika admin meluluskan secara manual
                 cacheAntreanAdmin.forEach(t => {
                     let userMeta = dbSantri.find(s => s.nik === t.nik) || { status_role: "SANTRI", kode: 0 };
                     const div = document.createElement('div');
