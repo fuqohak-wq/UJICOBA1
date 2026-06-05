@@ -260,23 +260,33 @@
             try {
                 base64Asli = await bacaFileSebagaiBase64Asli(fileInput.files[0]);
                 const worker = await Tesseract.createWorker('ind', 1);
-                await worker.setParameters({ tessedit_char_whitelist: '0123456789Rp.,TOTALNominal' });
                 const ret = await worker.recognize(base64Asli);
                 let teks = ret.data.text || "";
                 await worker.terminate();
 
-                let baris = teks.toUpperCase().replace(/\s+/g, '');
-                let matchesNominal = baris.match(/\d[\d\.,]*/g) || [];
+                // Bersihkan teks: hilangkan separator titik/koma agar angka menyatu
+                let teksBersih = teks.toUpperCase().replace(/[,.]/g, ''); 
+                
+                // Ambil semua kumpulan angka dengan rentang panjang 5-7 digit (Rp 10.000 s/d Rp 9.999.999)
+                let matchesNominal = teksBersih.match(/\d{5,7}/g) || [];
+                
                 for(let m of matchesNominal) {
-                    let v = parseInt(m.replace(/[^0-9]/g, ''));
-                    if (v >= 10000 && v <= 5000000) { nominalDitemukan = v; break; }
+                    let v = parseInt(m);
+                    if (v >= 10000 && v <= 5000000) { 
+                        nominalDitemukan = v; 
+                        let targetKodeAnak = parseInt(santriTerpilih.kode || 0);
+                        // Prioritaskan angka yang ekornya pas dengan kode unik
+                        if (v % 1000 === targetKodeAnak) {
+                            break; 
+                        }
+                    }
                 }
 
-                let matchesRef = baris.match(/\d{8,20}/g) || [];
+                let matchesRef = teksBersih.match(/\d{8,20}/g) || [];
                 noRefDitemukan = matchesRef.length > 0 ? matchesRef[0] : "REF-V2-" + Date.now().toString().slice(-6);
 
+                let targetKodeAnak = parseInt(santriTerpilih.kode || 0);
                 let tigaAngkaBelakangUang = nominalDitemukan % 1000;
-                let targetKodeAnak = parseInt(santriTerpilih.kode);
 
                 if (nominalDitemukan > 0 && tigaAngkaBelakangUang === targetKodeAnak) {
                     statusTransaksiFinal = "BERHASIL";
@@ -311,12 +321,16 @@
             };
 
             try {
-                const response = await fetch(API_URL, { method: "POST", body: JSON.stringify(payload) });
+                const response = await fetch(API_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payload) 
+                });
                 const hasil = await response.json();
                 alert(hasil.message);
                 location.reload();
             } catch(e) {
-                alert("Koneksi internet bermasalah ke Google Server.");
+                alert("Koneksi internet bermasalah atau respon server terputus.");
                 btn.disabled = false;
                 tampilkanSpinnerGuard(false);
             }
