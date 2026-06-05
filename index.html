@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Konfirmasi Struk Otomatis - YAYASAN YAHYAWIYYAH V2.5</title>
+    <title>SISTEM TRANSFER DIGITAL - PPMU YAHYAWIYYAH V2.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -16,7 +16,7 @@
     <header class="w-full text-center py-2 flex justify-between items-center border-b border-white/10">
         <div class="text-left">
             <h1 class="text-[10px] font-black text-amber-400 tracking-widest uppercase">YAYASAN YAHYAWIYYAH V2.5</h1>
-            <h2 class="text-base font-extrabold text-white tracking-tight leading-tight">GEMINI AI LIGHTWEIGHT ENGINE</h2>
+            <h2 class="text-base font-extrabold text-white tracking-tight leading-tight">SEMANGAT KHIDMAH UMMAH LILLAH</h2>
         </div>
         <button onclick="bukaPanelAdmin()" id="btn-nav-admin" class="bg-white/10 hover:bg-white/20 text-xs font-black px-3 py-2 rounded-xl border border-white/10 transition flex items-center gap-1.5 relative">
             🔐 Admin <span id="badge-antrean-luar" class="hidden bg-rose-600 text-white font-black px-1.5 py-0.5 rounded-full text-[9px] shadow animate-pulse">0</span>
@@ -96,19 +96,43 @@
 
     <footer class="w-full text-[10px] text-emerald-400/40 text-center pt-2 border-t border-white/5 font-bold">&copy; 2026 PPMUY Gemini-AI System</footer>
 
-    <div id="loadingSpamGuard" class="fixed inset-0 bg-slate-950/90 z-[9999] hidden flex-col justify-center items-center text-center p-6">
-        <div class="w-14 h-14 border-4 border-slate-700 border-t-amber-400 rounded-full animate-spin"></div>
-        <div class="mt-4 text-white font-black text-sm tracking-wide" id="spamGuardText">SINKRONISASI SERVER...</div>
+    <div id="loadingSpamGuard" class="fixed inset-0 bg-slate-950/95 z-[9999] hidden flex-col justify-center items-center text-center p-6">
+        <div class="w-14 h-14 border-4 border-slate-800 border-t-amber-400 rounded-full animate-spin"></div>
+        <div class="mt-4 text-amber-400 font-black text-sm tracking-wide" id="spamGuardText">SINKRONISASI SERVER...</div>
         <div class="text-xs text-slate-400 mt-1" id="spamGuardSubtext">Mohon tunggu sejenak.</div>
+        
+        <div id="wrapper-kisah-hikmah" class="mt-6 max-w-sm w-full bg-emerald-950/60 border-l-4 border-amber-400 p-4 rounded-xl text-left hidden">
+            <span class="text-[10px] font-black text-amber-400 tracking-wider uppercase block mb-1">📖 Lembar Kisah Hikmah Islami:</span>
+            <p id="label-kisah-teks" class="text-xs text-slate-200 font-medium italic leading-relaxed">Memuat lembar kisah hikmah dari server...</p>
+        </div>
     </div>
 
     <script>
+        // Memicu Spinner Loading Sekaligus Mengambil Data Kisah Hikmah Acak
         function tampilkanSpinnerGuard(show, text = "", subtext = "") {
             const guard = document.getElementById('loadingSpamGuard');
+            const kisahBox = document.getElementById('wrapper-kisah-hikmah');
+            
             if(text) document.getElementById('spamGuardText').innerText = text;
             if(subtext) document.getElementById('spamGuardSubtext').innerText = subtext;
-            if (show) { guard.classList.remove('hidden'); guard.classList.add('flex'); } 
-            else { guard.classList.add('hidden'); guard.classList.remove('flex'); }
+            
+            if (show) { 
+                guard.classList.remove('hidden'); guard.classList.add('flex'); 
+                
+                // Tarik data Kisah Islami dari Spreadsheet
+                fetch(`${API_URL}?aksi=ambilKisahIslami`)
+                .then(r => r.json())
+                .then(res => {
+                    if(res && res.status === "success" && res.kisah) {
+                        kisahBox.classList.remove('hidden');
+                        document.getElementById('label-kisah-teks').innerText = res.kisah;
+                    } else { kisahBox.classList.add('hidden'); }
+                }).catch(() => { kisahBox.classList.add('hidden'); });
+
+            } else { 
+                guard.classList.add('hidden'); guard.classList.remove('flex'); 
+                kisahBox.classList.add('hidden');
+            }
         }
 
         window.onload = async function() {
@@ -171,7 +195,6 @@
             cekValiditasInputUser();
         }
 
-        // FEATURE BARU: DOWNSIZE COMPRESS IMAGE AGAR RINGAN & TIDAK TIMEOUT
         function prosesKompresiGambar(input) {
             if(input.files.length === 0) return;
             tampilkanSpinnerGuard(true, "MEMBACA GAMBAR...", "Mengompresi dokumen agar hemat kuota...");
@@ -185,15 +208,13 @@
                 img.onload = function() {
                     const canvas = document.getElementById('canvas-kompresor');
                     const ctx = canvas.getContext('2d');
-                    
-                    // Set resolusi maksimal lebar 800px (Sangat cukup & tajam untuk AI)
                     const maxW = 800;
                     const scale = maxW / img.width;
                     canvas.width = maxW;
                     canvas.height = img.height * scale;
                     
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    fileGambarKompresiBase64 = canvas.toDataURL('image/jpeg', 0.75); // Kompresi kualitas 75%
+                    fileGambarKompresiBase64 = canvas.toDataURL('image/jpeg', 0.75);
                     
                     document.getElementById('icon-upload').innerText = "✅";
                     document.getElementById('text-upload-label').innerText = "Struk Siap Dikirim!";
@@ -214,12 +235,11 @@
             const inputManualUang = document.getElementById('nominal-manual-user').value;
             
             btn.disabled = true;
-            tampilkanSpinnerGuard(true, "MENGIRIM KE GEMINI AI...", "Menganalisis teks struk transfer secara realtime...");
+            tampilkanSpinnerGuard(true, "MENGIRIM DATA...", "Menyimpan berkas aman tanpa antrean kritis...");
 
             let nominalKetikManual = parseInt(inputManualUang.replace(/[^0-9]/g, "")) || 0;
 
             try {
-                // FIXED CRITICAL LINE V2.5 (Bebas dari Typo maut)
                 const payload = {
                     aksi: "simpanTransaksiOtomatisPenuh",
                     nik: santriTerpilih.nik,
@@ -242,7 +262,6 @@
             } catch(e) { alert("Terjadi gangguan jaringan."); btn.disabled = false; tampilkanSpinnerGuard(false); }
         }
 
-        // PANEL KENDALI ADMIN FUNCTIONS
         function bukaPanelAdmin() {
             let pass = prompt("Masukkan PIN:");
             if (pass === PIN_ADMIN_SYSTEM) { localStorage.setItem("admin_logged_in_permanen_v2", "true"); bukaPanelAdminTanPop(); }
@@ -256,7 +275,14 @@
             loopAdmin = setInterval(pullDataAdminDariServer, 8000);
         }
         function keluarPanelAdminSadar() { localStorage.removeItem("admin_logged_in_permanen_v2"); location.reload(); }
-        function gantiTabAdmin(t) { tabAktifAdmin = t; renderVisualListAdmin(); }
+        
+        function gantiTabAdmin(t) { 
+            tabAktifAdmin = t; 
+            document.getElementById('tab-btn-antrean').className = t === 'ANTREAN' ? "w-1/2 text-center py-2 text-xs font-black rounded-lg transition-all bg-emerald-700 text-white flex justify-center items-center gap-1" : "w-1/2 text-center py-2 text-xs font-black text-slate-400 rounded-lg transition-all hover:text-white";
+            document.getElementById('tab-btn-log').className = t === 'LOG' ? "w-1/2 text-center py-2 text-xs font-black rounded-lg transition-all bg-emerald-700 text-white flex justify-center items-center gap-1" : "w-1/2 text-center py-2 text-xs font-black text-slate-400 rounded-lg transition-all hover:text-white";
+            renderVisualListAdmin(); 
+        }
+
         async function pullDataAdminDariServer() {
             if (adminSedangNgetikUang) return;
             try {
@@ -271,31 +297,97 @@
                 }
             } catch(e) {}
         }
+
         function tanganiKetikanUangAdmin(i) { let m = i.value.replace(/[^0-9]/g, ""); i.value = m !== "" ? parseInt(m).toLocaleString('id-ID').replace(/,/g, ".") : ""; }
         
+        // ENGINE DETEKSI DUPLIKAT AI + SKEMA ANTI HUMAN ERROR VISUAL
         function renderVisualListAdmin() {
             if (adminSedangNgetikUang) return;
             const listContainer = document.getElementById('list-container-admin'); listContainer.innerHTML = "";
+            
             if(tabAktifAdmin === "ANTREAN") {
                 if(cacheAntreanAdmin.length === 0) { listContainer.innerHTML = `<div class="text-center text-xs text-slate-400 py-12">🎉 Antrean Bersih!</div>`; return; }
+                
                 cacheAntreanAdmin.forEach(t => {
                     let userMeta = dbSantri.find(s => s.nik === t.nik) || { status_role: "SANTRI", kode: 0 };
-                    const div = document.createElement('div'); div.className = "bg-slate-900/90 border border-white/10 p-3 rounded-xl space-y-2.5 shadow-md";
+                    const div = document.createElement('div'); 
+                    div.id = `card-admin-trx-${t.id_trx}`;
+                    div.className = "bg-slate-900/90 border border-white/10 p-3 rounded-xl space-y-2.5 shadow-md";
+                    
+                    let kontenAksiHtml = "";
+                    let alertHeaderHtml = `<div><h4 class="text-xs font-black text-white leading-tight">${t.nama}</h4><span class="text-[9px] text-amber-400 block font-bold">⏳ Catatan: ${t.alasan_pending}</span></div>`;
+
+                    // EVALUASI APAKAH DATA TERKENA PROTEKSI BLOKIR DUPLIKAT AI HARD
+                    if(t.alasan_pending && (t.alasan_pending.includes("BLOKIR HARD") || t.alasan_pending.includes("DUPLIKAT"))) {
+                        alertHeaderHtml = `<div><h4 class="text-xs font-black text-white leading-tight">${t.nama}</h4><span class="text-[10px] bg-red-950/80 border border-red-500/30 p-2 rounded-lg text-red-400 block font-black mt-1 leading-normal">🚨 ${t.alasan_pending}</span></div>`;
+                        
+                        // KUNCI TOMBOL ACC, PIN DIAKALI SEHINGGA TIDAK PERLU KETIK PIN LAGI
+                        kontenAksiHtml = `
+                            <div class="grid grid-columns-2 flex gap-2">
+                                <button onclick="prosesTolakKecuranganTanpaPin('${t.id_trx}')" class="w-2/3 bg-red-600 text-white font-black text-xs py-2.5 rounded-lg hover:bg-red-500 transition">🔴 TOLAK FRAUD</button>
+                                <button onclick="batalProsesSecaraVisual('${t.id_trx}')" class="w-1/3 bg-slate-700 text-white font-black text-xs py-2.5 rounded-lg hover:bg-slate-600 transition">⚪ CANCEL</button>
+                            </div>`;
+                    } else {
+                        // JIKA TRANSAKSI NORMAL SEPERTI BIASA
+                        kontenAksiHtml = `
+                            <div class="space-y-1"><input type="text" id="fee-koreksi-${t.id_trx}" value="${t.nominal_total.toLocaleString('id-ID').replace(/,/g, ".")}" oninput="tanganiKetikanUangAdmin(this)" onfocus="adminSedangNgetikUang=true" onblur="adminSedangNgetikUang=false" placeholder="Ketik nominal..." class="w-full bg-slate-950 border border-white/20 rounded-lg px-3 py-2.5 font-black text-amber-400 text-center text-base"></div>
+                            <div class="flex gap-2"><button onclick="prosesSetujuAdmin('${t.id_trx}', '${userMeta.status_role}', ${userMeta.kode})" class="w-full bg-emerald-600 text-white font-black text-xs py-2.5 rounded-lg">✓ ACC REKAP</button></div>`;
+                    }
+
                     div.innerHTML = `
-                        <div><h4 class="text-xs font-black text-white leading-tight">${t.nama}</h4><span class="text-[9px] text-rose-400 block font-bold">⚠️ ${t.alasan_pending}</span></div>
-                        <a href="${t.link_struk}" target="_blank" class="w-full bg-slate-950 p-3 rounded-lg border border-white/10 text-xs font-bold text-amber-400 block text-center">🔎 BUKA STRUK ASLI</a>
-                        <div class="space-y-1"><input type="text" id="fee-koreksi-${t.id_trx}" oninput="tanganiKetikanUangAdmin(this)" onfocus="adminSedangNgetikUang=true" onblur="adminSedangNgetikUang=false" placeholder="Ketik nominal..." class="w-full bg-slate-950 border border-white/20 rounded-lg px-3 py-2.5 font-black text-amber-400 text-center text-base"></div>
-                        <div class="flex gap-2"><button onclick="prosesSetujuAdmin('${t.id_trx}', '${userMeta.status_role}', ${userMeta.kode})" class="w-full bg-emerald-600 text-white font-black text-xs py-2.5 rounded-lg">✓ ACC REKAP</button></div>`;
+                        ${alertHeaderHtml}
+                        <a href="${t.link_struk}" target="_blank" class="w-full bg-slate-950 p-2.5 rounded-lg border border-white/10 text-xs font-bold text-amber-400 block text-center hover:bg-slate-900 transition">🔎 BUKA STRUK ASLI</a>
+                        ${kontenAksiHtml}
+                    `;
                     listContainer.appendChild(div);
                 });
             } else {
+                // LOG RIWAYAT SEKARANG SUDAH AKTIF MENAMPILKAN TRANSAKSI LENGKAP
+                if(cacheRiwayatAdmin.length === 0) { listContainer.innerHTML = `<div class="text-center text-xs text-slate-400 py-12">Belum ada riwayat pembukuan.</div>`; return; }
+                
                 cacheRiwayatAdmin.forEach(t => {
-                    const div = document.createElement('div'); div.className = "bg-slate-900/40 border border-white/5 p-2.5 rounded-lg text-xs flex justify-between items-center";
-                    div.innerHTML = `<div><span>${t.nama}</span></div> <b class="text-emerald-400">Rp ${parseInt(t.nominal_total).toLocaleString('id-ID')}</b>`;
+                    const div = document.createElement('div'); 
+                    const warnaBadge = t.status === "DITOLAK" ? "text-red-400 bg-red-950/30 border-red-900" : "text-emerald-400 bg-emerald-950/30 border-emerald-900";
+                    div.className = `border p-2.5 rounded-xl text-xs flex justify-between items-center bg-slate-900/30 border-white/5`;
+                    div.innerHTML = `
+                        <div>
+                            <span class="block font-black text-white">${t.nama.toLowerCase()}</span>
+                            <span class="text-[9px] px-1.5 py-0.2 border rounded font-bold uppercase inline-block mt-1 ${warnaBadge}">${t.status}</span>
+                        </div> 
+                        <b class="text-amber-400 text-sm font-black">Rp ${parseInt(t.nominal_total || 0).toLocaleString('id-ID')}</b>`;
                     listContainer.appendChild(div);
                 });
             }
         }
+
+        function batalProsesSecaraVisual(idTrx) {
+            const card = document.getElementById(`card-admin-trx-${idTrx}`);
+            if(card) {
+                card.remove();
+                let bDalam = document.getElementById('badge-antrean-dalam');
+                let jml = parseInt(bDalam.innerText || 0) - 1;
+                if(jml > 0) bDalam.innerText = jml; else bDalam.classList.add('hidden');
+            }
+        }
+
+        async function prosesTolakKecuranganTanpaPin(idTrx) {
+            const tanya = confirm("Yakin Mas Admin?");
+            if(!tanya) return;
+
+            tampilkanSpinnerGuard(true, "MEMBATALKAN...", "Menolak berkas ilegal...");
+            try {
+                await fetch(API_URL, { 
+                    method: "POST", 
+                    body: JSON.stringify({ 
+                        aksi: "tolakTransaksiOlehAdmin", 
+                        id_transaksi: idTrx, 
+                        pin_admin: PIN_ADMIN_SYSTEM // PIN disuplai sistem di latar belakang
+                    })
+                });
+                pullDataAdminDariServer();
+            } catch(e) {} finally { tampilkanSpinnerGuard(false); }
+        }
+
         async function prosesSetujuAdmin(id, role, kd) {
             const val = document.getElementById(`fee-koreksi-${id}`).value.replace(/[^0-9]/g, "");
             if(!val) return alert("Isi nominal!"); adminSedangNgetikUang = false;
