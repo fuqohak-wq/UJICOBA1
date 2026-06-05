@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Konfirmasi Struk Otomatis - YAYASAN YAHYAWIYYAH V2</title>
+    <title>Sistem Konfirmasi Struk Otomatis - YAYASAN YAHYAWIYYAH V2.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=600;700;800;900&display=swap" rel="stylesheet">
@@ -19,8 +19,8 @@
 
     <header class="w-full text-center py-2 flex justify-between items-center border-b border-white/10">
         <div class="text-left">
-            <h1 class="text-[10px] font-black text-amber-400 tracking-widest uppercase">YAYASAN YAHYAWIYYAH V2</h1>
-            <h2 class="text-base font-extrabold text-white tracking-tight leading-tight">UJI COBA PARALEL</h2>
+            <h1 class="text-[10px] font-black text-amber-400 tracking-widest uppercase">YAYASAN YAHYAWIYYAH V2.1</h1>
+            <h2 class="text-base font-extrabold text-white tracking-tight leading-tight">UJI COBA PARALEL TANGKAS</h2>
         </div>
         <button onclick="bukaPanelAdmin()" id="btn-nav-admin" class="bg-white/10 hover:bg-white/20 text-xs font-black px-3 py-2 rounded-xl border border-white/10 transition flex items-center gap-1.5 relative">
             🔐 Admin 
@@ -87,13 +87,12 @@
         </div>
     </main>
 
-    <!-- KANVAS TERSEMBUNYI UNTUK PROSES OLAH GAMBAR (ANTI-CRASH) -->
     <canvas id="canvas-preprocessing" class="hidden"></canvas>
 
     <main id="panel-admin" class="w-full flex-1 flex flex-col my-3 space-y-3 hidden">
         <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-white/5">
             <div class="flex items-center gap-1.5">
-                <span class="text-xs font-black uppercase text-amber-400 tracking-wider">🎛️ PANEL KENDALI V2</span>
+                <span class="text-xs font-black uppercase text-amber-400 tracking-wider">🎛️ PANEL KENDALI V2.1</span>
                 <span id="indicator-refresh" class="text-[8px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">Memonitor</span>
             </div>
             <button onclick="keluarPanelAdminSadar()" class="text-[11px] text-rose-400 font-extrabold hover:underline">Keluar</button>
@@ -116,14 +115,12 @@
         &copy; 2026 PPMUY Dual-Spreadsheet Mirroring System
     </footer>
 
-    <!-- POPUP SPAM GUARD / WAITING BLOCK -->
     <div id="loadingSpamGuard" class="fixed inset-0 bg-slate-950/90 z-[9999] hidden flex-col justify-center items-center text-center p-6">
         <div class="w-14 h-14 border-4 border-slate-700 border-t-amber-400 rounded-full animate-spin"></div>
         <div class="mt-4 text-white font-black text-sm tracking-wide" id="spamGuardText">SINKRONISASI SERVER...</div>
         <div class="text-xs text-slate-400 mt-1" id="spamGuardSubtext">Mohon tunggu sejenak.</div>
     </div>
 
-    <!-- MODAL PREVIEW STRUK -->
     <div id="modalPreviewStruk" class="fixed inset-0 bg-slate-950/95 z-[9998] hidden flex-col justify-between p-2">
         <div class="bg-slate-900 text-slate-100 rounded-2xl w-full max-w-md mx-auto flex flex-col h-[90vh] shadow-2xl border border-white/10">
             <div class="px-4 py-3 border-b border-white/10 bg-slate-950 flex justify-between items-center shrink-0 rounded-t-2xl">
@@ -172,7 +169,7 @@
 
         window.onload = async function() {
             if (localStorage.getItem("admin_logged_in_permanen_v2") === "true") { bukaPanelAdminTanPop(); }
-            tampilkanSpinnerGuard(true, "MEMUAT ENGINE V2...", "Mengunduh database santri & ustadz...");
+            tampilkanSpinnerGuard(true, "MEMUAT ENGINE V2.1...", "Mengunduh database santri & ustadz...");
             try {
                 const res = await fetch(API_URL);
                 const hasil = await res.json();
@@ -182,7 +179,7 @@
                 loopBadgeLuar = setInterval(syncBadgeLuarSaja, 15000);
             } catch(e) { 
                 tampilkanSpinnerGuard(false);
-                alert("Gagal terhubung ke Server V2.");
+                alert("Gagal terhubung ke Server V2.1.");
             }
         };
 
@@ -256,9 +253,9 @@
             }
         }
 
-        // ========================================================
-        // MODUL ENGINE PREPROCESSING (RESIZE, GRAYSCALE, CONTRAST)
-        // ========================================================
+        // =============================================================
+        // BARU V2.1: ENGINE PREPROCESSING ADAPTIF KONTRAS TINGGI
+        // =============================================================
         function optimalkanGambarUntukOcr(fileObj) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -270,7 +267,7 @@
                         const canvas = document.getElementById('canvas-preprocessing');
                         const ctx = canvas.getContext('2d');
                         
-                        let targetWidth = 1000;
+                        let targetWidth = 1200; // resolusi dinaikkan sedikit agar tulisan kecil terbaca
                         let skala = targetWidth / img.width;
                         let targetHeight = img.height * skala;
                         
@@ -282,21 +279,26 @@
                         let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         let data = imgData.data;
                         
+                        // Naikkan kontras secara eksponensial untuk memisahkan teks dari logo watermark background
+                        let faktorKontras = 2.5; 
                         for (let i = 0; i < data.length; i += 4) {
                             let r = data[i];
                             let g = data[i+1];
                             let b = data[i+2];
                             
-                            let abuAbu = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                            let hasilFilter = abuAbu > 130 ? 255 : 0;
+                            let abu = 0.299 * r + 0.587 * g + 0.114 * b;
                             
-                            data[i] = hasilFilter;     
-                            data[i+1] = hasilFilter;   
-                            data[i+2] = hasilFilter;   
+                            // Transformasi kontras adaptif
+                            let p = (abu - 128) * faktorKontras + 128;
+                            let vFinal = p > 255 ? 255 : (p < 0 ? 0 : p);
+                            
+                            data[i] = vFinal;     
+                            data[i+1] = vFinal;   
+                            data[i+2] = vFinal;   
                         }
                         
                         ctx.putImageData(imgData, 0, 0);
-                        resolve(canvas.toDataURL('image/jpeg', 0.8));
+                        resolve(canvas.toDataURL('image/jpeg', 0.9));
                     };
                 };
             });
@@ -319,7 +321,7 @@
         }
 
         // ==========================================
-        // ALUR EKSEKUSI ENGINE ULTRA UTAMA (FIXED)
+        // ALUR EKSEKUSI ENGINE ULTRA UTAMA V2.1
         // ==========================================
         async function prosesSuperOcrEngine() {
             const btn = document.getElementById('btn-submit');
@@ -327,7 +329,7 @@
             const inputManualUang = document.getElementById('nominal-manual-user').value;
             
             btn.disabled = true; 
-            tampilkanSpinnerGuard(true, "MENGOPTIMALKAN STRUK...", "Mengecilkan resolusi & menajamkan huruf teks..."); 
+            tampilkanSpinnerGuard(true, "MENGOPTIMALKAN TEKS STRUK...", "Membersihkan watermark background bank..."); 
 
             let nominalKetikManual = parseInt(inputManualUang.replace(/[^0-9]/g, "")) || 0;
             let base64AsliUntukDrive = "";
@@ -343,33 +345,56 @@
                 base64AsliUntukDrive = await bacaFileSebagaiBase64Asli(fileInput.files[0]);
                 base64HasilKompresiOcr = await optimalkanGambarUntukOcr(fileInput.files[0]);
 
-                tampilkanSpinnerGuard(true, "MEMBACA DATA STRUK...", "Engine OCR menganalisis teks nominal...");
+                tampilkanSpinnerGuard(true, "MEMPROSES OCR TANGKAS...", "Mengekstrak deretan teks finansial...");
 
                 const worker = await Tesseract.createWorker('ind', 1);
+                // Batasi pembacaan karakter hanya pada angka dan karakter alfabet penunjang utama
+                await worker.setParameters({
+                    tessedit_char_whitelist: '0123456789RpP.BbiIomMvVlLtTaAnNsSkKgeEruUxdD '
+                });
                 const ret = await worker.recognize(base64HasilKompresiOcr);
                 let teks = ret.data.text || "";
                 await worker.terminate();
 
-                let teksBersih = teks.toUpperCase().replace(/[,.]/g, ''); 
-                let matchesNominal = teksBersih.match(/\d{5,7}/g) || [];
-                
-                for(let m of matchesNominal) {
-                    let v = parseInt(m);
-                    if (v >= 10000 && v <= 5000000) { 
-                        if (v % 1000 === targetKodeAnak) { 
+                // BARU V2.1: Strategi pembersihan teks ekstra radikal (Atasi masalah "Rp200.388")
+                let teksBaris = teks.toUpperCase().split('\n');
+                for (let baris of teksBaris) {
+                    // Buang tulisan RP, titik, spasi untuk isolasi angka murni per baris
+                    let barisHanyaAngka = baris.replace(/RP/g, '').replace(/[^0-9]/g, '');
+                    
+                    if (barisHanyaAngka.length >= 5 && barisHanyaAngka.length <= 8) {
+                        let v = parseInt(barisHanyaAngka);
+                        if (v % 1000 === targetKodeAnak && v >= 10000 && v <= 5000000) {
                             nominalDitemukanOCR = v;
-                            break; 
+                            break;
                         }
                     }
                 }
-                let matchesRef = teksBersih.match(/\d{8,20}/g) || [];
+
+                // Jika ekstraksi baris gagal, pakai fallback regex global toleran
+                if (nominalDitemukanOCR === 0) {
+                    let teksBersihGlobal = teks.toUpperCase().replace(/[^0-9]/g, ' ');
+                    let kumpulanAngka = teksBersihGlobal.split(/\s+/);
+                    for (let itemAngka of kumpulanAngka) {
+                        if (itemAngka.length >= 5 && itemAngka.length <= 8) {
+                            let v = parseInt(itemAngka);
+                            if (v % 1000 === targetKodeAnak) {
+                                nominalDitemukanOCR = v;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                let teksRefSaring = teks.toUpperCase().replace(/[^0-9]/g, '');
+                let matchesRef = teksRefSaring.match(/\d{10,20}/g) || [];
                 if(matchesRef.length > 0) noRefDitemukan = matchesRef[0];
 
             } catch(ocrErr) {
                 nominalDitemukanOCR = 0; 
             }
 
-            // --- VALIDASI FILTER SUPER AMAN ---
+            // --- VALIDASI FILTER AKHIR ---
             let tigaAngkaBelakangOCR = nominalDitemukanOCR % 1000;
             let tigaAngkaBelakangManual = nominalKetikManual % 1000;
 
@@ -385,9 +410,8 @@
                 alasanSistemCuriga = `Angka unik salah. Input manual: Rp ${nominalKetikManual.toLocaleString('id-ID')} (Kode santri wajib: +${targetKodeAnak})`;
             }
 
-            tampilkanSpinnerGuard(true, "MENGIRIM LOG V2...", "Menulis data sinkronisasi...");
+            tampilkanSpinnerGuard(true, "MENYIMPAN LAPORAN...", "Mengirim data ke database master...");
 
-            // PERBAIKAN FATAL: Nama variabel disesuaikan agar tidak typo & macet loading lagi
             const payload = {
                 aksi: "simpanTransaksiOtomatisPenuh",
                 nik: santriTerpilih.nik,
@@ -421,10 +445,10 @@
         }
 
         // ==========================================
-        // FITUR PANEL KENDALI ADMIN
+        // PANEL KENDALI ADMIN
         // ==========================================
         function bukaPanelAdmin() {
-            let pass = prompt("Masukkan PIN Keamanan Admin V2:");
+            let pass = prompt("Masukkan PIN Keamanan Admin V2.1:");
             if (pass === PIN_ADMIN_SYSTEM) {
                 localStorage.setItem("admin_logged_in_permanen_v2", "true");
                 bukaPanelAdminTanPop();
