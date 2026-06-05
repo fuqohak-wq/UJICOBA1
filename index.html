@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Konfirmasi Struk Otomatis - YAYASAN YAHYAWIYYAH V2.2</title>
+    <title>Sistem Konfirmasi Struk Otomatis - YAYASAN YAHYAWIYYAH V2.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=600;700;800;900&display=swap" rel="stylesheet">
@@ -16,8 +16,8 @@
 
     <header class="w-full text-center py-2 flex justify-between items-center border-b border-white/10">
         <div class="text-left">
-            <h1 class="text-[10px] font-black text-amber-400 tracking-widest uppercase">YAYASAN YAHYAWIYYAH V2.2</h1>
-            <h2 class="text-base font-extrabold text-white tracking-tight leading-tight">UJI COBA PARALEL TANGKAS</h2>
+            <h1 class="text-[10px] font-black text-amber-400 tracking-widest uppercase">YAYASAN YAHYAWIYYAH V2.3</h1>
+            <h2 class="text-base font-extrabold text-white tracking-tight leading-tight">SISTEM SAPU JAGAT ANTI-MISS</h2>
         </div>
         <button onclick="bukaPanelAdmin()" id="btn-nav-admin" class="bg-white/10 hover:bg-white/20 text-xs font-black px-3 py-2 rounded-xl border border-white/10 transition flex items-center gap-1.5 relative">
             🔐 Admin <span id="badge-antrean-luar" class="hidden bg-rose-600 text-white font-black px-1.5 py-0.5 rounded-full text-[9px] shadow animate-pulse">0</span>
@@ -86,7 +86,7 @@
     <main id="panel-admin" class="w-full flex-1 flex flex-col my-3 space-y-3 hidden">
         <div class="flex justify-between items-center bg-slate-900/60 p-3 rounded-xl border border-white/5">
             <div class="flex items-center gap-1.5">
-                <span class="text-xs font-black uppercase text-amber-400 tracking-wider">🎛️ PANEL KENDALI V2.2</span>
+                <span class="text-xs font-black uppercase text-amber-400 tracking-wider">🎛️ PANEL KENDALI V2.3</span>
                 <span id="indicator-refresh" class="text-[8px] bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">Memonitor</span>
             </div>
             <button onclick="keluarPanelAdminSadar()" class="text-[11px] text-rose-400 font-extrabold hover:underline">Keluar</button>
@@ -146,7 +146,7 @@
 
         window.onload = async function() {
             if (localStorage.getItem("admin_logged_in_permanen_v2") === "true") { bukaPanelAdminTanPop(); }
-            tampilkanSpinnerGuard(true, "MEMUAT ENGINE V2.2...", "Mengunduh database santri...");
+            tampilkanSpinnerGuard(true, "MEMUAT ENGINE V2.3...", "Mengunduh database...");
             try {
                 const res = await fetch(API_URL);
                 const hasil = await res.json();
@@ -181,7 +181,7 @@
                 filtered.forEach(s => {
                     const btn = document.createElement('button');
                     btn.className = "w-full text-left bg-slate-50 p-3 rounded-xl flex justify-between items-center mt-1 border border-slate-200 text-slate-900";
-                    btn.innerHTML = `<div><span class="block text-sm font-black">${s.nama}</span><span class="block text-[10px] text-slate-500 uppercase font-bold">${s.status_role}</span></div> <span class="bg-emerald-800 text-white font-black text-[10px] px-2 py-0.5 rounded">KODE: ${s.kode ? s.kode.toString().padStart(3,'0') : '000'}</span>`;
+                    btn.innerHTML = `<div><span class="block text-sm font-black">${s.nama}</span><span class="block text-[10px] text-slate-500 uppercase font-bold">${s.status_role}</span></div> <span class="bg-emerald-800 text-white font-black text-[10px] px-2 py-0.5 rounded">KODE: ${s.kode ? s.kode.toString() : '0'}</span>`;
                     btn.onclick = () => pilihSantri(s);
                     resDiv.appendChild(btn);
                 });
@@ -196,7 +196,7 @@
             document.getElementById('area-tombol-submit').classList.remove('hidden');
             document.getElementById('target-nama').innerText = santri.nama;
             document.getElementById('label-role-akun').innerText = "Status: " + santri.status_role;
-            document.getElementById('target-kode-unik').innerText = santri.kode ? santri.kode.toString().padStart(3, '0') : "000";
+            document.getElementById('target-kode-unik').innerText = santri.kode ? santri.kode.toString() : "0";
             cekValiditasInputUser();
         }
 
@@ -221,9 +221,6 @@
             btn.disabled = !(fileInput.files.length > 0 && nominalInput.trim() !== "");
         }
 
-        // =============================================================
-        // REVISI V2.2: SEPARASI HITAM PUTIH ADAPTIF UNTUK TEKS BIRU
-        // =============================================================
         function optimalkanGambarUntukOcr(fileObj) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -241,10 +238,9 @@
                         let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         let data = imgData.data;
                         
-                        // Set Threshold Hitam-Putih Tajam Khusus Struk Digital
                         for (let i = 0; i < data.length; i += 4) {
                             let r = data[i], g = data[i+1], b = data[i+2];
-                            let v = (0.2126*r + 0.7152*g + 0.0722*b >= 140) ? 255 : 0;
+                            let v = (0.2126*r + 0.7152*g + 0.0722*b >= 135) ? 255 : 0;
                             data[i] = data[i+1] = data[i+2] = v;
                         }
                         ctx.putImageData(imgData, 0, 0);
@@ -266,10 +262,12 @@
             let base64AsliUntukDrive = "";
             let base64HasilKompresiOcr = "";
             let statusTransaksiFinal = "PENDING"; 
-            let alasanSistemCuriga = "Pending: Bukti transfer tidak sinkron dengan sistem otomatis.";
+            let alasanSistemCuriga = "Pending: Bukti tidak sinkron.";
             let ocrMenemukanCocok = false;
             let noRefDitemukan = "REF-V2-" + Date.now().toString().slice(-6);
-            let targetKodeAnakString = (santriTerpilih.kode || 0).toString().padStart(3, '0');
+            
+            // Ambil target kode murni (Contoh: "388")
+            let targetKodeMurniString = (santriTerpilih.kode || 0).toString();
 
             try {
                 base64AsliUntukDrive = await new Promise((res) => {
@@ -283,38 +281,38 @@
                 let teksMentahOcr = ret.data.text || "";
                 await worker.terminate();
 
-                // BARU V2.2: METODE STRATEGI MATA ELANG (Cari eksistensi akhiran teks langsung)
-                let teksIsolasiAngka = teksMentahOcr.toUpperCase().replace(/[^0-9]/g, ' ');
-                let barisanAngka = teksIsolasiAngka.split(/\s+/);
+                // =============================================================
+                // CRITICAL FIX V2.3: LOGIKA SAPU JAGAT (ANTI CHAR GAP / SPASI GAIB)
+                // =============================================================
+                // Bersihkan semua karakter non-angka di seluruh dokumen struk
+                let teksKumpulanAngkaMurni = teksMentahOcr.replace(/[^0-9]/g, '');
+                let stringManualUangMurni = nominalKetikManual.toString();
 
-                for (let segmen of barisanAngka) {
-                    if (segmen.length >= 5 && segmen.endsWith(targetKodeAnakString)) {
-                        let nilaiNominal = parseInt(segmen);
-                        if (nilaiNominal >= 10000 && nilaiNominal <= 5000000) {
-                            ocrMenemukanCocok = true;
-                            nominalKetikManual = nilaiNominal; // Bypass pakai data OCR yang 100% akurat
-                            break;
-                        }
-                    }
+                // Cek 1: Apakah teks angka gabungan mengandung nominal ketik manual?
+                // Cek 2: Apakah nominal ketik manual berekor kode unik & kode itu ada di struk?
+                if (teksKumpulanAngkaMurni.includes(stringManualUangMurni) && stringManualUangMurni.endsWith(targetKodeMurniString)) {
+                    ocrMenemukanCocok = true;
+                } else if (teksKumpulanAngkaMurni.includes(targetKodeMurniString) && stringManualUangMurni.endsWith(targetKodeMurniString)) {
+                    // Proteksi tambahan: Jika nominal utuh terpecah titik, tapi angka uniknya berhasil ditemukan di dalam struk
+                    ocrMenemukanCocok = true;
                 }
 
-                let teksRefSaring = teksMentahOcr.toUpperCase().replace(/[^0-9]/g, '');
-                let matchesRef = teksRefSaring.match(/\d{10,20}/g) || [];
+                let matchesRef = teksKumpulanAngkaMurni.match(/\d{10,20}/g) || [];
                 if(matchesRef.length > 0) noRefDitemukan = matchesRef[0];
 
             } catch(e) { ocrMenemukanCocok = false; }
 
-            // PENENTUAN STATUS AKHIR FILTER V2.2
+            // KEPUTUSAN FINAL FILTER SAPU JAGAT V2.3
             let stringManualUang = nominalKetikManual.toString();
             if (ocrMenemukanCocok) {
                 statusTransaksiFinal = "BERHASIL";
                 alasanSistemCuriga = "";
-            } else if (stringManualUang.endsWith(targetKodeAnakString)) {
+            } else if (stringManualUang.endsWith(targetKodeMurniString)) {
                 statusTransaksiFinal = "PENDING";
-                alasanSistemCuriga = `OCR Miss, namun klaim manual wali santri valid berakhiran +${targetKodeAnakString}. Butuh 1x klik ACC Admin.`;
+                alasanSistemCuriga = `OCR Miss, namun klaim manual wali santri valid berakhiran +${targetKodeMurniString}. Butuh 1x klik ACC Admin.`;
             } else {
                 statusTransaksiFinal = "PENDING";
-                alasanSistemCuriga = `Angka unik salah. Wajib berakhiran +${targetKodeAnakString}`;
+                alasanSistemCuriga = `Angka unik salah. Wajib berakhiran +${targetKodeMurniString}`;
             }
 
             tampilkanSpinnerGuard(true, "MENYIMPAN LAPORAN...", "Mengirim lembar berkas ke Spreadsheet...");
@@ -324,7 +322,7 @@
                 nik: santriTerpilih.nik,
                 nama: santriTerpilih.nama,
                 status_role: santriTerpilih.status_role,
-                kode_unik_anak: parseInt(targetKodeAnakString),
+                kode_unik_anak: parseInt(targetKodeMurniString),
                 nominal_total: nominalKetikManual, 
                 status_final: statusTransaksiFinal, 
                 alasan_pending: alasanSistemCuriga, 
