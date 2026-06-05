@@ -74,8 +74,12 @@
             gap: 8px;
         }
         .tab-pending {
-            background-color: #096343;
-            color: white;
+            background-color: #112a20;
+            color: #a4b0be;
+        }
+        .tab-active {
+            background-color: #096343 !important;
+            color: white !important;
         }
         .tab-badge {
             background-color: #ff3333;
@@ -85,10 +89,6 @@
             font-size: 11px;
             margin-left: 3px;
         }
-        .tab-riwayat {
-            background-color: #112a20;
-            color: #a4b0be;
-        }
         .card {
             background-color: #0a1f18;
             border: 1px solid #123327;
@@ -96,12 +96,28 @@
             padding: 18px;
             margin-bottom: 15px;
         }
+        .card-riwayat {
+            background-color: #11231b;
+            border-left: 4px solid #2ecc71;
+        }
         .card .nama-santri {
             font-size: 18px;
             font-weight: bold;
             margin: 0 0 8px 0;
             color: #ffffff;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .status-lunas { background-color: #2ed573; color: #051d14; }
+        .status-ditolak { background-color: #ff4757; color: white; }
+        
         .alert-box {
             background-color: rgba(255, 51, 51, 0.15);
             border: 1px dashed #ff3333;
@@ -160,7 +176,6 @@
         }
         .btn-acc:hover { background-color: #0b754f; }
         
-        /* Grup Tombol Khusus Fraud */
         .fraud-action-group {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -188,11 +203,56 @@
         }
         .btn-cancel-view:hover { background-color: #777777; }
 
-        .loading {
+        /* AREA LOADING & ENGINE SPINNER ANIMASI */
+        .loading-box {
+            display: none;
             text-align: center;
+            padding: 30px 15px;
+            background-color: #04120e;
+            border-radius: 10px;
+            border: 1px solid #163a2c;
+            margin-bottom: 20px;
+        }
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 5px solid rgba(243, 156, 18, 0.2);
+            border-top: 5px solid #f39c12;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .kisah-container {
+            background-color: #08291d;
+            border-left: 3px solid #f39c12;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: left;
+            margin-top: 15px;
+        }
+        .kisah-header {
+            font-size: 11px;
             color: #f39c12;
             font-weight: bold;
-            padding: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        .kisah-teks {
+            font-size: 13px;
+            color: #e0e0e0;
+            line-height: 1.5;
+            font-style: italic;
+            margin: 0;
+        }
+        .loading-text {
+            color: #f39c12;
+            font-weight: bold;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -210,58 +270,144 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn tab-pending" id="btn-tab-pending" onclick="muatDataAdminSistem()">
+        <button class="tab-btn tab-pending tab-active" id="btn-tab-pending" onclick="switchTab('pending')">
             📥 Antrean Pending <span class="tab-badge" id="badge-count">0</span>
         </button>
-        <button class="tab-btn tab-riwayat" id="btn-tab-riwayat" onclick="alert('Fitur Log Riwayat Standar Aktif')">
+        <button class="tab-btn tab-pending" id="btn-tab-riwayat" onclick="switchTab('riwayat')">
             📊 Log Riwayat
         </button>
     </div>
 
-    <!-- AREA DINAMIS TEMPAT DAFTAR ANTREAN DI-RENDER -->
-    <div id="loading-status" class="loading">Menghubungkan ke Google Sheets...</div>
+    <!-- SPINNER LOADING DENGAN INTEGRASI KISAH ISLAMI -->
+    <div id="loading-status-box" class="loading-box">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loading-message">Menghubungkan ke Google Sheets...</div>
+        <div class="kisah-container" id="box-kisah-islami" style="display:none;">
+            <div class="kisah-header">📖 Sembari Menunggu, Yuk Baca Kisah Hikmah:</div>
+            <p class="kisah-teks" id="teks-kisah">Memuat lembar kisah hikmah dari server...</p>
+        </div>
+    </div>
+
+    <!-- AREA KARTU DATA -->
     <div id="area-antrean-list"></div>
 </div>
 
 <script>
-    // URL WEB APP APPS SCRIPT ASLI REKENING BAPAK
     const URL_GAS_SYSTEM = "https://script.google.com/macros/s/AKfycbzpK04TsH4GJQyWZAHthJ0_lMVZhe_c-CE59biUz4hKREuEPFkv2hBJVq76n2pmNaQ79g/exec"; 
+    
+    let cacheAntrean = [];
+    let currentTab = 'pending';
 
-    // Jalankan otomatis saat web dibuka
-    document.addEventListener("DOMContentLoaded", muatDataAdminSistem);
+    document.addEventListener("DOMContentLoaded", () => {
+        muatDataAdminSistem();
+    });
 
-    function muatDataAdminSistem() {
-        document.getElementById("loading-status").style.display = "block";
+    // Mengubah tampilan Tab Menu secara interaktif
+    function switchTab(targetTab) {
+        currentTab = targetTab;
+        document.getElementById("btn-tab-pending").classList.remove("tab-active");
+        document.getElementById("btn-tab-riwayat").classList.remove("tab-active");
+
+        if(targetTab === 'pending') {
+            document.getElementById("btn-tab-pending").classList.add("tab-active");
+            renderAntreanKeLayar(cacheAntrean);
+        } else {
+            document.getElementById("btn-tab-riwayat").classList.add("tab-active");
+            muatLogRiwayatSistem();
+        }
+    }
+
+    // Tampilkan Spinner Loading beserta Teks Cerita Islami Acak
+    function tampilkanLoading(pesan) {
+        document.getElementById("loading-status-box").style.display = "block";
+        document.getElementById("loading-message").innerText = pesan;
         document.getElementById("area-antrean-list").innerHTML = "";
+        
+        // Panggil Engine Kisah Islami dari Spreadsheet
+        fetch(`${URL_GAS_SYSTEM}?aksi=ambilKisahIslami`)
+        .then(r => r.json())
+        .then(data => {
+            if(data.status === "success" && data.kisah) {
+                document.getElementById("box-kisah-islami").style.display = "block";
+                document.getElementById("teks-kisah").innerText = data.kisah;
+            }
+        }).catch(() => {
+            // Jika sheet kisah kosong/error, sembunyikan kotak tanpa merusak aplikasi
+            document.getElementById("box-kisah-islami").style.display = "none";
+        });
+    }
+
+    function sembunyikanLoading() {
+        document.getElementById("loading-status-box").style.display = "none";
+    }
+
+    // Fungsi Ambil Antrean Pending
+    function muatDataAdminSistem() {
+        tampilkanLoading("Mengunduh antrean transaksi terbaru...");
 
         fetch(`${URL_GAS_SYSTEM}?aksi=ambilDataAdminLengkap`)
         .then(response => response.json())
         .then(res => {
-            document.getElementById("loading-status").style.display = "none";
+            sembunyikanLoading();
             if(res.status === "success") {
-                document.getElementById("badge-count").innerText = res.antrean.length;
-                renderAntreanKeLayar(res.antrean);
+                cacheAntrean = res.antrean || [];
+                document.getElementById("badge-count").innerText = cacheAntrean.length;
+                if(currentTab === 'pending') renderAntreanKeLayar(cacheAntrean);
             } else {
-                document.getElementById("area-antrean-list").innerHTML = `<p style="color:red; text-align:center; padding:10px;">Gagal ambil data: ${res.message}</p>`;
+                document.getElementById("area-antrean-list").innerHTML = `<p style="color:red; text-align:center;">Gagal: ${res.message}</p>`;
             }
         })
         .catch(err => {
-            document.getElementById("loading-status").style.display = "none";
-            document.getElementById("area-antrean-list").innerHTML = `
-                <p style="color:#ff4d4d; text-align:center; font-weight:bold; padding:10px; margin:0;">
-                    Eror Jaringan Server: TypeError: Failed to fetch
-                </p>
-                <p style="color:#aaa; font-size:12px; text-align:center; margin:0;">
-                    Pastikan status Deploy Apps Script Bapak sudah disetel ke akses <b>"Anyone"</b>.
-                </p>
-            `;
+            sembunyikanLoading();
+            document.getElementById("area-antrean-list").innerHTML = `<p style="color:#ff4d4d; text-align:center; font-weight:bold;">Eror Jaringan Server (Failed to fetch)</p>`;
         });
     }
 
+    // KELOLA LOG RIWAYAT TRANSAKSI AKTIF
+    function muatLogRiwayatSistem() {
+        tampilkanLoading("Menyusun log riwayat pembukuan...");
+
+        fetch(`${URL_GAS_SYSTEM}?aksi=ambilLogRiwayatLengkap`)
+        .then(r => r.json())
+        .then(res => {
+            sembunyikanLoading();
+            const kontainer = document.getElementById("area-antrean-list");
+            
+            if(res.status !== "success" || !res.riwayat || res.riwayat.length === 0) {
+                kontainer.innerHTML = `<p style="text-align:center; color:#aaa; padding:20px;">Belum ada riwayat transaksi yang tersimpan.</p>`;
+                return;
+            }
+
+            res.riwayat.forEach(log => {
+                const badgeStatus = log.status === 'LUNAS' || log.status === 'SUCCESS' 
+                    ? `<span class="status-badge status-lunas">✓ Lunas</span>` 
+                    : `<span class="status-badge status-ditolak">🗙 Ditolak</span>`;
+
+                kontainer.innerHTML += `
+                    <div class="card card-riwayat">
+                        <div class="nama-santri">${log.nama.toLowerCase()}</div>
+                        ${badgeStatus}
+                        <div style="font-size: 14px; color: #f39c12; font-weight: bold; margin-bottom: 5px;">
+                            Rp ${Number(log.nominal_total || 0).toLocaleString('id-ID')}
+                        </div>
+                        <div style="font-size: 11px; color: #888;">ID: ${log.id_trx} | Tgl: ${log.tanggal || '-'}</div>
+                    </div>
+                `;
+            });
+        })
+        .catch(err => {
+            sembunyikanLoading();
+            document.getElementById("area-antrean-list").innerHTML = `<p style="color:red; text-align:center;">Gagal mengambil riwayat.</p>`;
+        });
+    }
+
+    // Render Data Antrean Pending ke Layar
     function renderAntreanKeLayar(daftarAntrean) {
         const kontainer = document.getElementById("area-antrean-list");
+        kontainer.innerHTML = "";
+        
         if (daftarAntrean.length === 0) {
-            kontainer.innerHTML = `<p style="text-align:center; color:#a4b0be; padding:20px;">🎉 Semua antrean bersih! Tidak ada transaksi pending.</p>`;
+            kontainer.innerHTML = `<p style="text-align:center; color:#a4b0be; padding:20px;">🎉 Semua antrean bersih!</p>`;
             return;
         }
 
@@ -269,12 +415,7 @@
             let infoBlokirHtml = "";
             let areaKontrolAksiHtml = "";
 
-            // ----------------------------------------------------------------------
-            // EVALUASI STRUK FRAUD / DUPLIKAT (MEMBACA DATA VARIABEL NAMA DARI GAS V3.9)
-            // ----------------------------------------------------------------------
             if (item.alasan_pending && (item.alasan_pending.includes("BLOKIR HARD") || item.alasan_pending.includes("DUPLIKAT"))) {
-                
-                // 1. MEMUNCULKAN NOTIF KEBOCORAN DAN MENAMPILKAN NAMA PEMILIK ASLINYA SECARA JELAS
                 infoBlokirHtml = `
                     <div class="alert-box">
                         ⚠️ 🚨 <b>SISTEM MENGUNCI OTOMATIS:</b><br>
@@ -282,10 +423,10 @@
                     </div>
                 `;
 
-                // 2. KUNCI TOMBOL ACC & SEDIAKAN PILIHAN TOLAK / CANCEL (BATAL PROSES)
+                // TOMBOL TANPA PASSWORD/PIN (Hanya konfirmasi teks biasa)
                 areaKontrolAksiHtml = `
                     <div class="fraud-action-group">
-                        <button class="btn-tolak-keras" onclick="prosesTolakFraud('${item.id_trx}')">
+                        <button class="btn-tolak-keras" onclick="prosesTolakFraudTanpaPin('${item.id_trx}')">
                             🔴 TOLAK FRAUD
                         </button>
                         <button class="btn-cancel-view" onclick="batalkanTampilanKartu(this)">
@@ -293,9 +434,7 @@
                         </button>
                     </div>
                 `;
-
             } else {
-                // TAMPILAN JIKA KONDISI TRANSAKSI NORMAL ATAU HANYA ANTRIAN BIASA
                 if (item.status === "ANTRIAN_AI") {
                     infoBlokirHtml = `<div class="alert-box-warn">⏳ AI sedang membaca struk di latar belakang... Mohon tunggu 1 menit.</div>`;
                 } else {
@@ -303,47 +442,34 @@
                 }
 
                 areaKontrolAksiHtml = `
-                    <input type="number" class="input-nominal" id="input_koreksi_${item.id_trx}" value="${item.nominal_total}" placeholder="Ketik nominal...">
+                    <input type="number" class="input-nominal" id="input_koreksi_${item.id_trx}" value="${item.nominal_total}">
                     <button class="btn-action btn-acc" onclick="prosesAccManual('${item.id_trx}', ${item.nominal_total})">
                         ✓ ACC REKAP
                     </button>
                 `;
             }
 
-            // Membangun Kerangka Card Layout
-            const HTML_CARD = `
+            kontainer.innerHTML += `
                 <div class="card" id="card_trx_${item.id_trx}">
                     <div class="nama-santri">${item.nama.toLowerCase()}</div>
                     ${infoBlokirHtml}
-                    
-                    <a href="${item.link_struk}" target="_blank" class="btn-action btn-struk">
-                        🔎 BUKA STRUK ASLI
-                    </a>
-                    
+                    <a href="${item.link_struk}" target="_blank" class="btn-action btn-struk">🔎 BUKA STRUK ASLI</a>
                     ${areaKontrolAksiHtml}
                 </div>
             `;
-            kontainer.innerHTML += HTML_CARD;
         });
     }
 
-    // Fungsi Pembatalan Visual: Menyembunyikan kartu tanpa merusak data Google Sheets
     function batalkanTampilanKartu(tombol) {
         const cardSasar = tombol.closest('.card');
         if (cardSasar) {
-            cardSasar.style.transition = "all 0.3s ease";
-            cardSasar.style.opacity = "0";
-            setTimeout(() => {
-                cardSasar.remove();
-                // Update badge jumlah antrean sementara di layar
-                const badge = document.getElementById("badge-count");
-                let nilaiSekarang = parseInt(badge.innerText || 0);
-                if (nilaiSekarang > 0) badge.innerText = nilaiSekarang - 1;
-            }, 300);
+            cardSasar.remove();
+            const badge = document.getElementById("badge-count");
+            let nilaiSekarang = parseInt(badge.innerText || 0);
+            if (nilaiSekarang > 0) badge.innerText = nilaiSekarang - 1;
         }
     }
 
-    // Fungsi Eksekusi ACC Ke Server GAS
     function prosesAccManual(idTrx, kodeUnikAnak) {
         const nominalInput = document.getElementById(`input_koreksi_${idTrx}`).value;
         const pin = prompt("Masukkan PIN Keamanan Admin:");
@@ -357,26 +483,19 @@
         });
     }
 
-    // Fungsi Eksekusi Tolak Fraud Ke Server GAS
-    function prosesTolakFraud(idTrx) {
-        const konfirmasi = confirm("Sistem mendeteksi ini struk palsu/kembar milik orang lain. Anda yakin ingin MENOLAK transaksi ini?");
+    // PROSES TOLAK FRAUD: PIN SUDAH DIHAPUS, GANTI KONFIRMASI LANGSUNG INSTAN
+    function prosesTolakFraudTanpaPin(idTrx) {
+        const konfirmasi = confirm("Yakin Mas Admin?");
         if (!konfirmasi) return;
 
-        const pin = prompt("PERINGATAN! Masukkan PIN Admin untuk membuang kecurangan:");
-        if (!pin) return;
-
         eksekusiAksiBackend("tolakTransaksiOlehAdmin", {
-            id_transaksi: idTrx,
-            pin_admin: pin
+            id_transaksi: idTrx
         });
     }
 
-    // Bridge Ajax Post Data
     function eksekusiAksiBackend(namaAksi, payloadData) {
         payloadData.aksi = namaAksi;
-        
-        document.getElementById("loading-status").style.display = "block";
-        document.getElementById("loading-status").innerText = "Mengirim keputusan ke server...";
+        tampilkanLoading("Sedang memperbarui database server...");
 
         fetch(URL_GAS_SYSTEM, {
             method: "POST",
@@ -388,7 +507,7 @@
             muatDataAdminSistem();
         })
         .catch(e => {
-            alert("Gagal memproses aksi: " + e.toString());
+            alert("Gagal memproses aksi.");
             muatDataAdminSistem();
         });
     }
