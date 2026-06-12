@@ -2,120 +2,196 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Sistem Informasi Izin Santri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Izin Santri</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    body { background-color: #f3f4f6; }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="p-4 md:p-8">
 
-  <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
+  <div class="max-w-6xl mx-auto space-y-8">
     
-    <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 p-6 text-center text-white">
-      <div class="text-3xl mb-1">🕌</div>
-      <h2 class="text-2xl font-bold tracking-wide">E-Perizinan Santri</h2>
-      <p class="text-xs text-emerald-100 mt-1 font-light">"Disiplin Lahiriah, Ketenangan Batiniah"</p>
+    <div class="text-center bg-blue-600 text-white p-6 rounded-xl shadow-md">
+      <h1 class="text-2xl font-bold md:text-3xl">Portal Manajemen Izin Santri</h1>
+      <p class="text-sm text-blue-100 mt-1">Terintegrasi Google Sheets, Telegram, dan WhatsApp</p>
     </div>
 
-    <form id="formIzin" class="p-6 space-y-4" onsubmit="handleFormSubmit(event)">
-      <div>
-        <label class="block text-sm font-semibold text-emerald-950 mb-1">Nomor Induk Komunitas (NIK)</label>
-        <input type="text" name="nik" required placeholder="Masukkan NIK Santri" class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-1">
+        <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2">
+          <span>📝</span> Form Pengajuan Izin
+        </h2>
+        
+        <form id="formIzin" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Nama Lengkap Santri</label>
+            <input type="text" id="nama" required placeholder="Masukkan nama sesuai database" 
+                   class="mt-1 block w-full p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Jenis Izin</label>
+            <select id="jenis_izin" required class="mt-1 block w-full p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+              <option value="Keluar">Keluar (Otomatis Pengurus)</option>
+              <option value="Sakit">Sakit (Otomatis Pengurus)</option>
+              <option value="Pulang">Pulang (Butuh Approval Pengasuh)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Alasan / Keperluan</label>
+            <textarea id="alasan" required rows="3" placeholder="Contoh: Menengok nenek sakit atau berobat" 
+                      class="mt-1 block w-full p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Tanggal Mulai</label>
+            <input type="date" id="tgl_mulai" required class="mt-1 block w-full p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Janji Kembali</label>
+            <input type="date" id="janji_kembali" required class="mt-1 block w-full p-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+          </div>
+
+          <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition-all shadow-sm">
+            Kirim Permohonan Izin
+          </button>
+        </form>
       </div>
 
-      <div>
-        <label class="block text-sm font-semibold text-emerald-950 mb-1">Jenis Izin</label>
-        <select name="jenis_izin" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          <option value="" disabled selected>-- Pilih Jenis Izin --</option>
-          <option value="Sakit">Sakit (Otomatis ACC)</option>
-          <option value="Keluar">Keluar Lingkungan (Otomatis ACC)</option>
-          <option value="Pulang">Pulang ke Rumah (Butuh Izin Pengasuh)</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-sm font-semibold text-emerald-950 mb-1">Alasan / Keperluan</label>
-        <textarea name="alasan" rows="3" required placeholder="Tuliskan alasan detail izin..." class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-semibold text-emerald-950 mb-1">Tanggal Mulai</label>
-          <input type="datetime-local" name="tgl_mulai" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 lg:col-span-2 space-y-4">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+            <span>📊</span> Web Monitor Riwayat Izin
+          </h2>
+          <button onclick="muatDataLog()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-300 transition-all font-medium">
+            🔄 Refresh Data
+          </button>
         </div>
-        <div>
-          <label class="block text-sm font-semibold text-emerald-950 mb-1">Janji Kembali</label>
-          <input type="datetime-local" name="janji_kembali" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+
+        <div class="overflow-x-auto border border-gray-200 rounded-lg">
+          <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
+            <thead class="bg-gray-50 text-gray-700 font-medium text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-4 py-3">Nama (Kelas)</th>
+                <th class="px-4 py-3">Jenis Izin</th>
+                <th class="px-4 py-3">Keperluan</th>
+                <th class="px-4 py-3">Waktu</th>
+                <th class="px-4 py-3 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tabelLog" class="divide-y divide-gray-200 bg-white text-gray-600">
+              <tr>
+                <td colspan="5" class="px-4 py-8 text-center text-gray-400">Sedang memuat data log izin...</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <div class="pt-2">
-        <button type="submit" id="btnSubmit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center space-x-2 cursor-pointer">
-          <span>Ajukan Izin permohonan</span>
-        </button>
-      </div>
-    </form>
-
-    <div id="statusBox" class="hidden m-6 p-4 rounded-lg text-center font-medium text-sm"></div>
+    </div>
   </div>
 
   <script>
-    // ⚠️ GANTI DENGAN URL DEPLOY WEB APP GOOGLE APPS SCRIPT ANDA
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwRrCcccgo_fYRGFYRcOqnVS6QRw_NLrTbe4Cwezdpsk4dOXmxU3UexDPBL1ncFjwxl/exec";
+    // ⚠️ GANTI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA HASIL DEPLOY
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxCI_P-9tPVOcnckUj3m0b_bto_40J9MzO8li3kUdxTPNPREOnGeyoPER2HL-DYdPPG/exec";
 
-    function handleFormSubmit(event) {
-      event.preventDefault();
+    // 1. Event Handler untuk Submit Form (POST)
+    document.getElementById("formIzin").addEventListener("submit", function(e) {
+      e.preventDefault();
       
-      const form = document.getElementById('formIzin');
-      const btnSubmit = document.getElementById('btnSubmit');
-      const statusBox = document.getElementById('statusBox');
-      
+      const btnSubmit = document.getElementById("btnSubmit");
+      btnSubmit.disabled = true;
+      btnSubmit.innerText = "Memproses...";
+
       const payload = {
         action: "submit_form",
         formData: {
-          nik: form.nik.value,
-          jenis_izin: form.jenis_izin.value,
-          alasan: form.alasan.value,
-          tgl_mulai: form.tgl_mulai.value,
-          janji_kembali: form.janji_kembali.value
+          nama: document.getElementById("nama").value,
+          jenis_izin: document.getElementById("jenis_izin").value,
+          alasan: document.getElementById("alasan").value,
+          tgl_mulai: document.getElementById("tgl_mulai").value,
+          janji_kembali: document.getElementById("janji_kembali").value
         }
       };
 
-      btnSubmit.disabled = true;
-      btnSubmit.innerHTML = `
-        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <span>Memproses Data...</span>
-      `;
-      statusBox.classList.add('hidden');
-
-      // Mengirim data ke GAS Menggunakan Fetch API lintas domain
       fetch(WEB_APP_URL, {
         method: "POST",
-        mode: "no-cors", // Penting untuk menghindari CORS error di Google Apps Script redirect
-        headers: { "Content-Type": "application/json" },
+        mode: "cors", // Memastikan mode CORS aktif
         body: JSON.stringify(payload)
       })
-      .then(() => {
-        // Karena menggunakan mode: "no-cors", kita tidak bisa membaca json response langsung, 
-        // tapi jika masuk ke blok .then() artinya data sukses terkirim ke Google Script.
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<span>Ajukan Izin permohonan</span>';
-        form.reset();
-        
-        statusBox.className = "m-6 p-4 rounded-lg text-center font-medium text-sm bg-emerald-50 text-emerald-800 border border-emerald-200";
-        statusBox.innerHTML = `✨ Syukran, Permohonan izin Anda sedang diproses sistem.`;
-        statusBox.classList.remove('hidden');
+      .then(res => res.json())
+      .then(res => {
+        alert(res.message);
+        if(res.status === "success") {
+          document.getElementById("formIzin").reset();
+          muatDataLog(); // Langsung refresh tabel setelah sukses
+        }
       })
-      .catch(error => {
+      .catch(err => {
+        console.error(err);
+        alert("Terjadi kesalahan jaringan atau CORS!");
+      })
+      .finally(() => {
         btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<span>Ajukan Izin permohonan</span>';
-        
-        statusBox.className = "m-6 p-4 rounded-lg text-center font-medium text-sm bg-rose-50 text-rose-800 border border-rose-200";
-        statusBox.innerHTML = "❌ Gagal mengirim permohonan: " + error.toString();
-        statusBox.classList.remove('hidden');
+        btnSubmit.innerText = "Kirim Permohonan Izin";
+      });
+    });
+
+    // 2. Fungsi Ambil Data Log Izin (GET)
+    function muatDataLog() {
+      const tbody = document.getElementById("tabelLog");
+      
+      fetch(`${WEB_APP_URL}?aksi=ambil_log_izin`, {
+        method: "GET",
+        mode: "cors" // Memastikan mode CORS aktif
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res.status === "success") {
+          tbody.innerHTML = "";
+          
+          if(res.data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">Belum ada riwayat izin.</td></tr>`;
+            return;
+          }
+
+          // Urutkan dari yang terbaru (ID/Timestamp terbesar di atas)
+          res.data.reverse();
+
+          res.data.forEach(item => {
+            // Memberikan warna badge status berdasarkan isi text
+            let warnaBadge = "bg-amber-100 text-amber-800"; // Menunggu...
+            if(item.status.includes("Disetujui")) warnaBadge = "bg-green-100 text-green-800";
+            if(item.status.includes("Ditolak")) warnaBadge = "bg-red-100 text-red-800";
+
+            const row = `
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3 font-medium text-gray-900">${item.nama}<br><span class="text-xs text-gray-400">${item.kelas}</span></td>
+                <td class="px-4 py-3"><span class="px-2 py-0.5 text-xs font-semibold rounded bg-gray-100 text-gray-700">${item.jenis_izin}</span></td>
+                <td class="px-4 py-3 max-w-xs truncate" title="${item.alasan}">${item.alasan}</td>
+                <td class="px-4 py-3 text-xs text-gray-500">${item.tgl_mulai}<br>s.d<br>${item.janji_kembali}</td>
+                <td class="px-4 py-3 text-center"><span class="px-2.5 py-1 text-xs font-medium rounded-full ${warnaBadge}">${item.status}</span></td>
+              </tr>
+            `;
+            tbody.innerHTML += row;
+          });
+        } else {
+          tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-red-500">Gagal memuat: ${res.message}</td></tr>`;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="5" class="px-4 py-8 text-center text-red-500">Gagal memuat data (Masalah CORS/Jaringan)</td></tr>`;
       });
     }
+
+    // Jalankan penarikan data pertama kali saat halaman web dibuka
+    window.onload = muatDataLog;
   </script>
 </body>
 </html>
