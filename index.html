@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Informasi Izin Santri</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
+    
+    <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 p-6 text-center text-white">
+      <div class="text-3xl mb-1">🕌</div>
+      <h2 class="text-2xl font-bold tracking-wide">E-Perizinan Santri</h2>
+      <p class="text-xs text-emerald-100 mt-1 font-light">"Disiplin Lahiriah, Ketenangan Batiniah"</p>
+    </div>
+
+    <form id="formIzin" class="p-6 space-y-4" onsubmit="handleFormSubmit(event)">
+      <div>
+        <label class="block text-sm font-semibold text-emerald-950 mb-1">Nomor Induk Komunitas (NIK)</label>
+        <input type="text" name="nik" required placeholder="Masukkan NIK Santri" class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-emerald-950 mb-1">Jenis Izin</label>
+        <select name="jenis_izin" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <option value="" disabled selected>-- Pilih Jenis Izin --</option>
+          <option value="Sakit">Sakit (Otomatis ACC)</option>
+          <option value="Keluar">Keluar Lingkungan (Otomatis ACC)</option>
+          <option value="Pulang">Pulang ke Rumah (Butuh Izin Pengasuh)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-emerald-950 mb-1">Alasan / Keperluan</label>
+        <textarea name="alasan" rows="3" required placeholder="Tuliskan alasan detail izin..." class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-emerald-950 mb-1">Tanggal Mulai</label>
+          <input type="datetime-local" name="tgl_mulai" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-emerald-950 mb-1">Janji Kembali</label>
+          <input type="datetime-local" name="janji_kembali" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button type="submit" id="btnSubmit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center space-x-2 cursor-pointer">
+          <span>Ajukan Izin permohonan</span>
+        </button>
+      </div>
+    </form>
+
+    <div id="statusBox" class="hidden m-6 p-4 rounded-lg text-center font-medium text-sm"></div>
+  </div>
+
+  <script>
+    // ⚠️ GANTI DENGAN URL DEPLOY WEB APP GOOGLE APPS SCRIPT ANDA
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx-Fpy0IjhzZf0dq5wSqpdSc09GGd5uXHp9vlLBlbE0MciPAMO1M1M-wx7X-KoyANnz/exec";
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      
+      const form = document.getElementById('formIzin');
+      const btnSubmit = document.getElementById('btnSubmit');
+      const statusBox = document.getElementById('statusBox');
+      
+      const payload = {
+        action: "submit_form",
+        formData: {
+          nik: form.nik.value,
+          jenis_izin: form.jenis_izin.value,
+          alasan: form.alasan.value,
+          tgl_mulai: form.tgl_mulai.value,
+          janji_kembali: form.janji_kembali.value
+        }
+      };
+
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = `
+        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Memproses Data...</span>
+      `;
+      statusBox.classList.add('hidden');
+
+      // Mengirim data ke GAS Menggunakan Fetch API lintas domain
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors", // Penting untuk menghindari CORS error di Google Apps Script redirect
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        // Karena menggunakan mode: "no-cors", kita tidak bisa membaca json response langsung, 
+        // tapi jika masuk ke blok .then() artinya data sukses terkirim ke Google Script.
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<span>Ajukan Izin permohonan</span>';
+        form.reset();
+        
+        statusBox.className = "m-6 p-4 rounded-lg text-center font-medium text-sm bg-emerald-50 text-emerald-800 border border-emerald-200";
+        statusBox.innerHTML = `✨ Syukran, Permohonan izin Anda sedang diproses sistem.`;
+        statusBox.classList.remove('hidden');
+      })
+      .catch(error => {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<span>Ajukan Izin permohonan</span>';
+        
+        statusBox.className = "m-6 p-4 rounded-lg text-center font-medium text-sm bg-rose-50 text-rose-800 border border-rose-200";
+        statusBox.innerHTML = "❌ Gagal mengirim permohonan: " + error.toString();
+        statusBox.classList.remove('hidden');
+      });
+    }
+  </script>
+</body>
+</html>
