@@ -1,635 +1,328 @@
 <!DOCTYPE html>
-
 <html lang="id" class="dark">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>HQ E-Perizinan Portal - PPMUY</title>
-
   
-
   <script src="https://cdn.tailwindcss.com"></script>
-
   <script>
-
     tailwind.config = {
-
       darkMode: 'class',
-
       theme: {
-
         extend: {
-
           colors: {
-
             hq: {
-
               dark: '#09090b',
-
               panel: '#14141b',
-
               border: '#27272a'
-
             }
-
           }
-
         }
-
       }
-
     }
-
   </script>
-
   
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   
-
   <style>
-
     @keyframes pulse-alert {
-
       0%, 100% { border-color: rgba(245, 158, 11, 0.4); background-color: rgba(245, 158, 11, 0.02); }
-
       50% { border-color: rgba(245, 158, 11, 1); background-color: rgba(245, 158, 11, 0.06); }
-
     }
-
     .tactical-flash {
-
       animation: pulse-alert 2s infinite;
-
       border-left: 4px solid #f59e0b !important;
-
     }
-
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-
     ::-webkit-scrollbar-track { background: transparent; }
-
     .dark ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-
   </style>
-
 </head>
-
 <body class="bg-slate-50 dark:bg-hq-dark text-slate-800 dark:text-zinc-200 min-h-screen font-sans transition-colors duration-300">
 
-
-
   <header class="bg-white dark:bg-hq-panel border-b border-slate-200 dark:border-hq-border sticky top-0 z-40 backdrop-blur bg-opacity-90 dark:bg-opacity-90 transition-colors duration-300">
-
     <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-
       <div class="flex items-center gap-3">
-
         <div class="bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-500 shadow-inner">
-
           <i class="fa-solid fa-mosque text-xl animate-pulse"></i>
-
         </div>
-
         <div>
-
           <h1 class="text-md font-black tracking-wider text-slate-900 dark:text-zinc-50 uppercase">E-Perizinan Pusat Santri</h1>
-
           <p class="text-[10px] text-slate-500 dark:text-zinc-500 font-mono tracking-widest uppercase">PPMUY - Disiplin Lahiriah Ketenangan Batiniah</p>
-
         </div>
-
       </div>
-
       
-
       <div class="flex items-center gap-2 w-full sm:w-auto justify-end text-xs font-mono">
-
         <button onclick="toggleVisorTheme()" class="bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 border border-slate-200 dark:border-zinc-700 px-3 py-2 rounded-lg flex items-center gap-2 transition cursor-pointer">
-
           <i id="visorIcon" class="fa-solid fa-sun text-amber-500"></i> <span id="visorText">TOGGLE VISOR</span>
-
         </button>
-
         <span class="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/20 font-bold tracking-wider uppercase">
-
           PERMIT-CORE
-
         </span>
-
       </div>
-
     </div>
-
   </header>
 
-
-
   <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-
     
-
     <section class="bg-white dark:bg-hq-panel rounded-2xl border border-slate-200 dark:border-hq-border p-6 shadow-sm dark:shadow-2xl h-fit transition-colors duration-300">
-
       <div class="flex items-center gap-2 pb-4 mb-5 border-b border-slate-100 dark:border-hq-border">
-
         <i class="fa-solid fa-file-pen text-emerald-500"></i>
-
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-zinc-100">Form Pengajuan Izin</h2>
-
       </div>
-
-
 
       <form id="formIzin" class="space-y-4" onsubmit="handleFormSubmit(event)">
-
         <div>
-
           <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Nomor Induk Komunitas (NIK)</label>
-
           <div class="relative">
-
             <i class="fa-solid fa-user-shield absolute left-3 top-3.5 text-slate-400 dark:text-zinc-600 text-xs"></i>
-
             <input type="text" name="nik" required placeholder="Masukkan NIK Santri" 
-
               class="w-full pl-9 pr-4 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition duration-200">
-
           </div>
-
         </div>
 
-
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Nama Lengkap Santri</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-400 dark:text-zinc-600 text-xs"></i>
+            <input type="text" name="nama" required placeholder="Masukkan Nama Lengkap" 
+              class="w-full pl-9 pr-4 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition duration-200">
+          </div>
+        </div>
 
         <div>
-
           <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Jenis Kategori Izin</label>
-
           <select name="jenis_izin" required 
-
             class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-emerald-500 transition duration-200">
-
             <option value="" disabled selected>-- Pilih Kategori --</option>
-
             <option value="Sakit">🏥 Sakit (Otomatis ACC)</option>
-
             <option value="Keluar">🌿 Keluar Komplek (Otomatis ACC)</option>
-
             <option value="Pulang">🚨 Pulang ke Rumah (Butuh Wali)</option>
-
           </select>
-
         </div>
-
-
 
         <div>
-
           <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Alasan / Deskripsi Keperluan</label>
-
           <textarea name="alasan" rows="3" required placeholder="Tulis rincian alasan dan tujuan keperluan detail..."
-
             class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-700 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-emerald-500 transition duration-200"></textarea>
-
         </div>
-
-
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
           <div>
-
             <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Waktu Mulai</label>
-
             <input type="datetime-local" name="tgl_mulai" required 
-
               class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-emerald-500 transition duration-200">
-
           </div>
-
           <div>
-
             <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Janji Kembali</label>
-
             <input type="datetime-local" name="janji_kembali" required 
-
               class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-emerald-500 transition duration-200">
-
           </div>
-
         </div>
-
-
 
         <button type="submit" id="btnSubmit"
-
           class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-600/10 hover:shadow-emerald-600/20 transition duration-200 text-xs uppercase tracking-widest flex justify-center items-center gap-2 cursor-pointer">
-
           <i class="fa-solid fa-paper-plane"></i> Ajukan Izin Permohonan
-
         </button>
-
       </form>
 
-
-
       <div id="statusBox" class="hidden mt-4 p-4 rounded-xl text-center font-mono text-xs border"></div>
-
     </section>
-
-
 
     <section class="bg-white dark:bg-hq-panel rounded-2xl border border-slate-200 dark:border-hq-border p-6 shadow-sm dark:shadow-2xl lg:col-span-2 transition-colors duration-300">
-
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 mb-5 border-b border-slate-100 dark:border-hq-border gap-4">
-
         <div class="flex items-center gap-2.5">
-
           <div class="bg-slate-50 dark:bg-hq-dark p-2 rounded-xl border border-slate-200 dark:border-zinc-800 text-slate-400">
-
             <i class="fa-solid fa-desktop text-sm"></i>
-
           </div>
-
           <div>
-
             <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-zinc-100">Live Permit Board Monitor</h2>
-
             <p class="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">Sinkronisasi berkas antrean izin santri secara real-time</p>
-
           </div>
-
         </div>
-
         <button onclick="muatDataLogIzin()" class="text-xs bg-slate-50 hover:bg-slate-100 dark:bg-hq-dark dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 font-mono px-3 py-2 rounded-xl flex items-center gap-2 transition cursor-pointer">
-
           <i class="fa-solid fa-sync text-[10px]"></i> REFRESH HUD
-
         </button>
-
       </div>
-
-
 
       <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-hq-dark">
-
         <table class="w-full text-left border-collapse text-xs font-mono">
-
           <thead>
-
             <tr class="bg-slate-50 dark:bg-hq-panel/50 text-slate-400 dark:text-zinc-500 border-b border-slate-200 dark:border-zinc-800 text-[10px] uppercase tracking-widest">
-
               <th class="py-3.5 px-4">Santri</th>
-
               <th class="py-3.5 px-4">Kategori & Alasan</th>
-
               <th class="py-3.5 px-4">Durasi Waktu</th>
-
               <th class="py-3.5 px-4 text-center">Status Hub</th>
-
             </tr>
-
           </thead>
-
           <tbody id="tabelBodyIzin" class="divide-y divide-slate-100 dark:divide-zinc-900/60 text-slate-700 dark:text-zinc-300">
-
             <tr>
-
               <td colspan="4" class="text-center py-16 text-slate-400 dark:text-zinc-600">
-
                 <i class="fa-solid fa-circle-notch animate-spin text-lg text-emerald-500 mb-2 block"></i> Booting data log izin...
-
               </td>
-
             </tr>
-
           </tbody>
-
         </table>
-
       </div>
-
     </section>
-
   </main>
 
-
-
   <script>
-
     // ⚠️ MASUKKAN URL EXEC WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
-
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx-Fpy0IjhzZf0dq5wSqpdSc09GGd5uXHp9vlLBlbE0MciPAMO1M1M-wx7X-KoyANnz/exec";
 
-
-
     document.addEventListener("DOMContentLoaded", function() {
-
       muatDataLogIzin();
-
     });
 
-
-
     // --- VISOR THEME SWITCHER (DARK / LIGHT) ---
-
     function toggleVisorTheme() {
-
       const html = document.documentElement;
-
       const visorIcon = document.getElementById("visorIcon");
-
       if (html.classList.contains('dark')) {
-
         html.classList.remove('dark');
-
         visorIcon.className = "fa-solid fa-moon text-indigo-500";
-
       } else {
-
         html.classList.add('dark');
-
         visorIcon.className = "fa-solid fa-sun text-amber-500";
-
       }
-
     }
-
-
 
     // --- TRANSMIT/KIRIM FORM DATA BARU ---
-
     function handleFormSubmit(event) {
-
       event.preventDefault();
-
       
-
       const form = document.getElementById('formIzin');
-
       const btnSubmit = document.getElementById('btnSubmit');
-
       const statusBox = document.getElementById('statusBox');
-
       
-
       const payload = {
-
         action: "submit_form",
-
         formData: {
-
           nik: form.nik.value.trim(),
-
+          nama: form.nama.value.trim(),
           jenis_izin: form.jenis_izin.value,
-
           alasan: form.alasan.value.trim(),
-
           tgl_mulai: form.tgl_mulai.value,
-
           janji_kembali: form.janji_kembali.value
-
         }
-
       };
 
-
-
       btnSubmit.disabled = true;
-
       btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-xs"></i> TRANSMITTING...`;
-
       statusBox.classList.add('hidden');
 
-
-
       fetch(WEB_APP_URL, {
-
         method: "POST",
-
         mode: "no-cors",
-
         headers: { "Content-Type": "application/json" },
-
         body: JSON.stringify(payload)
-
       })
-
       .then(() => {
-
         btnSubmit.disabled = false;
-
         btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane text-xs"></i> Ajukan Izin Permohonan`;
-
         form.reset();
-
         
-
         statusBox.className = "mt-4 p-4 rounded-xl text-center font-mono text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
-
         statusBox.innerHTML = `✨ Terkirim. Berkas perizinan sedang diproses di gerbang pusat.`;
-
         statusBox.classList.remove('hidden');
-
         
-
         // Reload tabel sejenak setelah mengirim
-
         setTimeout(muatDataLogIzin, 1500);
-
       })
-
       .catch(error => {
-
         btnSubmit.disabled = false;
-
         btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane text-xs"></i> Ajukan Izin Permohonan`;
-
         
-
         statusBox.className = "mt-4 p-4 rounded-xl text-center font-mono text-xs bg-rose-500/10 text-rose-500 border-rose-500/20";
-
         statusBox.innerHTML = "❌ Fail link transmission: " + error.toString();
-
         statusBox.classList.remove('hidden');
-
       });
-
     }
-
-
 
     // --- TAMPILKAN LIVE LOG DATA PERIZINAN ---
-
     function muatDataLogIzin() {
-
       const tbody = document.getElementById("tabelBodyIzin");
-
       tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-slate-400 dark:text-zinc-500"><i class="fa-solid fa-circle-notch animate-spin text-sm text-emerald-500 mb-2 block"></i> Syncing Cloud Data Server...</td></tr>`;
 
-
-
       // Menembak fungsi aksi ambil log ke doGet(e) di Google Apps Script
-
       fetch(`${WEB_APP_URL}?aksi=ambil_log_izin`)
-
         .then(res => res.json())
-
         .then(response => {
-
           if (response.status === "success") {
-
             let data = response.data;
-
             if(data.length === 0) {
-
               tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-slate-400 dark:text-zinc-600">BERKAS KOSONG (CLEAR).</td></tr>`;
-
               return;
-
             }
-
             tbody.innerHTML = "";
-
             
-
             // Urutkan dari data paling baru di atas (.reverse)
-
             data.reverse().forEach(row => {
-
               let tr = document.createElement("tr");
-
               
-
               let idIzin = row.id_izin || "-";
-
               let idNik = row.nik || "-";
-
               let namaSantri = row.nama || "-";
-
               let kelasSantri = row.kelas || "-";
-
               let tipeIzin = row.jenis_izin || "Lainnya";
-
               let keperluan = row.alasan || "-";
-
               let tglMulai = formatTanggalManual(row.tgl_mulai);
-
               let tglKembali = formatTanggalManual(row.janji_kembali);
-
               let statusIzin = (row.status || "Menunggu Persetujuan Pengasuh").trim();
 
-
-
               // Deteksi row style & efek kedip darurat (tactical flash) jika berstatus menunggu persetujuan
-
               let rowStyle = "border-b border-slate-100 dark:border-zinc-900/60 bg-white dark:bg-hq-dark/40 hover:bg-slate-50/80 dark:hover:bg-hq-panel/30 transition-colors align-top";
-
               if (statusIzin.includes("Menunggu")) {
-
                 rowStyle = "tactical-flash align-top text-slate-900 dark:text-zinc-100";
-
               }
-
               tr.className = rowStyle;
 
-
-
               // Tampilan badge status dinamis
-
               let badgeStatus = "";
-
               if (statusIzin.includes("Disetujui")) {
-
                 badgeStatus = `<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase">✅ APP/OK</span>`;
-
               } else if (statusIzin.includes("Ditolak")) {
-
                 badgeStatus = `<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 uppercase">❌ REJECTED</span>`;
-
               } else {
-
                 badgeStatus = `<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase animate-pulse">🛰️ PENDING</span>`;
-
               }
 
-
-
               tr.innerHTML = `
-
                 <td class="py-3.5 px-4 font-bold">
-
                   <div class="text-slate-900 dark:text-zinc-100">${namaSantri}</div>
-
                   <div class="text-[10px] text-slate-400 dark:text-zinc-500 font-normal">NIK: ${idNik} | RM: ${kelasSantri}</div>
-
                 </td>
-
                 <td class="py-3.5 px-4 max-w-xs whitespace-normal">
-
                   <span class="font-bold text-emerald-600 dark:text-emerald-400 text-[10px] block uppercase">[ ${tipeIzin} ]</span>
-
                   <div class="text-slate-500 dark:text-zinc-400 mt-0.5 text-[11px]">${keperluan}</div>
-
                 </td>
-
                 <td class="py-3.5 px-4 text-slate-500 dark:text-zinc-400 text-[11px] whitespace-nowrap">
-
                   <div>🛫 ${tglMulai}</div>
-
                   <div class="mt-0.5">🛬 ${tglKembali}</div>
-
                 </td>
-
                 <td class="py-3.5 px-4 text-center">${badgeStatus}</td>
-
               `;
-
               tbody.appendChild(tr);
-
             });
-
           }
-
         }).catch(err => {
-
           console.error(err);
-
           tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-rose-500 font-mono text-xs">Gagal melakukan sinkronisasi dengan Cloud Database.</td></tr>`;
-
         });
-
     }
-
-
 
     // Helper merapikan tampilan objek string tanggal bawaan datetime-local
-
     function formatTanggalManual(strTgl) {
-
       if(!strTgl) return "-";
-
       try {
-
         let t = new Date(strTgl);
-
         if(isNaN(t.getTime())) return strTgl; 
-
         return t.toLocaleString('id-ID', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}).replace(/\./g, ':');
-
       } catch(e) { return strTgl; }
-
     }
-
   </script>
-
 </body>
-
 </html>
