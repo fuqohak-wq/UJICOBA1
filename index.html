@@ -2,206 +2,120 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-Perizinan Pusat Santri</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Sistem Informasi Izin Santri</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
-  <header class="bg-white shadow-sm p-4 mb-6">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div>
-        <h1 class="text-xl font-bold tracking-wide text-indigo-900">E-PERIZINAN PUSAT SANTRI</h1>
-        <p class="text-xs text-slate-500">PPMUY - DISIPLIN . LAHIRIAH . KETENANGAN . BATINIAH</p>
-      </div>
-      <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full">PERMIT-CORE ACTIVE</span>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-emerald-100">
     
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-1">
-      <h2 class="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
-        📋 FORM PENAJUAN IZIN
-      </h2>
-      
-      <form id="formIzin" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Nomor Induk Komunitas (NIK)</label>
-          <input type="text" id="nik" required placeholder="Masukkan NIK Santri..." 
-                 class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Jenis Kategori Izin</label>
-          <select id="jenis_izin" required 
-                  class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="">-- Pilih Kategori --</option>
-            <option value="Sakit">Sakit (Otomatis ACC)</option>
-            <option value="Keluar">Keluar Komplek (Otomatis ACC)</option>
-            <option value="Pulang">Pulang ke Rumah (Butuh ACC Wali/Pengasuh)</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Alasan / Deskripsi Keperluan</label>
-          <textarea id="alasan" required rows="3" placeholder="Tulis rincian alasan secara detail..." 
-                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Waktu Mulai</label>
-            <input type="datetime-local" id="tgl_mulai" required 
-                   class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Janji Kembali</label>
-            <input type="datetime-local" id="janji_kembali" required 
-                   class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-          </div>
-        </div>
-
-        <button type="submit" id="btnSubmit" 
-                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md shadow-emerald-200 transition duration-200 flex justify-center items-center gap-2">
-          🚀 AJUKAN IZIN PERMOHONAN
-        </button>
-      </form>
+    <div class="bg-gradient-to-r from-emerald-800 to-emerald-600 p-6 text-center text-white">
+      <div class="text-3xl mb-1">🕌</div>
+      <h2 class="text-2xl font-bold tracking-wide">E-Perizinan Santri</h2>
+      <p class="text-xs text-emerald-100 mt-1 font-light">"Disiplin Lahiriah, Ketenangan Batiniah"</p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 lg:col-span-2 flex flex-col">
-      <div class="flex justify-between items-center mb-4">
+    <form id="formIzin" class="p-6 space-y-4" onsubmit="handleFormSubmit(event)">
+      <div>
+        <label class="block text-sm font-semibold text-emerald-950 mb-1">Nomor Induk Komunitas (NIK)</label>
+        <input type="text" name="nik" required placeholder="Masukkan NIK Santri" class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-emerald-950 mb-1">Jenis Izin</label>
+        <select name="jenis_izin" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <option value="" disabled selected>-- Pilih Jenis Izin --</option>
+          <option value="Sakit">Sakit (Otomatis ACC)</option>
+          <option value="Keluar">Keluar Lingkungan (Otomatis ACC)</option>
+          <option value="Pulang">Pulang ke Rumah (Butuh Izin Pengasuh)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-emerald-950 mb-1">Alasan / Keperluan</label>
+        <textarea name="alasan" rows="3" required placeholder="Tuliskan alasan detail izin..." class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2">
-            🖥️ LIVE PERMIT BOARD MONITOR
-          </h2>
-          <p class="text-xs text-slate-400">Sinkronisasi berkas antrean izin santri secara real-time</p>
+          <label class="block text-sm font-semibold text-emerald-950 mb-1">Tanggal Mulai</label>
+          <input type="datetime-local" name="tgl_mulai" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
         </div>
-        <button onclick="ambilLogIzin()" class="border border-slate-200 hover:bg-slate-50 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 flex items-center gap-1 transition">
-          🔄 REFRESH HUD
+        <div>
+          <label class="block text-sm font-semibold text-emerald-950 mb-1">Janji Kembali</label>
+          <input type="datetime-local" name="janji_kembali" required class="w-full px-4 py-2 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button type="submit" id="btnSubmit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition duration-200 flex items-center justify-center space-x-2 cursor-pointer">
+          <span>Ajukan Izin permohonan</span>
         </button>
       </div>
+    </form>
 
-      <div class="overflow-x-auto flex-1">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="border-b border-slate-200 text-xs font-semibold uppercase text-slate-400 tracking-wider">
-              <th class="pb-3 pl-2">Santri</th>
-              <th class="pb-3">Kategori & Alasan</th>
-              <th class="pb-3">Durasi Waktu</th>
-              <th class="pb-3 text-right pr-2">Status Hub</th>
-            </tr>
-          </thead>
-          <tbody id="tabelLog" class="divide-y divide-slate-100 text-sm font-medium">
-            <tr>
-              <td colspan="4" class="text-center py-8 text-slate-400">Sedang memuat data dari cloud server...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </main>
+    <div id="statusBox" class="hidden m-6 p-4 rounded-lg text-center font-medium text-sm"></div>
+  </div>
 
   <script>
-    // MASUKKAN WEB APP URL HASIL DEPLOYMENT GOOGLE APPS SCRIPT KAMU DI SINI!
-    const WEB_APP_URL = "https://script.google.com/macros/s/XXXXX_ID_DEPLOYMENT_KAMU_XXXXX/exec";
+    // ⚠️ GANTI DENGAN URL DEPLOY WEB APP GOOGLE APPS SCRIPT ANDA
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwRrCcccgo_fYRGFYRcOqnVS6QRw_NLrTbe4Cwezdpsk4dOXmxU3UexDPBL1ncFjwxl/exec";
 
-    // 1. Logika Menangani Kirim Data Form (POST)
-    document.getElementById('formIzin').addEventListener('submit', async function(e) {
-      e.preventDefault();
+    function handleFormSubmit(event) {
+      event.preventDefault();
       
-      const btn = document.getElementById('btnSubmit');
-      const textAwal = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '⏳ Memproses Berkas...';
-
-      // Menyusun objek payload yang kompatibel 100% dengan doPost pada Apps Script
+      const form = document.getElementById('formIzin');
+      const btnSubmit = document.getElementById('btnSubmit');
+      const statusBox = document.getElementById('statusBox');
+      
       const payload = {
         action: "submit_form",
         formData: {
-          nik: document.getElementById('nik').value,
-          jenis_izin: document.getElementById('jenis_izin').value,
-          alasan: document.getElementById('alasan').value,
-          tgl_mulai: document.getElementById('tgl_mulai').value,
-          janji_kembali: document.getElementById('janji_kembali').value
+          nik: form.nik.value,
+          jenis_izin: form.jenis_izin.value,
+          alasan: form.alasan.value,
+          tgl_mulai: form.tgl_mulai.value,
+          janji_kembali: form.janji_kembali.value
         }
       };
 
-      try {
-        const response = await fetch(WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors', // Menghindari masalah aturan CORS browser di GitHub Pages
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = `
+        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Memproses Data...</span>
+      `;
+      statusBox.classList.add('hidden');
 
-        // Karena mode 'no-cors' tidak bisa membaca kembalian body JSON secara eksplisit,
-        // Kita langsung asumsikan berhasil dikirim jika tidak masuk blok catch.
-        alert("Permohonan izin berhasil dikirim ke server pusat!");
-        document.getElementById('formIzin').reset();
-        setTimeout(ambilLogIzin, 2000); // Refresh tabel otomatis setelah 2 detik
-
-      } catch (error) {
-        console.error("Error submit:", error);
-        alert("Gagal mengirim data permohonan. Cek koneksi.");
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = textAwal;
-      }
-    });
-
-    // 2. Logika Mengambil Data Riwayat Log Izin (GET - aksi=ambil_log_izin)
-    async function ambilLogIzin() {
-      const tbody = document.getElementById('tabelLog');
-      
-      try {
-        const response = await fetch(`${WEB_APP_URL}?aksi=ambil_log_izin`);
-        const result = await response.json();
+      // Mengirim data ke GAS Menggunakan Fetch API lintas domain
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors", // Penting untuk menghindari CORS error di Google Apps Script redirect
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        // Karena menggunakan mode: "no-cors", kita tidak bisa membaca json response langsung, 
+        // tapi jika masuk ke blok .then() artinya data sukses terkirim ke Google Script.
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<span>Ajukan Izin permohonan</span>';
+        form.reset();
         
-        if (result.status === "success") {
-          tbody.innerHTML = ""; // Bersihkan loading text
-          
-          if (result.data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-slate-400">Belum ada riwayat izin tertulis.</td></tr>`;
-            return;
-          }
-
-          // Urutkan data terbaru agar tampil di posisi paling atas board (Reverse order)
-          result.data.reverse().forEach(row => {
-            // Pengaturan warna badge status kustom
-            let badgeStyle = "bg-amber-100 text-amber-700";
-            if (row.status.includes("Disetujui")) badgeStyle = "bg-emerald-100 text-emerald-700";
-            if (row.status.includes("Ditolak")) badgeStyle = "bg-rose-100 text-rose-700";
-
-            tbody.innerHTML += `
-              <tr class="hover:bg-slate-50 transition">
-                <td class="py-3 pl-2">
-                  <div class="font-bold text-slate-700">${row.nama}</div>
-                  <div class="text-xs text-slate-400">NIK: ${row.nik} | ${row.kelas}</div>
-                </td>
-                <td class="py-3">
-                  <span class="text-xs font-bold text-indigo-600 block">[ ${row.jenis_izin.toUpperCase()} ]</span>
-                  <span class="text-slate-600 text-xs">${row.alasan}</span>
-                </td>
-                <td class="py-3 text-xs text-slate-500">
-                  🛫 ${row.tgl_mulai}<br>🛬 ${row.janji_kembali}
-                </td>
-                <td class="py-3 text-right pr-2">
-                  <span class="px-2.5 py-1 rounded-md text-xs font-bold ${badgeStyle}">${row.status}</span>
-                </td>
-              </tr>
-            `;
-          });
-        }
-      } catch (error) {
-        console.error("Error fetch log:", error);
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 text-rose-500 font-semibold">⚠️ Gagal mensinkronisasikan data dari Cloud.</td></tr>`;
-      }
+        statusBox.className = "m-6 p-4 rounded-lg text-center font-medium text-sm bg-emerald-50 text-emerald-800 border border-emerald-200";
+        statusBox.innerHTML = `✨ Syukran, Permohonan izin Anda sedang diproses sistem.`;
+        statusBox.classList.remove('hidden');
+      })
+      .catch(error => {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<span>Ajukan Izin permohonan</span>';
+        
+        statusBox.className = "m-6 p-4 rounded-lg text-center font-medium text-sm bg-rose-50 text-rose-800 border border-rose-200";
+        statusBox.innerHTML = "❌ Gagal mengirim permohonan: " + error.toString();
+        statusBox.classList.remove('hidden');
+      });
     }
-
-    // Jalankan penarikan data log otomatis saat halaman web pertama kali dibuka
-    window.onload = ambilLogIzin;
   </script>
 </body>
 </html>
