@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="light">
+<html lang="id" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,82 +8,61 @@
   <script>
     tailwind.config = {
       darkMode: 'class',
-      theme: { extend: { colors: { hq: { dark: '#0f172a', panel: '#1e293b', border: '#334155' } } } }
+      theme: { extend: { colors: { hq: { dark: '#09090b', panel: '#14141b', border: '#27272a' } } } }
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @keyframes pulse-alert {
-      0%, 100% { border-color: rgba(2, 132, 199, 0.4); background-color: rgba(2, 132, 199, 0.02); }
-      50% { border-color: rgba(2, 132, 199, 1); background-color: rgba(2, 132, 199, 0.1); }
+      0%, 100% { border-color: rgba(245, 158, 11, 0.4); background-color: rgba(245, 158, 11, 0.02); }
+      50% { border-color: rgba(245, 158, 11, 1); background-color: rgba(245, 158, 11, 0.06); }
     }
-    .tactical-flash { animation: pulse-alert 2s infinite; border-left: 4px solid #0284c7 !important; }
+    .tactical-flash { animation: pulse-alert 2s infinite; border-left: 4px solid #f59e0b !important; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    .dark ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .dark ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
   </style>
 </head>
-<body class="bg-blue-50/50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 min-h-screen font-sans transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-hq-dark text-slate-800 dark:text-zinc-200 min-h-screen font-sans transition-colors duration-300">
 
-  <header class="bg-white dark:bg-hq-panel border-b-2 border-blue-600 dark:border-hq-border sticky top-0 z-40 backdrop-blur bg-opacity-95 dark:bg-opacity-95 transition-colors duration-300 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3 w-full md:w-auto">
-        <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md shadow-blue-600/20">
-          <i class="fa-solid fa-shield-halved text-xl animate-pulse"></i>
-        </div>
+  <header class="bg-white dark:bg-hq-panel border-b border-slate-200 dark:border-hq-border sticky top-0 z-40 backdrop-blur bg-opacity-90">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-500"><i class="fa-solid fa-mosque text-xl animate-pulse"></i></div>
         <div>
-          <h1 class="text-md font-black tracking-wider text-blue-900 dark:text-sky-400 uppercase">E-PERIZINAN PUSAT SANTRI</h1>
-          <p class="text-[10px] text-blue-700 dark:text-zinc-400 font-mono tracking-widest uppercase font-bold">PPMUY - DIVISI KEAMANAN & MONITORING</p>
+          <h1 class="text-md font-black tracking-wider text-slate-900 dark:text-zinc-50 uppercase">E-Perizinan Pusat Santri</h1>
+          <p class="text-[10px] text-slate-500 dark:text-zinc-500 font-mono tracking-widest uppercase">PPMUY - DUA JALUR INTEGRASI OTOMATIS TELEGRAM BOT</p>
         </div>
       </div>
-      <div class="flex flex-col items-center md:items-end text-center md:text-right w-full md:w-auto px-3 py-1 bg-blue-100/60 dark:bg-slate-900/50 rounded-xl border border-blue-200/60 dark:border-zinc-800">
-        <div id="liveClock" class="text-xs font-mono font-bold text-blue-900 dark:text-sky-400 tracking-wider"><i class="fa-regular fa-clock mr-1"></i> MEMUAT WAKTU...</div>
-        <div id="motivationBox" class="text-[10px] font-bold text-blue-800 dark:text-zinc-400 italic max-w-sm mt-0.5 truncate">"Memuat radar disiplin..."</div>
-      </div>
-      <div class="flex items-center gap-2 w-full md:w-auto justify-center md:justify-end text-xs font-mono">
-        <button onclick="toggleVisorTheme()" class="bg-blue-600 hover:bg-blue-700 text-white dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 border border-blue-700 dark:border-zinc-700 px-3 py-2 rounded-lg flex items-center gap-2 transition cursor-pointer shadow-sm">
-          <i id="visorIcon" class="fa-solid fa-moon"></i> <span>TEMA</span>
+      <div class="flex items-center gap-2 text-xs font-mono">
+        <button onclick="toggleVisorTheme()" class="bg-slate-100 dark:bg-zinc-800 border px-3 py-2 rounded-lg flex items-center gap-2 cursor-pointer">
+          <i id="visorIcon" class="fa-solid fa-sun text-amber-500"></i> <span>TEMA</span>
         </button>
-        <a href="https://manajemen.ppmuy.com/dashboard.html" class="bg-slate-800 hover:bg-slate-900 text-white border border-slate-950 px-3 py-2 rounded-lg flex items-center gap-2 transition font-bold shadow-sm">
-          <i class="fa-solid fa-arrow-left-long text-sky-400"></i> DASHBOARD
-        </a>
+        <span class="bg-emerald-500/10 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 px-3 py-2 rounded-lg border border-emerald-500/20 font-bold uppercase">PERMIT-CORE</span>
       </div>
     </div>
   </header>
 
-  <section class="max-w-7xl mx-auto px-4 pt-6 grid grid-cols-3 gap-4">
-    <div class="bg-white dark:bg-hq-panel border-l-4 border-amber-500 rounded-xl p-3 shadow-sm flex justify-between items-center">
-      <div><p class="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500">🏥 Sakit</p><h3 id="countSakit" class="text-xl font-black font-mono">0</h3></div>
-    </div>
-    <div class="bg-white dark:bg-hq-panel border-l-4 border-indigo-500 rounded-xl p-3 shadow-sm flex justify-between items-center">
-      <div><p class="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500">🌿 Keluar</p><h3 id="countKeluar" class="text-xl font-black font-mono">0</h3></div>
-    </div>
-    <div class="bg-white dark:bg-hq-panel border-l-4 border-blue-600 rounded-xl p-3 shadow-sm flex justify-between items-center">
-      <div><p class="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500">🚨 Pulang</p><h3 id="countPulang" class="text-xl font-black font-mono">0</h3></div>
-    </div>
-  </section>
-
-  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <section class="bg-white dark:bg-hq-panel rounded-2xl border-2 border-blue-100 dark:border-hq-border p-5 shadow-md h-fit">
-      <div class="flex items-center gap-2 pb-3 mb-4 border-b border-blue-100 dark:border-hq-border">
-        <i class="fa-solid fa-file-pen text-blue-600"></i>
-        <h2 class="text-xs font-bold uppercase tracking-wider font-mono">Form Pengajuan Izin</h2>
+  <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <section class="bg-white dark:bg-hq-panel rounded-2xl border border-slate-200 dark:border-hq-border p-6 shadow-sm h-fit">
+      <div class="flex items-center gap-2 pb-4 mb-5 border-b border-slate-100 dark:border-hq-border">
+        <i class="fa-solid fa-file-pen text-emerald-500"></i>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-zinc-100">Form Pengajuan Izin</h2>
       </div>
 
       <form id="formIzin" class="space-y-4" onsubmit="handleFormSubmit(event)">
         <div>
-          <label class="block text-[10px] font-bold text-blue-900 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Nama Lengkap / NIK Santri</label>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Nama Lengkap / NIK Santri</label>
           <div class="relative">
-            <i class="fa-solid fa-user absolute left-3 top-3.5 text-blue-600 text-xs"></i>
-            <input type="text" name="nama_santri" required placeholder="Masukkan Nama Lengkap Sesuai Database" 
-              class="w-full pl-9 pr-4 py-2.5 bg-blue-50/50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm font-bold rounded-xl border border-blue-200 dark:border-zinc-800 focus:outline-none focus:border-blue-600">
+            <i class="fa-solid fa-user-shield absolute left-3 top-3.5 text-slate-400 text-xs"></i>
+            <input type="text" name="nik_atau_nama" required placeholder="Masukkan Nama Lengkap / NIK" 
+              class="w-full pl-9 pr-4 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-emerald-500 font-bold">
           </div>
         </div>
 
         <div>
-          <label class="block text-[10px] font-bold text-blue-900 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Jenis Kategori Izin</label>
-          <select name="jenis_izin" required class="w-full px-3 py-2.5 bg-blue-50/50 dark:bg-hq-dark font-bold text-sm rounded-xl border border-blue-200 dark:border-zinc-800">
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Jenis Kategori Izin</label>
+          <select name="jenis_izin" required class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-emerald-500 font-bold">
             <option value="" disabled selected>-- Pilih Kategori --</option>
             <option value="Sakit">🏥 Sakit</option>
             <option value="Keluar">🌿 Keluar Komplek</option>
@@ -92,50 +71,55 @@
         </div>
 
         <div>
-          <label class="block text-[10px] font-bold text-blue-900 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Alasan / Deskripsi Keperluan</label>
-          <textarea name="alasan" rows="3" required placeholder="Tulis alasan detail..." class="w-full px-3 py-2.5 bg-blue-50/50 dark:bg-hq-dark text-sm rounded-xl border border-blue-200 dark:border-zinc-800"></textarea>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Alasan / Deskripsi Keperluan</label>
+          <textarea name="alasan" rows="3" required placeholder="Tulis alasan secara jelas..." class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-emerald-500"></textarea>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-[10px] font-bold font-mono">Waktu Mulai</label>
-            <input type="datetime-local" name="tgl_mulai" required class="w-full px-2 py-2 bg-blue-50/50 dark:bg-hq-dark text-xs rounded-xl border border-blue-200">
+            <label class="block text-[10px] font-bold text-slate-500 font-mono">Waktu Mulai</label>
+            <input type="datetime-local" name="tgl_mulai" required class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200">
           </div>
           <div>
-            <label class="block text-[10px] font-bold font-mono">Janji Kembali</label>
-            <input type="datetime-local" name="janji_kembali" required class="w-full px-2 py-2 bg-blue-50/50 dark:bg-hq-dark text-xs rounded-xl border border-blue-200">
+            <label class="block text-[10px] font-bold text-slate-500 font-mono">Janji Kembali</label>
+            <input type="datetime-local" name="janji_kembali" required class="w-full px-3 py-2.5 bg-slate-50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 text-sm rounded-xl border border-slate-200">
           </div>
         </div>
 
-        <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl shadow-lg text-xs uppercase tracking-widest border-b-4 border-blue-800 active:border-b-0 cursor-pointer">
-          <i class="fa-solid fa-satellite-dish"></i> Ajukan Izin Permohonan
+        <button type="submit" id="btnSubmit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg text-xs uppercase tracking-widest flex justify-center items-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-paper-plane"></i> Kirim Ke Telegram Pengasuh
         </button>
       </form>
       <div id="statusBox" class="hidden mt-4 p-4 rounded-xl text-center font-mono text-xs border"></div>
     </section>
 
-    <section class="bg-white dark:bg-hq-panel rounded-2xl border border-blue-200 dark:border-hq-border p-5 shadow-md lg:col-span-2">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 mb-4 border-b border-blue-100 gap-4">
-        <div>
-          <h2 class="text-xs font-bold uppercase tracking-wider font-mono">Live Permit Board Monitor</h2>
-          <p class="text-[10px] text-slate-500 font-mono">Antrean izin masuk langsung terkirim ke Telegram Pengasuh</p>
+    <section class="bg-white dark:bg-hq-panel rounded-2xl border border-slate-200 dark:border-hq-border p-6 shadow-sm lg:col-span-2">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 mb-5 border-b gap-4">
+        <div class="flex items-center gap-2.5">
+          <div class="bg-slate-50 dark:bg-hq-dark p-2 rounded-xl border text-slate-400"><i class="fa-solid fa-desktop text-sm"></i></div>
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-zinc-100">Live Permit Board Monitor</h2>
+            <p class="text-[10px] text-slate-400 font-mono">Antrean izin menunggu ketukan tombol bot Telegram Pengasuh</p>
+          </div>
         </div>
-        <button onclick="muatDataLogIzin()" class="text-xs bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold font-mono px-3 py-2 rounded-xl flex items-center gap-2 cursor-pointer shadow-sm">
-          <i class="fa-solid fa-arrows-rotate text-[10px]"></i> REFRESH HUD
+        <button onclick="muatDataLogIzin()" class="text-xs bg-slate-50 hover:bg-slate-100 dark:bg-hq-dark border border-slate-200 text-slate-600 dark:text-zinc-400 font-mono px-3 py-2 rounded-xl flex items-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-sync text-[10px]"></i> REFRESH HUD
         </button>
       </div>
 
-      <div class="overflow-x-auto rounded-xl border-2 border-blue-100 bg-white dark:bg-hq-dark">
+      <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-hq-dark">
         <table class="w-full text-left border-collapse text-xs font-mono">
           <thead>
-            <tr class="bg-blue-600 text-white border-b border-blue-700 text-[10px] uppercase tracking-widest font-black">
-              <th class="py-3.5 px-4">Santri / NIK</th>
+            <tr class="bg-slate-50 dark:bg-hq-panel/50 text-slate-400 border-b text-[10px] uppercase tracking-widest">
+              <th class="py-3.5 px-4">Santri / Biodata</th>
               <th class="py-3.5 px-4">Kategori & Alasan</th>
-              <th class="py-3.5 px-4">Durasi Batas Waktu</th>
+              <th class="py-3.5 px-4">Durasi Waktu</th>
               <th class="py-3.5 px-4 text-center">Status Hub</th>
             </tr>
           </thead>
-          <tbody id="tabelBodyIzin" class="divide-y-2 divide-blue-50 text-slate-800 dark:text-zinc-200"></tbody>
+          <tbody id="tabelBodyIzin" class="divide-y text-slate-700 dark:text-zinc-300">
+            <tr><td colspan="4" class="text-center py-16"><i class="fa-solid fa-circle-notch animate-spin text-lg text-emerald-500 mb-2 block"></i> Booting data log izin...</td></tr>
+          </tbody>
         </table>
       </div>
     </section>
@@ -145,16 +129,19 @@
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwRrCcccgo_fYRGFYRcOqnVS6QRw_NLrTbe4Cwezdpsk4dOXmxU3UexDPBL1ncFjwxl/exec";
 
     document.addEventListener("DOMContentLoaded", function() {
-      setInterval(() => {
-        document.getElementById("liveClock").innerHTML = `<i class="fa-regular fa-clock mr-1 text-blue-600"></i> ${new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' })}`;
-      }, 1000);
       muatDataLogIzin();
     });
 
     function toggleVisorTheme() {
       const html = document.documentElement;
-      if (html.classList.contains('dark')) { html.classList.remove('dark'); html.classList.add('light'); } 
-      else { html.classList.remove('light'); html.classList.add('dark'); }
+      const visorIcon = document.getElementById("visorIcon");
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        visorIcon.className = "fa-solid fa-moon text-indigo-500";
+      } else {
+        html.classList.add('dark');
+        visorIcon.className = "fa-solid fa-sun text-amber-500";
+      }
     }
 
     function handleFormSubmit(event) {
@@ -166,7 +153,7 @@
       const payload = {
         action: "submit_form",
         formData: {
-          nama_santri: form.nama_santri.value.trim(),
+          nik_atau_nama: form.nik_atau_nama.value.trim(),
           jenis_izin: form.jenis_izin.value,
           alasan: form.alasan.value.trim(),
           tgl_mulai: form.tgl_mulai.value,
@@ -175,79 +162,94 @@
       };
 
       btnSubmit.disabled = true;
-      btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-xs"></i> TRANSMITTING DATA...`;
+      btnSubmit.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin text-xs"></i> SENDING TO BOT TELEGRAM...`;
+      statusBox.classList.add('hidden');
 
-      fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
       .then(() => {
         btnSubmit.disabled = false;
-        btnSubmit.innerHTML = `<i class="fa-solid fa-satellite-dish text-xs"></i> Ajukan Izin Permohonan`;
+        btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane text-xs"></i> Kirim Ke Telegram Pengasuh`;
         form.reset();
-        statusBox.className = "mt-4 p-4 rounded-xl text-center font-mono font-bold text-xs bg-blue-100 text-blue-800 border-2 border-blue-400/30";
-        statusBox.innerHTML = `🛰️ DATA SENT! Antrean izin berhasil dikirim ke Telegram Pengasuh. Menunggu ACC.`;
+        statusBox.className = "mt-4 p-4 rounded-xl text-center font-mono text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
+        statusBox.innerHTML = `✨ Berkas terkirim! Antrean perizinan menunggu keputusan pengasuh via Telegram.`;
         statusBox.classList.remove('hidden');
         setTimeout(muatDataLogIzin, 1500);
       })
       .catch(error => {
         btnSubmit.disabled = false;
-        statusBox.className = "mt-4 p-4 rounded-xl text-center font-mono font-bold text-xs bg-rose-100 text-rose-700";
-        statusBox.innerHTML = "❌ FAULT: " + error.toString();
+        btnSubmit.innerHTML = `<i class="fa-solid fa-paper-plane text-xs"></i> Kirim Ke Telegram Pengasuh`;
+        statusBox.className = "mt-4 p-4 rounded-xl text-center font-mono text-xs bg-rose-500/10 text-rose-500 border-rose-500/20";
+        statusBox.innerHTML = "❌ Fail Transmission: " + error.toString();
         statusBox.classList.remove('hidden');
       });
     }
 
     function muatDataLogIzin() {
       const tbody = document.getElementById("tabelBodyIzin");
-      tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 font-bold text-blue-600"><i class="fa-solid fa-spinner animate-spin mr-2"></i>SINKRONISASI DATA...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-slate-400"><i class="fa-solid fa-circle-notch animate-spin text-sm text-emerald-500 mb-2 block"></i> Syncing Cloud Data Server...</td></tr>`;
 
       fetch(`${WEB_APP_URL}?aksi=ambil_log_izin`)
         .then(res => res.json())
         .then(response => {
           if (response.status === "success") {
             let data = response.data;
-            let cntSakit = 0, cntKeluar = 0, cntPulang = 0;
             if(data.length === 0) {
-              tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10">Belum ada antrean log izin.</td></tr>`;
+              tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16">BELUM ADA REKAMAN LOG DATA PERIZINAN.</td></tr>`;
               return;
             }
             tbody.innerHTML = "";
             data.reverse().forEach(row => {
               let tr = document.createElement("tr");
               let statusIzin = (row.status || "Menunggu Persetujuan Pengasuh").trim();
-              
-              if (!statusIzin.includes("Ditolak")) {
-                if (row.jenis_izin.toLowerCase() === "sakit") cntSakit++;
-                if (row.jenis_izin.toLowerCase() === "keluar") cntKeluar++;
-                if (row.jenis_izin.toLowerCase() === "pulang") cntPulang++;
+
+              let rowStyle = "border-b border-slate-100 dark:border-zinc-900/60 bg-white dark:bg-hq-dark/40 hover:bg-slate-50 dark:hover:bg-hq-panel/30 transition-colors align-top";
+              if (statusIzin.includes("Menunggu")) { rowStyle = "tactical-flash align-top text-slate-900 dark:text-zinc-100"; }
+              tr.className = rowStyle;
+
+              let badgeStatus = "";
+              if (statusIzin.includes("Disetujui")) {
+                badgeStatus = `<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 uppercase">✅ ACC/OK</span>`;
+              } else if (statusIzin.includes("Ditolak")) {
+                badgeStatus = `<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-rose-500/10 text-rose-600 border border-rose-500/20 uppercase">❌ REJECTED</span>`;
+              } else {
+                badgeStatus = `<span class="px-2 py-1 rounded-md text-[10px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20 uppercase animate-pulse">🛰️ PENDING</span>`;
               }
 
-              tr.className = statusIzin.includes("Menunggu") ? "tactical-flash bg-blue-50/20 font-bold" : "border-b hover:bg-slate-50";
-              
-              let badge = statusIzin.includes("Disetujui") || statusIzin.includes("Otomatis") || statusIzin.includes("OK")
-                ? `<span class="px-2 py-1 rounded text-[10px] bg-emerald-600 text-white font-black">🟢 ACC/OK</span>`
-                : `<span class="px-2 py-1 rounded text-[10px] bg-amber-500 text-white font-black animate-pulse">⏳ PENDING</span>`;
-
               tr.innerHTML = `
-                <td class="py-3 px-4">
-                  <div class="font-black uppercase">${row.nama || "Belum Terbaca"}</div>
-                  <div class="text-[10px] text-slate-500">NIK: ${row.nik || "-"} | Kelas: ${row.kelas || "-"}</div>
+                <td class="py-3.5 px-4 font-bold">
+                  <div class="text-slate-900 dark:text-zinc-100">${row.nama || "-"}</div>
+                  <div class="text-[10px] text-slate-400 font-normal">NIK: ${row.nik || "-"} | RM: ${row.kelas || "-"}</div>
                 </td>
-                <td class="py-3 px-4"><span class="font-bold text-blue-600 text-[10px]">[ ${row.jenis_izin} ]</span><div class="text-slate-600 mt-0.5">${row.alasan}</div></td>
-                <td class="py-3 px-4 text-[11px]"><div>🛫 ${formatTanggalManual(row.tgl_mulai)}</div><div class="mt-0.5">🛬 ${formatTanggalManual(row.janji_kembali)}</div></td>
-                <td class="py-3 px-4 text-center">${badge}</td>
+                <td class="py-3.5 px-4 max-w-xs whitespace-normal">
+                  <span class="font-bold text-emerald-600 text-[10px] block uppercase">[ ${row.jenis_izin} ]</span>
+                  <div class="text-slate-500 dark:text-zinc-400 mt-0.5 text-[11px]">${row.alasan || "-"}</div>
+                </td>
+                <td class="py-3.5 px-4 text-slate-500 text-[11px] whitespace-nowrap">
+                  <div>🛫 ${formatTanggalManual(row.tgl_mulai)}</div>
+                  <div class="mt-0.5">🛬 ${formatTanggalManual(row.janji_kembali)}</div>
+                </td>
+                <td class="py-3.5 px-4 text-center">${badgeStatus}</td>
               `;
               tbody.appendChild(tr);
             });
-            document.getElementById("countSakit").innerText = cntSakit;
-            document.getElementById("countKeluar").innerText = cntKeluar;
-            document.getElementById("countPulang").innerText = cntPulang;
           }
+        }).catch(err => {
+          tbody.innerHTML = `<tr><td colspan="4" class="text-center py-16 text-rose-500 text-xs">Gagal melakukan sinkronisasi dengan Cloud Database.</td></tr>`;
         });
     }
 
     function formatTanggalManual(strTgl) {
       if(!strTgl) return "-";
-      let t = new Date(strTgl);
-      return isNaN(t.getTime()) ? strTgl : t.toLocaleString('id-ID', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
+      try {
+        let t = new Date(strTgl);
+        if(isNaN(t.getTime())) return strTgl; 
+        return t.toLocaleString('id-ID', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}).replace(/\./g, ':');
+      } catch(e) { return strTgl; }
     }
   </script>
 </body>
