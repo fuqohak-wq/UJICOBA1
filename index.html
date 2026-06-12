@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,10 +13,9 @@
         extend: {
           colors: {
             hq: {
-              dark: '#0f172a', /* Slate 900 */
-              panel: '#1e293b', /* Slate 800 */
-              border: '#334155', /* Slate 700 */
-              blueBrand: '#0284c7' /* Sky 600 */
+              dark: '#0f172a',
+              panel: '#1e293b',
+              border: '#334155'
             }
           }
         }
@@ -56,18 +55,18 @@
         </div>
       </div>
       
-      <div class="flex flex-col items-center md:items-end text-center md:text-right w-full md:w-auto px-2 py-1 bg-blue-100/60 dark:bg-slate-900/50 rounded-xl border border-blue-200/60 dark:border-zinc-800">
+      <div class="flex flex-col items-center md:items-end text-center md:text-right w-full md:w-auto px-3 py-1 bg-blue-100/60 dark:bg-slate-900/50 rounded-xl border border-blue-200/60 dark:border-zinc-800">
         <div id="liveClock" class="text-xs font-mono font-bold text-blue-900 dark:text-sky-400 tracking-wider">
-          <i class="fa-regular fa-clock mr-1"></i> MEMUAT WAKTU...
+          <i class="fa-regular fa-clock mr-1"></i> MEMUAT WAKTU HUD...
         </div>
-        <div id="motivationBox" class="text-[10px] font-medium text-blue-800 dark:text-zinc-400 italic max-w-sm mt-0.5 truncate">
-          "Memuat moto taktis..."
+        <div id="motivationBox" class="text-[10px] font-bold text-blue-800 dark:text-zinc-400 italic max-w-sm mt-0.5 truncate">
+          "Memuat komitmen pengamanan..."
         </div>
       </div>
 
       <div class="flex items-center gap-2 w-full md:w-auto justify-center md:justify-end text-xs font-mono">
         <button onclick="toggleVisorTheme()" class="bg-blue-600 hover:bg-blue-700 text-white dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 border border-blue-700 dark:border-zinc-700 px-3 py-2 rounded-lg flex items-center gap-2 transition cursor-pointer shadow-sm">
-          <i id="visorIcon" class="fa-solid fa-sun"></i> <span>TEMA</span>
+          <i id="visorIcon" class="fa-solid fa-moon"></i> <span>TEMA</span>
         </button>
         
         <a href="https://manajemen.ppmuy.com/dashboard.html" class="bg-slate-800 hover:bg-slate-900 text-white border border-slate-950 px-3 py-2 rounded-lg flex items-center gap-2 transition font-bold shadow-sm">
@@ -81,21 +80,21 @@
   <section class="max-w-7xl mx-auto px-4 pt-6 grid grid-cols-3 gap-4">
     <div class="bg-white dark:bg-hq-panel border-l-4 border-amber-500 rounded-xl p-3 shadow-sm flex justify-between items-center transition-colors">
       <div>
-        <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-400">🏥 Sakit</p>
+        <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-400 font-bold">🏥 Sakit</p>
         <h3 id="countSakit" class="text-xl font-black text-slate-800 dark:text-zinc-100 font-mono">0</h3>
       </div>
       <i class="fa-solid fa-user-nurse text-amber-500/20 text-2xl hidden sm:block"></i>
     </div>
     <div class="bg-white dark:bg-hq-panel border-l-4 border-indigo-500 rounded-xl p-3 shadow-sm flex justify-between items-center transition-colors">
       <div>
-        <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-400">🌿 Keluar</p>
+        <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-400 font-bold">🌿 Keluar</p>
         <h3 id="countKeluar" class="text-xl font-black text-slate-800 dark:text-zinc-100 font-mono">0</h3>
       </div>
       <i class="fa-solid fa-leaf text-indigo-500/20 text-2xl hidden sm:block"></i>
     </div>
     <div class="bg-white dark:bg-hq-panel border-l-4 border-blue-600 rounded-xl p-3 shadow-sm flex justify-between items-center transition-colors">
       <div>
-        <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-400">🚨 Pulang</p>
+        <p class="text-[10px] uppercase font-mono tracking-wider text-slate-500 dark:text-zinc-400 font-bold">🚨 Pulang</p>
         <h3 id="countPulang" class="text-xl font-black text-slate-800 dark:text-zinc-100 font-mono">0</h3>
       </div>
       <i class="fa-solid fa-house-chimney text-blue-600/20 text-2xl hidden sm:block"></i>
@@ -107,15 +106,15 @@
     <section class="bg-white dark:bg-hq-panel rounded-2xl border-2 border-blue-100 dark:border-hq-border p-5 shadow-md h-fit transition-colors duration-300">
       <div class="flex items-center gap-2 pb-3 mb-4 border-b border-blue-100 dark:border-hq-border">
         <i class="fa-solid fa-file-pen text-blue-600 dark:text-sky-400"></i>
-        <h2 class="text-xs font-bold uppercase tracking-wider text-blue-900 dark:text-zinc-100">Form Pengajuan Izin</h2>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-blue-900 dark:text-zinc-100 font-mono">Form Pengajuan Izin</h2>
       </div>
 
       <form id="formIzin" class="space-y-4" onsubmit="handleFormSubmit(event)">
         <div>
-          <label class="block text-[10px] font-bold text-blue-900 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Nomor Induk Komunitas (NIK)</label>
+          <label class="block text-[10px] font-bold text-blue-900 dark:text-zinc-400 uppercase tracking-widest mb-1.5 font-mono">Nama Lengkap Santri</label>
           <div class="relative">
-            <i class="fa-solid fa-id-card absolute left-3 top-3.5 text-blue-600 dark:text-zinc-500 text-xs"></i>
-            <input type="text" name="nik" required placeholder="Masukkan NIK Santri" 
+            <i class="fa-solid fa-user absolute left-3 top-3.5 text-blue-600 dark:text-zinc-500 text-xs"></i>
+            <input type="text" name="nama_santri" required placeholder="Masukkan Nama Sesuai Induk" 
               class="w-full pl-9 pr-4 py-2.5 bg-blue-50/50 dark:bg-hq-dark text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-600 text-sm font-bold rounded-xl border border-blue-200 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition duration-200">
           </div>
         </div>
@@ -127,7 +126,7 @@
             <option value="" disabled selected class="text-slate-400">-- Pilih Kategori --</option>
             <option value="Sakit" class="text-slate-900">🏥 Sakit (Otomatis ACC)</option>
             <option value="Keluar" class="text-slate-900">🌿 Keluar Komplek (Otomatis ACC)</option>
-            <option value="Pulang" class="text-slate-900">🚨 Pulang ke Rumah (Butuh Wali)</option>
+            <option value="Pulang" class="text-slate-900">🚨 Pulang ke Rumah (Butuh ACC Wali)</option>
           </select>
         </div>
 
@@ -166,12 +165,12 @@
             <i class="fa-solid fa-network-wired text-sm"></i>
           </div>
           <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-blue-900 dark:text-zinc-100">Live Permit Board Monitor</h2>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-blue-900 dark:text-zinc-100 font-mono">Live Permit Board Monitor</h2>
             <p class="text-[10px] text-slate-500 dark:text-zinc-400 font-mono">Sinkronisasi berkas antrean izin santri secara real-time</p>
           </div>
         </div>
         <button onclick="muatDataLogIzin()" class="text-xs bg-blue-50 hover:bg-blue-100 dark:bg-hq-dark dark:hover:bg-zinc-800 border border-blue-200 dark:border-zinc-800 text-blue-700 dark:text-zinc-300 font-bold font-mono px-3 py-2 rounded-xl flex items-center gap-2 transition cursor-pointer shadow-sm">
-          <i class="fa-solid fa-arrows-rotate text-[10px]"></i> REFRESH DATA
+          <i class="fa-solid fa-arrows-rotate text-[10px]"></i> REFRESH HUD
         </button>
       </div>
 
@@ -193,10 +192,10 @@
   </main>
 
   <script>
-    // URL SERVICE LINK PRODUCTION (SUDAH DISINKRONKAN DENGAN EXEC BARU ANDA)
+    // MASUKKAN LINK URL WEB APP GOOGLE SCRIPT ANDA DI SINI
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx-Fpy0IjhzZf0dq5wSqpdSc09GGd5uXHp9vlLBlbE0MciPAMO1M1M-wx7X-KoyANnz/exec";
 
-    // --- ARRAY KATA-KATA MOTIVASI TIM KEAMANAN ---
+    // MOTIVASI KEAMANAN RANDOM SETIAP REFRESH
     const MOTO_KEAMANAN = [
       "🛡️ 'Disiplin adalah jembatan antara cita-cita dan pencapaian santri.'",
       "⚡ 'Keamanan bukan sekadar tugas, melainkan benteng ketenangan ibadah.'",
@@ -206,7 +205,7 @@
       "🎯 'Satu aturan ditaati, seribu ketenangan santri terpenuhi.'"
     ];
 
-    // --- JOKES / CERITA LUCU SAAT LOADING ---
+    // JOKES / CERITA LUCU SAAT LOADING SPINNER SYNCING
     const JOKES_SANTRI = [
       "Menghitung sandal hilang di depan masjid...",
       "Mencari santri yang ngumpet di kamar mandi pas subuhan...",
@@ -226,12 +225,11 @@
       muatDataLogIzin();
     });
 
-    // --- TIMER LIVE CLOCK HUD ---
     function initLiveClock() {
       const liveClock = document.getElementById("liveClock");
       setInterval(() => {
         const sekarang = new Date();
-        liveClock.innerHTML = `<i class="fa-regular fa-clock mr-1 text-blue-600 dark:text-sky-400 animate-spin-slow"></i> ${sekarang.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' })}`;
+        liveClock.innerHTML = `<i class="fa-regular fa-clock mr-1 text-blue-600 dark:text-sky-400"></i> ${sekarang.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' })}`;
       }, 1000);
     }
 
@@ -241,20 +239,20 @@
       box.innerText = MOTO_KEAMANAN[acak];
     }
 
-    // --- VISOR THEME CONTROLLER ---
     function toggleVisorTheme() {
       const html = document.documentElement;
       const visorIcon = document.getElementById("visorIcon");
       if (html.classList.contains('dark')) {
         html.classList.remove('dark');
+        html.classList.add('light');
         visorIcon.className = "fa-solid fa-moon text-indigo-600";
       } else {
+        html.classList.remove('light');
         html.classList.add('dark');
         visorIcon.className = "fa-solid fa-sun text-amber-400";
       }
     }
 
-    // --- SUBMIT TRANSMISSION ---
     function handleFormSubmit(event) {
       event.preventDefault();
       const form = document.getElementById('formIzin');
@@ -264,7 +262,7 @@
       const payload = {
         action: "submit_form",
         formData: {
-          nik: form.nik.value.trim(),
+          nama_santri: form.nama_santri.value.trim(),
           jenis_izin: form.jenis_izin.value,
           alasan: form.alasan.value.trim(),
           tgl_mulai: form.tgl_mulai.value,
@@ -288,7 +286,7 @@
         form.reset();
         
         statusBox.className = "mt-4 p-4 rounded-xl text-center font-mono font-bold text-xs bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-sky-400 border-2 border-blue-400/30";
-        statusBox.innerHTML = `🛰️ DATA TRANSMITTED! Berkas perizinan berhasil ditembak ke Bot Telegram Pengasuh.`;
+        statusBox.innerHTML = `🛰️ DATA TRANSMITTED! Berkas perizinan berhasil ditembak ke WhatsApp Grup, Bot Telegram & WhatsApp Wali Santri.`;
         statusBox.classList.remove('hidden');
         
         setTimeout(muatDataLogIzin, 1500);
@@ -302,7 +300,6 @@
       });
     }
 
-    // --- FETCH SYNCING TABLE DATA MONITOR ---
     function muatDataLogIzin() {
       const tbody = document.getElementById("tabelBodyIzin");
       const acakJoke = JOKES_SANTRI[Math.floor(Math.random() * JOKES_SANTRI.length)];
@@ -321,8 +318,6 @@
         .then(response => {
           if (response.status === "success") {
             let data = response.data;
-            
-            // Hitung Counter Statistik Ringkasan
             let cntSakit = 0, cntKeluar = 0, cntPulang = 0;
 
             if(data.length === 0) {
@@ -344,23 +339,20 @@
               let tglKembali = formatTanggalManual(row.janji_kembali);
               let statusIzin = (row.status || "Menunggu Persetujuan Pengasuh").trim();
 
-              // Akumulasi Counter khusus data yang berstatus AKTIF/DISETUJUI/MENUGGU
               if (!statusIzin.includes("Ditolak")) {
                 if (tipeIzin.toLowerCase() === "sakit") cntSakit++;
                 if (tipeIzin.toLowerCase() === "keluar") cntKeluar++;
                 if (tipeIzin.toLowerCase() === "pulang") cntPulang++;
               }
 
-              // Base Row Styling dengan Kontras Tinggi (Biru Jelas di Light Mode)
               let rowStyle = "border-b-2 border-blue-50/70 dark:border-zinc-900/40 bg-white dark:bg-hq-dark/40 hover:bg-blue-50/60 dark:hover:bg-hq-panel/30 transition-colors align-top text-slate-900 dark:text-zinc-200";
               if (statusIzin.includes("Menunggu")) {
                 rowStyle = "tactical-flash align-top text-blue-950 font-bold dark:text-zinc-100 bg-blue-50/30";
               }
               tr.className = rowStyle;
 
-              // Badge Status Hub Kontras Tinggi
               let badgeStatus = "";
-              if (statusIzin.includes("Disetujui")) {
+              if (statusIzin.includes("Disetujui") || statusIzin.includes("Otomatis")) {
                 badgeStatus = `<span class="px-2.5 py-1 rounded-md text-[10px] font-black bg-emerald-600 text-white border border-emerald-700 shadow-sm uppercase"><i class="fa-solid fa-square-check"></i> APP/OK</span>`;
               } else if (statusIzin.includes("Ditolak")) {
                 badgeStatus = `<span class="px-2.5 py-1 rounded-md text-[10px] font-black bg-rose-600 text-white border border-rose-700 shadow-sm uppercase"><i class="fa-solid fa-rectangle-xmark"></i> REJECT</span>`;
@@ -370,7 +362,7 @@
 
               tr.innerHTML = `
                 <td class="py-3.5 px-4 font-bold border-r border-blue-50 dark:border-transparent">
-                  <div class="text-blue-950 dark:text-zinc-50 font-black text-xs">${namaSantri}</div>
+                  <div class="text-blue-950 dark:text-zinc-50 font-black text-xs uppercase">${namaSantri}</div>
                   <div class="text-[10px] text-blue-800 dark:text-zinc-400 font-mono font-bold mt-0.5">ID: ${idNik}</div>
                   <div class="text-[9px] text-slate-500 dark:text-zinc-500 font-normal">RM: ${kelasSantri}</div>
                 </td>
