@@ -1,238 +1,56 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Perizinan Santri</title>
-
-<style>
-body{
-    font-family: Arial,sans-serif;
-    background:#f4f6f9;
-    margin:0;
-    padding:20px;
-}
-
-.container{
-    max-width:700px;
-    margin:auto;
-    background:white;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 3px 10px rgba(0,0,0,.1);
-}
-
-h2{
-    text-align:center;
-}
-
-label{
-    display:block;
-    margin-top:12px;
-    font-weight:bold;
-}
-
-input,select,textarea{
-    width:100%;
-    padding:10px;
-    border:1px solid #ddd;
-    border-radius:6px;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    margin-top:15px;
-    padding:12px;
-    background:#0d6efd;
-    color:white;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#0b5ed7;
-}
-
-#hasil{
-    margin-top:15px;
-    padding:10px;
-    border-radius:6px;
-    display:none;
-}
-
-.success{
-    background:#d1e7dd;
-    color:#0f5132;
-}
-
-.error{
-    background:#f8d7da;
-    color:#842029;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-table th, table td{
-    border:1px solid #ddd;
-    padding:8px;
-    text-align:left;
-}
-
-table th{
-    background:#eee;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Pengurus - E-Pesantren</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-sm bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl flex flex-col gap-4 text-center">
+        <div>
+            <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-lg">
+                <i class="fa-solid fa-shield-halved text-slate-950 text-2xl"></i>
+            </div>
+            <h1 class="text-base font-black text-amber-400 tracking-wider uppercase">E-PESANTREN CORE</h1>
+            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Otorisasi Manajemen Terpadu</p>
+        </div>
+        <form id="form-login" class="space-y-3 text-left">
+            <div>
+                <label class="text-[10px] font-black text-slate-400 tracking-wider uppercase block mb-1">Username Admin:</label>
+                <input type="text" id="inp-user" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white outline-none focus:border-amber-400" required>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-slate-400 tracking-wider uppercase block mb-1">PIN / Password:</label>
+                <input type="password" id="inp-pass" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white outline-none focus:border-amber-400" required>
+            </div>
+            <button type="submit" id="btn-login" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer">MASUK SISTEM</button>
+        </form>
+    </div>
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbz0i601sqImT3uLzz8YHN93Y_SkLUhhG4G6rEtZqeYeohj8EiKfbRxxule_a_GWxa0/exec";
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const b = document.getElementById('btn-login');
+            b.disabled = true; b.innerText = "VALIDASI CLOUD...";
+            
+            const p = new URLSearchParams();
+            p.append('aksi', 'login_admin');
+            p.append('username', document.getElementById('inp-user').value);
+            p.append('password', document.getElementById('inp-pass').value);
 
-<div class="container">
-
-<h2>Form Perizinan Santri</h2>
-
-<form id="izinForm">
-
-<label>NIK</label>
-<input type="text" id="nik" required>
-
-<label>Jenis Izin</label>
-<select id="jenis_izin" required>
-<option value="">Pilih</option>
-<option value="Keluar">Keluar</option>
-<option value="Sakit">Sakit</option>
-<option value="Pulang">Pulang</option>
-</select>
-
-<label>Alasan</label>
-<textarea id="alasan" required></textarea>
-
-<label>Tanggal Mulai</label>
-<input type="date" id="tgl_mulai" required>
-
-<label>Janji Kembali</label>
-<input type="date" id="janji_kembali" required>
-
-<button type="submit">Kirim Izin</button>
-
-</form>
-
-<div id="hasil"></div>
-
-<h3>Riwayat Izin</h3>
-
-<table>
-<thead>
-<tr>
-<th>Nama</th>
-<th>Jenis</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody id="logBody"></tbody>
-</table>
-
-</div>
-
-<script>
-
-const WEBAPP_URL =
-"https://script.google.com/macros/s/AKfycbxCI_P-9tPVOcnckUj3m0b_bto_40J9MzO8li3kUdxTPNPREOnGeyoPER2HL-DYdPPG/exec";
-
-const form = document.getElementById("izinForm");
-const hasil = document.getElementById("hasil");
-
-form.addEventListener("submit", async (e)=>{
-
-    e.preventDefault();
-
-    const payload = {
-        action:"submit_form",
-        formData:{
-            nik:document.getElementById("nik").value,
-            jenis_izin:document.getElementById("jenis_izin").value,
-            alasan:document.getElementById("alasan").value,
-            tgl_mulai:document.getElementById("tgl_mulai").value,
-            janji_kembali:document.getElementById("janji_kembali").value
-        }
-    };
-
-    try{
-
-        const response = await fetch(WEBAPP_URL,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(payload)
+            try {
+                let res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: p.toString() });
+                let r = await res.json();
+                if (r.status === "success") {
+                    localStorage.setItem('session_nama', r.nama);
+                    localStorage.setItem('session_role', r.role);
+                    window.location.href = "dashboard.html";
+                } else { alert(r.message); }
+            } catch(err) { alert("Koneksi gagal atau masalah CORS!"); }
+            finally { b.disabled = false; b.innerText = "MASUK SISTEM"; }
         });
-
-        const data = await response.json();
-
-        hasil.style.display="block";
-
-        if(data.status==="success"){
-            hasil.className="success";
-            hasil.innerHTML=data.message;
-            form.reset();
-            loadLog();
-        }else{
-            hasil.className="error";
-            hasil.innerHTML=data.message;
-        }
-
-    }catch(err){
-
-        hasil.style.display="block";
-        hasil.className="error";
-        hasil.innerHTML="Gagal terhubung ke server";
-
-        console.error(err);
-    }
-
-});
-
-async function loadLog(){
-
-    try{
-
-        const response = await fetch(
-            WEBAPP_URL + "?aksi=ambil_log_izin"
-        );
-
-        const result = await response.json();
-
-        if(result.status!=="success") return;
-
-        const tbody =
-        document.getElementById("logBody");
-
-        tbody.innerHTML="";
-
-        result.data.reverse().forEach(item=>{
-
-            tbody.innerHTML += `
-            <tr>
-                <td>${item.nama}</td>
-                <td>${item.jenis_izin}</td>
-                <td>${item.status}</td>
-            </tr>
-            `;
-        });
-
-    }catch(err){
-        console.error(err);
-    }
-}
-
-loadLog();
-
-</script>
-
+    </script>
 </body>
 </html>
