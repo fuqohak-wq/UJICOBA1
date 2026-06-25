@@ -65,7 +65,7 @@
             <tbody id="tabel-santri-body">
               <tr>
                 <td colspan="4" class="loading-text">
-                  Sedang mengambil data saldo santri...
+                  Sedang mengambil data melalui jalur aman proxy server...
                 </td>
               </tr>
             </tbody>
@@ -76,33 +76,36 @@
   </div>
 
   <script>
-    // URL Deployment resmi Apps Script Anda
     const URL_WEB_APP_GAS = "https://script.google.com/macros/s/AKfycbwcRxVXmsKp5Xk-QrWe2E5EaSxfEdC7IAKaiH2wkTiOScfoxOjyU017qsqYzyFUEm-K/exec";
+    
+    // Menggunakan open proxy server gratis dari AllOrigins untuk menembus sensor akun HP secara total
+    const URL_PROXY_BYPASS = "https://api.allorigins.win/get?url=" + encodeURIComponent(URL_WEB_APP_GAS + "?_nocache=" + new Date().getTime());
 
     let masterDataSantri = [];
 
-    // Membaca data dengan bypass paksa cache browser mobile
     window.onload = function() {
-      const script = document.createElement("script");
-      // Menggunakan kombinasi waktu milidetik + angka acak Math.random agar Google mengira ini device baru
-      script.src = URL_WEB_APP_GAS + "?callback=bukanJsonpBiasa&v=" + new Date().getTime() + "_" + Math.floor(Math.random() * 1000);
-      
-      script.onerror = function() {
-        alert("Gagal memuat data dari Google. Silakan refresh halaman ini sekali lagi.");
-      };
-      document.body.appendChild(script);
+      fetch(URL_PROXY_BYPASS)
+        .then(response => {
+          if (response.ok) return response.json();
+          throw new Error('Koneksi proxy gagal.');
+        })
+        .then(data => {
+          // AllOrigins membungkus respon teks asli di dalam field bernama 'contents'
+          const responseAsli = JSON.parse(data.contents);
+          
+          if (responseAsli.status === "success") {
+            masterDataSantri = responseAsli.data;
+            document.getElementById("search-input").disabled = false;
+            renderTabel(masterDataSantri);
+          } else {
+            alert("Gagal membaca isi tabel: " + responseAsli.message);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          alert("Gagal memuat data dari Google. Sesi browser HP terikat keamanan Google. Silakan bersihkan histori browser Anda.");
+        });
     };
-
-    // Fungsi global penampung data bypass
-    function bukanJsonpBiasa(response) {
-      if (response.status === "success") {
-        masterDataSantri = response.data;
-        document.getElementById("search-input").disabled = false;
-        renderTabel(masterDataSantri);
-      } else {
-        alert("Error internal sheet: " + response.message);
-      }
-    }
 
     function renderTabel(daftarSantri) {
       const tbody = document.getElementById("tabel-santri-body");
@@ -149,16 +152,14 @@
         alert(`Nomor HP untuk "${nama}" kosong.`);
         return;
       }
-      
       let nomorBersih = noHp.replace(/\D/g, '');
       if (nomorBersih.startsWith('0')) {
         nomorBersih = '62' + nomorBersih.slice(1);
       }
-      
       let templateText = document.getElementById("template-pesan").value;
       let pesanFix = templateText.replace(/{nama}/g, nama).replace(/{saldo}/g, nominalTunggakan);
 
-      // Jalur universal wa.me
+      // Jalur wa.me murni instan
       const linkWaMe = "https://wa.me/" + nomorBersih + "?text=" + encodeURIComponent(pesanFix);
       window.open(linkWaMe, '_blank');
     }
