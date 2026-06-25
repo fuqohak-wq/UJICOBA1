@@ -6,104 +6,175 @@
   <title>Dashboard Tunggakan Santri</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, sans-serif; background-color: #f8fafc; color: #334155; padding: 20px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; color: #334155; padding: 20px; line-height: 1.5; }
     .container { max-w: 1100px; margin: 0 auto; }
-    .header-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+    
+    /* Header Card */
+    .header-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .header-title h1 { font-size: 22px; font-weight: 700; color: #0f172a; }
+    .header-title p { font-size: 13px; color: #64748b; margin-top: 4px; }
+    .counter-badge { background: #fef9c3; border: 1px solid #fef08a; padding: 8px 16px; border-radius: 8px; color: #854d0e; font-size: 13px; font-weight: 500; }
+    
+    /* Layout Grid */
     .main-layout { display: grid; grid-template-columns: 1fr; gap: 24px; }
     @media (min-width: 992px) { .main-layout { grid-template-columns: 350px 1fr; } }
-    .sidebar-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; height: fit-content; }
-    textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-size: 13px; font-family: monospace; background-color: #f8fafc; resize: vertical; outline: none; }
-    .search-box { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; }
-    .search-box input { width: 100%; border: none; outline: none; font-size: 14px; }
-    .table-container { background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
-    table { width: 100%; border-collapse: collapse; }
-    th { background-color: #f1f5f9; padding: 14px 16px; font-size: 12px; font-weight: 600; color: #475569; }
-    td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; }
+    
+    /* Sidebar Template */
+    .sidebar-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; height: fit-content; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .sidebar-card h2 { font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 8px; }
+    .sidebar-card p { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+    textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-size: 13px; font-family: monospace; color: #334155; background-color: #f8fafc; resize: vertical; outline: none; }
+    textarea:focus { border-color: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
+    .instructions { background-color: #f1f5f9; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 12px; color: #475569; }
+    .tag-code { background: white; border: 1px solid #e2e8f0; padding: 1px 4px; border-radius: 4px; font-family: monospace; font-weight: bold; color: #16a34a; }
+    
+    /* Main Content */
+    .search-box { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .search-box input { width: 100%; border: none; outline: none; font-size: 14px; color: #1e293b; }
+    
+    /* Tabel */
+    .table-container { background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    th { background-color: #f1f5f9; padding: 14px 16px; font-size: 12px; font-weight: 600; color: #475569; border-b: 1px solid #e2e8f0; }
+    td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    tr:hover td { background-color: #f8fafc; }
     .minus-amount { font-family: monospace; font-weight: 600; color: #dc2626; text-align: right; }
-    .btn-wa { background-color: #16a34a; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; width: 100%; text-align: center; text-decoration: none; display: block;}
+    
+    /* Tombol */
+    .btn-wa { background-color: #16a34a; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; width: 100%; text-align: center; text-decoration: none; display: block; transition: background 0.2s; }
     .btn-wa:hover { background-color: #15803d; }
-    .loading-text { padding: 40px; text-align: center; color: #64748b; }
+    
+    /* Status Loader/Error */
+    .loading-text { padding: 40px; text-align: center; color: #64748b; font-size: 13px; }
+    .error-box { padding: 16px; background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; color: #991b1b; font-size: 13px; }
   </style>
 </head>
 <body>
 
   <div class="container">
+    
     <div class="header-card">
-      <div>
-        <h1 style="font-size: 22px; font-weight:700;">Sistem Monitoring Saldo Minus</h1>
-        <p style="font-size: 13px; color: #64748b;">Daftar konfirmasi iuran syahriyyah via Vercel.</p>
+      <div class="header-title">
+        <h1>Sistem Monitoring Saldo Minus</h1>
+        <p>Daftar konfirmasi iuran syahriyyah santri PPMUY langsung via Vercel.</p>
       </div>
-      <div style="background: #fef9c3; padding: 8px 16px; border-radius: 8px; color: #854d0e; font-size: 13px;" id="counter-info">Memuat data...</div>
+      <div class="counter-badge" id="counter-info">Menghubungkan...</div>
     </div>
 
     <div class="main-layout">
+      
       <div class="sidebar-card">
-        <h2 style="font-size: 14px; margin-bottom: 8px;">⚙️ Template Pesan WA</h2>
+        <h2>⚙️ Template Pesan WA</h2>
+        <p>Ubah draf teks di bawah ini. Variabel tanda kurung akan menyesuaikan otomatis.</p>
+        
         <textarea id="template-pesan" rows="10">Assalamualaikum Wr. Wb.
-Menginfokan kepada Wali Santri dari {nama}, saldo mengalami minus sebesar {saldo}. Mohon segera melakukan top-up. Terima kasih.</textarea>
+
+Menginfokan kepada Wali Santri dari {nama}, saat ini saldo tabungan santri di Sistem PPMUY mengalami minus sebesar {saldo}.
+
+Mohon berkenan untuk segera melakukan pengisian ulang (top-up) tabungan syahriyyah santri guna kelancaran administrasi pondok.
+
+Terima kasih atas kerja samanya.
+Wassalamualaikum Wr. Wb.</textarea>
+        
+        <div class="instructions">
+          <strong>📋 Parameter Tag:</strong>
+          Gunakan <span class="tag-code">{nama}</span> untuk nama santri.<br>
+          Gunakan <span class="tag-code">{saldo}</span> untuk angka tunggakan.
+        </div>
       </div>
 
       <div>
         <div class="search-box">
-          <input type="text" id="search-input" oninput="filterSantri()" placeholder="Cari nama santri...">
+          <input type="text" id="search-input" oninput="filterSantri()" placeholder="Cari nama santri atau nomor WA..." disabled>
         </div>
 
         <div class="table-container">
           <table>
             <thead>
               <tr>
-                <th style="width: 50px;">No</th>
+                <th style="width: 50px; text-align: center;">No</th>
                 <th>Nama Lengkap</th>
-                <th style="text-align: right;">Tunggakan</th>
+                <th style="text-align: right;">Tunggakan (Minus)</th>
                 <th style="width: 120px; text-align: center;">Aksi</th>
               </tr>
             </thead>
             <tbody id="tabel-santri-body">
-              <tr><td colspan="4" class="loading-text">Menghubungkan ke API Google Sheets...</td></tr>
+              <tr>
+                <td colspan="4" class="loading-text">
+                  Sedang mengambil data saldo dari Google API... Mohon tunggu.
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
+
     </div>
   </div>
 
   <script>
-    // ⚠️ GANTI DENGAN URL WEB APP /EXEC MILIK ANDA SENDIRI
+    // ⚠️ PASTIKAN URL /EXEC DI BAWAH INI ADALAH URL DEPLOYMENT TERBARU ANDA
     const URL_WEB_APP_GAS = "https://script.google.com/macros/s/AKfycbwcRxVXmsKp5Xk-QrWe2E5EaSxfEdC7IAKaiH2wkTiOScfoxOjyU017qsqYzyFUEm-K/exec";
 
     let masterDataSantri = [];
 
+    // Mengambil data secara aman dari domain luar (Bypass CORS via Redirect Follow)
     window.onload = function() {
-      fetch(URL_WEB_APP_GAS)
-        .then(response => response.json())
-        .then(response => {
-          if (response.status === "success") {
-            masterDataSantri = response.data;
-            renderTabel(masterDataSantri);
-          } else {
-            alert(response.message);
-          }
-        })
-        .catch(error => alert("Kendala CORS/Koneksi: " + error.toString()));
+      fetch(URL_WEB_APP_GAS, {
+        method: "GET",
+        mode: "cors",
+        redirect: "follow",
+        headers: {
+          "Content-Type": "text/plain"
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Gagal terhubung dengan server Google Apps Script.");
+        return response.json();
+      })
+      .then(response => {
+        if (response.status === "success") {
+          masterDataSantri = response.data;
+          document.getElementById("search-input").disabled = false;
+          renderTabel(masterDataSantri);
+        } else {
+          tampilkanPesanError(response.message);
+        }
+      })
+      .catch(error => {
+        tampilkanPesanError("Kendala Akses CORS: Pastikan setelan Deployment Google Apps Script Anda aksesnya sudah diatur ke 'Anyone' (Siapa Saja)!");
+        console.error(error);
+      });
     };
 
     function renderTabel(daftarSantri) {
       const tbody = document.getElementById("tabel-santri-body");
       const counterInfo = document.getElementById("counter-info");
+      
       if (daftarSantri.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="loading-text">Tidak ada santri minus.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="loading-text">Tidak ada data santri dengan saldo minus.</td></tr>`;
         counterInfo.innerText = "0 Santri";
         return;
       }
+
       counterInfo.innerText = `${daftarSantri.length} Santri Minus`;
       tbody.innerHTML = "";
+
       daftarSantri.forEach((santri, index) => {
         const tr = document.createElement("tr");
+        
         tr.innerHTML = `
-          <td style="text-align:center; color:#94a3b8;">${index + 1}</td>
-          <td><strong>${santri.nama}</strong><br><small style="color:#94a3b8;">${santri.whatsapp}</small></td>
+          <td style="text-align: center; color: #94a3b8; font-family: monospace;">${index + 1}</td>
+          <td>
+            <div style="font-weight: 600; color: #0f172a;">${santri.nama}</div>
+            <div style="font-size: 12px; color: #94a3b8; font-family: monospace; margin-top: 2px;">${santri.whatsapp || '-'}</div>
+          </td>
           <td class="minus-amount">-${santri.tunggakanTerformat}</td>
-          <td><button class="btn-wa" onclick="kirimWhatsApp('${santri.nama.replace(/'/g, "\\'")}', '${santri.whatsapp}', '${santri.tunggakanTerformat}')">Kirim WA</button></td>
+          <td>
+            <button class="btn-wa" onclick="kirimWhatsApp('${santri.nama.replace(/'/g, "\\'")}', '${santri.whatsapp}', '${santri.tunggakanTerformat}')">
+              Kirim WA
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
@@ -111,16 +182,43 @@ Menginfokan kepada Wali Santri dari {nama}, saldo mengalami minus sebesar {saldo
 
     function filterSantri() {
       const kataKunci = document.getElementById("search-input").value.toLowerCase().trim();
-      const hasilFilter = masterDataSantri.filter(s => s.nama.toLowerCase().includes(kataKunci));
+      const hasilFilter = masterDataSantri.filter(santri => {
+        return santri.nama.toLowerCase().includes(kataKunci) || santri.whatsapp.includes(kataKunci);
+      });
       renderTabel(hasilFilter);
     }
 
-    function kirimWhatsApp(nama, noHp, nominal) {
-      if (!noHp) return alert("Nomor kosong");
-      let bersih = noHp.replace(/\D/g, '');
-      if (bersih.startsWith('0')) bersih = '62' + bersih.slice(1);
-      let text = document.getElementById("template-pesan").value.replace(/{nama}/g, nama).replace(/{saldo}/g, nominal);
-      window.open(`https://api.whatsapp.com/send?phone=${bersih}&text=${encodeURIComponent(text)}`, '_blank');
+    function kirimWhatsApp(nama, noHp, nominalTunggakan) {
+      if (!noHp || noHp === '-') {
+        alert(`Gagal mengirim. Nomor HP untuk "${nama}" tidak tertera di sheet.`);
+        return;
+      }
+
+      let nomorBersih = noHp.replace(/\D/g, '');
+      if (nomorBersih.startsWith('0')) {
+        nomorBersih = '62' + nomorBersih.slice(1);
+      }
+
+      let templateText = document.getElementById("template-pesan").value;
+      let pesanFix = templateText
+        .replace(/{nama}/g, nama)
+        .replace(/{saldo}/g, nominalTunggakan);
+
+      window.open(`https://api.whatsapp.com/send?phone=${nomorBersih}&text=${encodeURIComponent(pesanFix)}`, '_blank');
+    }
+
+    function tampilkanPesanError(pesan) {
+      const tbody = document.getElementById("tabel-santri-body");
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" style="padding: 20px;">
+            <div class="error-box">
+              <strong>Sistem Gagal Memuat Data:</strong><br>${pesan}
+            </div>
+          </td>
+        </tr>
+      `;
+      document.getElementById("counter-info").innerText = "Error";
     }
   </script>
 </body>
