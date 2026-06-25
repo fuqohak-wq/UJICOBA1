@@ -44,7 +44,7 @@
     <div class="main-layout">
       <div class="sidebar-card">
         <h2>⚙️ Template Teks WA</h2>
-        <textarea id="template-pesan" rows="11">Anak bapak ibu yang bernama {nama} saldonya minus {saldo}. Tolong segera diisi.</textarea>
+        <textarea id="template-pesan" rows="5">Anak bapak ibu yang bernama {nama} saldonya minus {saldo}. Tolong segera diisi.</textarea>
       </div>
 
       <div>
@@ -81,19 +81,20 @@
 
     let masterDataSantri = [];
 
-    // Membaca data dengan mekanisme cache bypass dinamis waktu nyata
+    // Membaca data dengan bypass paksa cache browser mobile
     window.onload = function() {
       const script = document.createElement("script");
-      // Menambahkan stempel waktu &_nocache= agar browser HP tidak memaksakan memori akun Google lama
-      script.src = URL_WEB_APP_GAS + "?callback=callback&_nocache=" + new Date().getTime();
+      // Menggunakan kombinasi waktu milidetik + angka acak Math.random agar Google mengira ini device baru
+      script.src = URL_WEB_APP_GAS + "?callback=bukanJsonpBiasa&v=" + new Date().getTime() + "_" + Math.floor(Math.random() * 1000);
       
       script.onerror = function() {
-        alert("Gagal memuat data dari Google. Periksa koneksi internet.");
+        alert("Gagal memuat data dari Google. Silakan refresh halaman ini sekali lagi.");
       };
       document.body.appendChild(script);
     };
 
-    function callback(response) {
+    // Fungsi global penampung data bypass
+    function bukanJsonpBiasa(response) {
       if (response.status === "success") {
         masterDataSantri = response.data;
         document.getElementById("search-input").disabled = false;
@@ -145,11 +146,10 @@
 
     function kirimWhatsApp(nama, noHp, nominalTunggakan) {
       if (!noHp || noHp === '-') {
-        alert(`Nomor WA untuk "${nama}" kosong.`);
+        alert(`Nomor HP untuk "${nama}" kosong.`);
         return;
       }
       
-      // Bersihkan karakter non-angka
       let nomorBersih = noHp.replace(/\D/g, '');
       if (nomorBersih.startsWith('0')) {
         nomorBersih = '62' + nomorBersih.slice(1);
@@ -158,10 +158,8 @@
       let templateText = document.getElementById("template-pesan").value;
       let pesanFix = templateText.replace(/{nama}/g, nama).replace(/{saldo}/g, nominalTunggakan);
 
-      // JALUR DIKIRIM LANGSUNG LEWAT PROTOKOL WA.ME UNIVERSAL (ANTI-DOWNLOAD)
+      // Jalur universal wa.me
       const linkWaMe = "https://wa.me/" + nomorBersih + "?text=" + encodeURIComponent(pesanFix);
-
-      // Eksekusi langsung buka tab aplikasi
       window.open(linkWaMe, '_blank');
     }
   </script>
