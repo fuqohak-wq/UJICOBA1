@@ -8,65 +8,42 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; color: #334155; padding: 20px; line-height: 1.5; }
     .container { max-w: 1100px; margin: 0 auto; }
-    
-    /* Header Card */
     .header-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .header-title h1 { font-size: 22px; font-weight: 700; color: #0f172a; }
     .header-title p { font-size: 13px; color: #64748b; margin-top: 4px; }
     .counter-badge { background: #fef9c3; border: 1px solid #fef08a; padding: 8px 16px; border-radius: 8px; color: #854d0e; font-size: 13px; font-weight: 500; }
-    
-    /* Layout Grid */
     .main-layout { display: grid; grid-template-columns: 1fr; gap: 24px; }
     @media (min-width: 992px) { .main-layout { grid-template-columns: 350px 1fr; } }
-    
-    /* Sidebar Template */
     .sidebar-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; height: fit-content; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .sidebar-card h2 { font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 8px; }
-    .sidebar-card p { font-size: 12px; color: #64748b; margin-bottom: 16px; }
     textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-size: 13px; font-family: monospace; color: #334155; background-color: #f8fafc; resize: vertical; outline: none; }
-    textarea:focus { border-color: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,0.1); }
-    .instructions { background-color: #f1f5f9; padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 12px; color: #475569; }
-    .tag-code { background: white; border: 1px solid #e2e8f0; padding: 1px 4px; border-radius: 4px; font-family: monospace; font-weight: bold; color: #16a34a; }
-    
-    /* Main Content */
-    .search-box { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .search-box { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; }
     .search-box input { width: 100%; border: none; outline: none; font-size: 14px; color: #1e293b; }
-    
-    /* Tabel */
     .table-container { background: white; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
     th { background-color: #f1f5f9; padding: 14px 16px; font-size: 12px; font-weight: 600; color: #475569; border-b: 1px solid #e2e8f0; }
     td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
     tr:hover td { background-color: #f8fafc; }
     .minus-amount { font-family: monospace; font-weight: 600; color: #dc2626; text-align: right; }
-    
-    /* Tombol */
-    .btn-wa { background-color: #16a34a; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; width: 100%; text-align: center; text-decoration: none; display: block; transition: background 0.2s; }
+    .btn-wa { background-color: #16a34a; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; width: 100%; text-align: center; text-decoration: none; display: block; }
     .btn-wa:hover { background-color: #15803d; }
-    
-    /* Status Loader/Error */
     .loading-text { padding: 40px; text-align: center; color: #64748b; font-size: 13px; }
-    .error-box { padding: 16px; background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 8px; color: #991b1b; font-size: 13px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    
     <div class="header-card">
       <div class="header-title">
         <h1>Sistem Monitoring Saldo Minus</h1>
-        <p>Daftar konfirmasi iuran syahriyyah santri PPMUY langsung via Vercel.</p>
+        <p>Daftar konfirmasi iuran syahriyyah via Vercel (JSONP Premium Version).</p>
       </div>
       <div class="counter-badge" id="counter-info">Menghubungkan...</div>
     </div>
 
     <div class="main-layout">
-      
       <div class="sidebar-card">
         <h2>⚙️ Template Pesan WA</h2>
-        <p>Ubah draf teks di bawah ini. Variabel tanda kurung akan menyesuaikan otomatis.</p>
-        
         <textarea id="template-pesan" rows="10">Assalamualaikum Wr. Wb.
 
 Menginfokan kepada Wali Santri dari {nama}, saat ini saldo tabungan santri di Sistem PPMUY mengalami minus sebesar {saldo}.
@@ -75,12 +52,6 @@ Mohon berkenan untuk segera melakukan pengisian ulang (top-up) tabungan syahriyy
 
 Terima kasih atas kerja samanya.
 Wassalamualaikum Wr. Wb.</textarea>
-        
-        <div class="instructions">
-          <strong>📋 Parameter Tag:</strong>
-          Gunakan <span class="tag-code">{nama}</span> untuk nama santri.<br>
-          Gunakan <span class="tag-code">{saldo}</span> untuk angka tunggakan.
-        </div>
       </div>
 
       <div>
@@ -101,51 +72,46 @@ Wassalamualaikum Wr. Wb.</textarea>
             <tbody id="tabel-santri-body">
               <tr>
                 <td colspan="4" class="loading-text">
-                  Sedang mengambil data saldo dari Google API... Mohon tunggu.
+                  Sedang memuat data dari spreadsheet menggunakan jalur aman JSONP...
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-
     </div>
   </div>
 
   <script>
-    // ⚠️ PASTIKAN URL /EXEC DI BAWAH INI ADALAH URL DEPLOYMENT TERBARU ANDA
+    // URL Deployment resmi Apps Script Anda
     const URL_WEB_APP_GAS = "https://script.google.com/macros/s/AKfycbwcRxVXmsKp5Xk-QrWe2E5EaSxfEdC7IAKaiH2wkTiOScfoxOjyU017qsqYzyFUEm-K/exec";
 
     let masterDataSantri = [];
 
-    // Mengambil data secara aman dari domain luar (Bypass CORS via Redirect Follow)
+    // JALUR JSONP UTAMA: Inject tag <script> secara langsung ke HTML saat halaman dimuat
     window.onload = function() {
-      fetch(URL_WEB_APP_GAS, {
-        method: "GET",
-        mode: "cors",
-        redirect: "follow",
-        headers: {
-          "Content-Type": "text/plain"
-        }
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Gagal terhubung dengan server Google Apps Script.");
-        return response.json();
-      })
-      .then(response => {
-        if (response.status === "success") {
-          masterDataSantri = response.data;
-          document.getElementById("search-input").disabled = false;
-          renderTabel(masterDataSantri);
-        } else {
-          tampilkanPesanError(response.message);
-        }
-      })
-      .catch(error => {
-        tampilkanPesanError("Kendala Akses CORS: Pastikan setelan Deployment Google Apps Script Anda aksesnya sudah diatur ke 'Anyone' (Siapa Saja)!");
-        console.error(error);
-      });
+      const script = document.createElement("script");
+      // Meminta data dan mengarahkan target tangkapan ke fungsi 'callback'
+      script.src = URL_WEB_APP_GAS + "?callback=callback";
+      
+      // Jika skrip gagal dimuat dari server Google
+      script.onerror = function() {
+        tampilkanPesanError("Gagal memuat skrip data dari server Google Apps Script.");
+      };
+      
+      document.body.appendChild(script);
     };
+
+    // FUNGSI SAKTI: Menangkap data dari Google tanpa lewat filter JSON browser biasa
+    function callback(response) {
+      if (response.status === "success") {
+        masterDataSantri = response.data;
+        document.getElementById("search-input").disabled = false;
+        renderTabel(masterDataSantri);
+      } else {
+        tampilkanPesanError(response.message);
+      }
+    }
 
     function renderTabel(daftarSantri) {
       const tbody = document.getElementById("tabel-santri-body");
@@ -162,7 +128,6 @@ Wassalamualaikum Wr. Wb.</textarea>
 
       daftarSantri.forEach((santri, index) => {
         const tr = document.createElement("tr");
-        
         tr.innerHTML = `
           <td style="text-align: center; color: #94a3b8; font-family: monospace;">${index + 1}</td>
           <td>
@@ -190,19 +155,14 @@ Wassalamualaikum Wr. Wb.</textarea>
 
     function kirimWhatsApp(nama, noHp, nominalTunggakan) {
       if (!noHp || noHp === '-') {
-        alert(`Gagal mengirim. Nomor HP untuk "${nama}" tidak tertera di sheet.`);
+        alert(`Nomor HP untuk "${nama}" kosong.`);
         return;
       }
-
       let nomorBersih = noHp.replace(/\D/g, '');
-      if (nomorBersih.startsWith('0')) {
-        nomorBersih = '62' + nomorBersih.slice(1);
-      }
-
+      if (nomorBersih.startsWith('0')) nomorBersih = '62' + nomorBersih.slice(1);
+      
       let templateText = document.getElementById("template-pesan").value;
-      let pesanFix = templateText
-        .replace(/{nama}/g, nama)
-        .replace(/{saldo}/g, nominalTunggakan);
+      let pesanFix = templateText.replace(/{nama}/g, nama).replace(/{saldo}/g, nominalTunggakan);
 
       window.open(`https://api.whatsapp.com/send?phone=${nomorBersih}&text=${encodeURIComponent(pesanFix)}`, '_blank');
     }
@@ -212,7 +172,7 @@ Wassalamualaikum Wr. Wb.</textarea>
       tbody.innerHTML = `
         <tr>
           <td colspan="4" style="padding: 20px;">
-            <div class="error-box">
+            <div style="padding:16px; background-color:#fef2f2; border:1px solid #fee2e2; border-radius:8px; color:#991b1b; font-size:13px;">
               <strong>Sistem Gagal Memuat Data:</strong><br>${pesan}
             </div>
           </td>
