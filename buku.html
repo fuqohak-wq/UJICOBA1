@@ -3,192 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Book Layout & Reader Engine</title>
+    <title>Elegan Book Layout Engine - Fixed</title>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
     
-    <!-- Mammoth.js Library untuk membaca file DOCX -->
+    <!-- Mammoth.js untuk baca DOCX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    <!-- html2pdf.js untuk ekspor PDF presisi -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.min.js"></script>
 
     <style>
-        /* ==========================================================================
-           1. CORE & CONTROL PANEL STYLES (UI)
-           ========================================================================== */
+        /* ==========================================
+           1. PANEL KONTROL (UI ATAS)
+           ========================================== */
         :root {
             --bg-body: #1a1a1a;
             --panel-bg: #2a2a2a;
             --accent-gold: #c5a059;
-            --text-light: #ecefe6;
-            
-            /* Book Theme Variables (Default: Warm Sepia) */
             --paper-bg: #fbf7ee;
             --paper-text: #2c2523;
             --paper-border: #e2d9c8;
             --ornament-color: #4a3b32;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg-body);
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
+            color: #fff;
             min-height: 100vh;
         }
 
-        /* Top Control Panel */
         .control-panel {
             background-color: var(--panel-bg);
-            padding: 15px 25px;
+            padding: 12px 20px;
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--accent-gold);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .logo-title {
+        .logo {
             font-family: 'Cinzel', serif;
             color: var(--accent-gold);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            letter-spacing: 1px;
         }
 
-        .actions-group {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .btn-group { display: flex; gap: 10px; align-items: center; }
 
         .btn-upload {
             background: linear-gradient(135deg, #c5a059, #9e7d3b);
             color: #fff;
-            padding: 10px 18px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-upload:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-        }
-
-        input[type="file"] {
-            display: none;
         }
 
         .btn-action {
             background: #3a3a3a;
-            color: var(--text-light);
-            border: 1px solid #555;
-            padding: 9px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.2s;
-        }
-
-        .btn-action:hover {
-            background: #4a4a4a;
-            border-color: var(--accent-gold);
-        }
-
-        .theme-select {
-            background: #3a3a3a;
             color: #fff;
             border: 1px solid #555;
-            padding: 9px;
-            border-radius: 6px;
+            padding: 8px 14px;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-        /* Container Buku */
+        .btn-action:hover { border-color: var(--accent-gold); }
+
+        input[type="file"] { display: none; }
+
+        /* ==========================================
+           2. TAMPILAN BUKU (PREVIEW DI WEB)
+           ========================================== */
         .workspace {
-            flex: 1;
             padding: 40px 20px;
             display: flex;
             justify-content: center;
-            overflow-x: auto;
+            background: #111;
         }
 
-        /* ==========================================================================
-           2. BOOK LAYOUT & TYPOGRAPHY STYLES (PREVIEW & PRINT)
-           ========================================================================== */
-        .book-container {
-            width: 210mm; /* A5 / Standard Novel Spread */
-            min-height: 297mm;
+        .book-page {
+            width: 148mm; /* Ukuran Standar Buku A5 */
+            min-height: 210mm;
             background-color: var(--paper-bg);
             color: var(--paper-text);
-            padding: 25mm 20mm 25mm 20mm;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-            transition: background 0.3s, color 0.3s;
-            box-sizing: border-box;
+            padding: 20mm 15mm 20mm 15mm;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             border: 1px solid var(--paper-border);
+            margin-bottom: 30px;
+            position: relative;
         }
 
-        /* Theme Variants */
-        body.theme-white .book-container {
-            --paper-bg: #ffffff;
-            --paper-text: #111111;
-            --paper-border: #dddddd;
-            --ornament-color: #222222;
-        }
-
-        body.theme-dark .book-container {
-            --paper-bg: #1e1e1e;
-            --paper-text: #dcdcdc;
-            --paper-border: #333333;
-            --ornament-color: #c5a059;
-        }
-
-        /* Running Header */
+        /* Running Header Buku */
         .running-header {
             text-align: center;
             font-family: 'Pinyon Script', cursive;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: var(--ornament-color);
             border-bottom: 1px dashed var(--paper-border);
-            padding-bottom: 8px;
-            margin-bottom: 30px;
-            opacity: 0.85;
+            padding-bottom: 5px;
+            margin-bottom: 25px;
         }
 
-        /* Chapter Header & Ornaments */
+        /* Bab & Ornaments */
         .chapter-header {
             text-align: center;
-            margin: 40px 0 30px 0;
-            page-break-before: always;
+            margin: 30px 0 25px 0;
         }
 
-        .chapter-header:first-child {
-            page-break-before: avoid;
-        }
-
-        .chapter-ornament-top {
-            width: 140px;
-            height: 50px;
+        .chapter-ornament-svg {
+            width: 120px;
+            height: 40px;
             margin: 0 auto 10px auto;
             fill: var(--ornament-color);
             display: block;
@@ -196,45 +128,35 @@
 
         .chapter-number {
             font-family: 'Cinzel', serif;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
-            letter-spacing: 2px;
             color: var(--paper-text);
-            margin-bottom: 5px;
         }
 
         .chapter-title {
             font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            font-weight: 600;
+            font-size: 1.3rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Paragraf & Tipografi */
+        .book-content p {
+            font-family: 'Merriweather', serif;
+            font-size: 10pt;
+            line-height: 1.8;
+            text-align: justify;
+            text-indent: 1.5em;
             margin-bottom: 12px;
         }
 
-        .chapter-subtitle {
-            font-family: 'Merriweather', serif;
-            font-style: italic;
-            font-size: 0.95rem;
-            opacity: 0.8;
-            margin-bottom: 25px;
-        }
-
-        /* Typography Inside Book */
-        .book-content p {
-            font-family: 'Merriweather', serif;
-            font-size: 10.5pt;
-            line-height: 1.75;
-            text-align: justify;
-            text-indent: 1.8em;
-            margin-bottom: 0;
-        }
-
-        /* Drop Cap for first paragraph of a chapter */
+        /* Drop Cap di Awal Bab */
         .chapter-header + p::first-letter,
         .drop-cap::first-letter {
             font-family: 'Cinzel', serif;
-            font-size: 3.5em;
+            font-size: 3em;
             float: left;
             line-height: 0.8;
             padding-right: 8px;
@@ -243,217 +165,186 @@
             font-weight: bold;
         }
 
-        /* Decorative Scene Break */
+        /* ==========================================
+           3. PERBAIKAN FORMAT TABEL (SANGAT RAPI)
+           ========================================== */
+        .book-content table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 20px 0 !important;
+            font-family: 'Merriweather', serif;
+            font-size: 9pt;
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .book-content th, .book-content td {
+            border: 1px solid var(--ornament-color) !important;
+            padding: 8px 12px !important;
+            text-align: left !important;
+            vertical-align: top !important;
+            line-height: 1.5 !important;
+        }
+
+        .book-content th {
+            background-color: rgba(197, 160, 89, 0.2) !important;
+            font-family: 'Cinzel', serif !important;
+            font-weight: bold !important;
+        }
+
+        .book-content tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        /* Scene Break / Pembatas */
         .scene-break {
             text-align: center;
-            margin: 25px 0;
-            font-size: 1.2rem;
+            margin: 20px 0;
+            font-size: 1.1rem;
             color: var(--ornament-color);
-            letter-spacing: 5px;
+            letter-spacing: 4px;
         }
 
-        /* Page Numbering Footer */
+        /* Footer & Nomor Halaman */
         .page-footer {
-            margin-top: 50px;
+            margin-top: 40px;
             text-align: center;
-            position: relative;
         }
 
-        .page-number-frame {
+        .page-number {
             display: inline-block;
-            padding: 8px 25px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30'%3E%3Cpath d='M10 15 Q 25 2, 50 15 Q 75 28, 90 15 Q 75 2, 50 15 Q 25 28, 10 15' fill='none' stroke='%20%234a3b32' stroke-width='1'/%3E%3C/svg%3E");
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
             font-family: 'Cinzel', serif;
             font-size: 0.9rem;
-            font-weight: 600;
+            border-top: 1px solid var(--ornament-color);
+            border-bottom: 1px solid var(--ornament-color);
+            padding: 2px 15px;
         }
 
-        /* ==========================================================================
-           3. PRINT & PDF MEDIA RULES
-           ========================================================================== */
+        /* ==========================================
+           4. CETAK & SIMPAN PDF (WINDOW.PRINT)
+           ========================================== */
         @media print {
-            .control-panel {
-                display: none !important;
-            }
-            body {
-                background: none;
-            }
-            .workspace {
-                padding: 0;
-            }
-            .book-container {
-                box-shadow: none;
-                border: none;
-                width: 100%;
-                padding: 0;
+            .control-panel { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .workspace { padding: 0 !important; background: transparent !important; display: block !important; }
+            .book-page {
+                width: 100% !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                page-break-after: always;
             }
             @page {
                 size: A5;
-                margin: 20mm 15mm;
+                margin: 18mm 12mm 18mm 12mm;
             }
         }
     </style>
 </head>
-<body class="theme-sepia">
+<body>
 
-    <!-- Control Panel Top Bar -->
     <div class="control-panel">
-        <div class="logo-title">✨ ELEGAN BOOK LAYOUT ENGINE</div>
-        
-        <div class="actions-group">
+        <div class="logo">✨ LAYOUT BUKU PROFESIONAL</div>
+        <div class="btn-group">
             <label class="btn-upload">
-                📂 Pilih File (.DOCX)
+                📂 Upload DOCX
                 <input type="file" id="docxInput" accept=".docx">
             </label>
-
-            <select id="themeSelect" class="theme-select" onchange="changeTheme(this.value)">
-                <option value="theme-sepia">📜 Tema Sepia Classic</option>
-                <option value="theme-white">📄 Tema White Paper</option>
-                <option value="theme-dark">🌙 Tema Dark Gold</option>
-            </select>
-
-            <button class="btn-action" onclick="exportPDF()">📄 Download PDF</button>
-            <button class="btn-action" onclick="exportWord()">📝 Download Word (.docx)</button>
+            <button class="btn-action" onclick="downloadPDF()">🖨️ Cetak / Simpan PDF</button>
+            <button class="btn-action" onclick="exportWord()">📝 Download Word</button>
         </div>
     </div>
 
-    <!-- Book Workspace Preview -->
     <div class="workspace">
-        <div class="book-container" id="bookRenderArea">
-            <!-- Running Header -->
-            <div class="running-header" id="runningHeaderDisplay">C'est La Vie !</div>
-
-            <!-- Content Area -->
+        <div class="book-page" id="bookRenderArea">
+            <div class="running-header">C'est La Vie !</div>
             <div class="book-content" id="bookContent">
-                <!-- Template Default / Placeholder -->
                 <div class="chapter-header">
-                    <!-- SVG Ornament Header -->
-                    <svg class="chapter-ornament-top" viewBox="0 0 200 60">
-                        <path d="M100 10 C60 10, 40 40, 10 30 C40 35, 60 20, 100 25 C140 20, 160 35, 190 30 C160 40, 140 10, 100 10 Z M100 30 C80 30, 70 45, 50 40 C70 42, 80 35, 100 37 C120 35, 130 42, 150 40 C130 45, 120 30, 100 30 Z" fill="currentColor"/>
-                        <circle cx="100" cy="18" r="4" fill="currentColor"/>
+                    <svg class="chapter-ornament-svg" viewBox="0 0 200 60">
+                        <path d="M100 10 C60 10, 40 40, 10 30 C40 35, 60 20, 100 25 C140 20, 160 35, 190 30 C160 40, 140 10, 100 10 Z" />
                     </svg>
                     <div class="chapter-number">1</div>
-                    <div class="chapter-title">Pratinjau Layout Buku</div>
-                    <div class="chapter-subtitle">Silakan unggah file .docx Anda untuk melihat keajaiban layout otomatis.</div>
+                    <div class="chapter-title">Sains & Filosofi</div>
                 </div>
-
-                <p>Selamat datang di sistem pengatur tata letak buku otomatis berstandar profesional. Dokumen Word Anda yang biasa akan ditransformasikan secara presisi menjadi tata letak buku novel/karya ilmiah klasik yang mewah, rapi, dan memberikan kenyamanan membaca kelas premium.</p>
-
-                <div class="scene-break">❖ ❖ ❖</div>
-
-                <p>Sistem ini secara cerdas akan mendeteksi setiap Heading sebagai Bab Baru, menyusun running header, membuat Drop Cap di awal paragraf, serta memberikan ornamen pembatas otomatis pada setiap perpindahan bab.</p>
+                <p>Silakan upload file .docx Anda menggunakan tombol di atas. Tabel, paragraf, dan bab akan otomatis ditata secara sangat rapi dan presisi khas buku novel/karya ilmiah cetak.</p>
             </div>
-
-            <!-- Page Number Footer -->
             <div class="page-footer">
-                <div class="page-number-frame">1</div>
+                <div class="page-number">1</div>
             </div>
         </div>
     </div>
 
-    <!-- Script Processing -->
     <script>
-        let rawHtmlContent = "";
-        let originalFileName = "Buku_Profesional";
+        let filename = "Buku_Hasil_Layout";
 
-        // Read DOCX File
-        document.getElementById('docxInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
+        document.getElementById('docxInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
             if (!file) return;
 
-            originalFileName = file.name.replace('.docx', '');
+            filename = file.name.replace('.docx', '');
 
             const reader = new FileReader();
-            reader.onload = function(e) {
-                const arrayBuffer = e.target.result;
-                mammoth.convertToHtml({arrayBuffer: arrayBuffer})
-                    .then(displayResult)
-                    .catch(handleError);
+            reader.onload = function(event) {
+                mammoth.convertToHtml({arrayBuffer: event.target.result})
+                    .then(processHtml)
+                    .catch(err => alert("Gagal membaca file: " + err.message));
             };
             reader.readAsArrayBuffer(file);
         });
 
-        // Convert & Beautify HTML Layout
-        function displayResult(result) {
-            const container = document.getElementById('bookContent');
-            let html = result.value;
-
-            // Parser untuk mempercantik struktur HTML
+        function processHtml(result) {
+            let rawHtml = result.value;
             let parser = new DOMParser();
-            let doc = parser.parseFromString(html, 'text/html');
+            let doc = parser.parseFromString(rawHtml, 'text/html');
 
-            let formattedContent = '';
-            let chapterCount = 1;
-
+            let formattedHtml = "";
+            let chapIndex = 1;
             let elements = doc.body.children;
 
             for (let i = 0; i < elements.length; i++) {
                 let el = elements[i];
 
-                // Detect Heading 1 / Heading 2 as Chapter Title
+                // Jika Judul Bab (H1 / H2)
                 if (el.tagName === 'H1' || el.tagName === 'H2') {
-                    formattedContent += `
+                    formattedHtml += `
                         <div class="chapter-header">
-                            <svg class="chapter-ornament-top" viewBox="0 0 200 60">
-                                <path d="M100 10 C60 10, 40 40, 10 30 C40 35, 60 20, 100 25 C140 20, 160 35, 190 30 C160 40, 140 10, 100 10 Z M100 30 C80 30, 70 45, 50 40 C70 42, 80 35, 100 37 C130 45, 120 30, 100 30 Z" fill="currentColor"/>
-                                <circle cx="100" cy="18" r="4" fill="currentColor"/>
+                            <svg class="chapter-ornament-svg" viewBox="0 0 200 60">
+                                <path d="M100 10 C60 10, 40 40, 10 30 C40 35, 60 20, 100 25 C140 20, 160 35, 190 30 C160 40, 140 10, 100 10 Z" />
                             </svg>
-                            <div class="chapter-number">${chapterCount++}</div>
+                            <div class="chapter-number">${chapIndex++}</div>
                             <div class="chapter-title">${el.innerText}</div>
                         </div>
                     `;
                 } 
-                // Detect Scene Breaks (*** or ---)
+                // Jika Pembatas Scene
                 else if (el.innerText.trim() === '***' || el.innerText.trim() === '---') {
-                    formattedContent += `<div class="scene-break">❖ ❖ ❖</div>`;
+                    formattedHtml += `<div class="scene-break">❖ ❖ ❖</div>`;
                 } 
-                // Normal Paragraph
+                // Jika Tabel
+                else if (el.tagName === 'TABLE') {
+                    formattedHtml += el.outerHTML; // Otomatis dirapikan oleh CSS khusus tabel kita
+                }
+                // Jika Paragraf
                 else if (el.tagName === 'P') {
-                    if(el.innerText.trim() !== "") {
-                        formattedContent += `<p>${el.innerHTML}</p>`;
+                    if (el.innerText.trim() !== '') {
+                        formattedHtml += `<p>${el.innerHTML}</p>`;
                     }
-                } 
-                else {
-                    formattedContent += el.outerHTML;
+                } else {
+                    formattedHtml += el.outerHTML;
                 }
             }
 
-            container.innerHTML = formattedContent;
-            rawHtmlContent = formattedContent;
+            document.getElementById('bookContent').innerHTML = formattedHtml;
         }
 
-        function handleError(err) {
-            alert('Gagal membaca file DOCX: ' + err.message);
+        // Fungsi PDF Aman & Anti-Crash (Menggunakan Print Dialog Native Browser)
+        function downloadPDF() {
+            window.print();
         }
 
-        // Change Theme
-        function changeTheme(themeClass) {
-            document.body.className = themeClass;
-        }
-
-        // Export to PDF
-        function exportPDF() {
-            const element = document.getElementById('bookRenderArea');
-            const opt = {
-                margin:       [15, 15, 15, 15],
-                filename:     `${originalFileName}_Layout_Buku.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'mm', format: 'a5', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(element).save();
-        }
-
-        // Export to Word
+        // Fungsi Download Word
         function exportWord() {
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
-                "xmlns:w='urn:schemas-microsoft-com:office:word' "+
-                "xmlns='http://www.w3.org/TR/REC-html40'>"+
-                "<head><meta charset='utf-8'><title>Export Word</title></head><body>";
+            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
             const footer = "</body></html>";
             const sourceHTML = header + document.getElementById("bookRenderArea").innerHTML + footer;
             
@@ -461,7 +352,7 @@
             const fileDownload = document.createElement("a");
             document.body.appendChild(fileDownload);
             fileDownload.href = source;
-            fileDownload.download = `${originalFileName}_Formatted.doc`;
+            fileDownload.download = `${filename}_Layout.doc`;
             fileDownload.click();
             document.body.removeChild(fileDownload);
         }
