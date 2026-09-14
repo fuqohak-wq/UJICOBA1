@@ -10,125 +10,139 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     
-    <!-- Mammoth.js -->
+    <!-- Mammoth.js untuk membaca DOCX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-    
-    <!-- Paged.js Engine (Membuat Layout Buku & Footnote Bottom-Page Otomatis) -->
-    <script src="https://unpkg.com/pagedjs/dist/paged.polyline.js"></script>
 
     <style>
-        /* ==========================================================================
-           1. LAYOUT & TIPOGRAFI BUKU PROFESIONAL (KONSISTEN 100%)
-           ========================================================================== */
+        /* ==========================================
+           1. LAYOUT & UI UTAMA (KONTRASTING PREVIEW)
+           ========================================== */
         :root {
             --font-title: 'Cinzel', serif;
             --font-body: 'Merriweather', serif;
-            --text-color: #111111;
-            --border-color: #333333;
+            --paper-bg: #fdfbf7; /* Warna Kertas Cream Mewah */
+            --paper-text: #1a1a1a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: var(--font-body);
-            color: var(--text-color);
-            background: #222;
+            background-color: #121212;
+            color: #fff;
+            min-height: 100vh;
         }
 
-        /* Control Panel Top UI */
+        /* Top Bar Control Panel */
         .control-panel {
             position: fixed;
             top: 0; left: 0; right: 0;
-            background: #1a1a1a;
-            padding: 12px 20px;
+            background: #1e1e1e;
+            padding: 12px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 99999;
+            z-index: 10000;
             border-bottom: 2px solid #c5a059;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .brand-title {
+            color: #c5a059;
+            font-family: var(--font-title);
+            font-weight: bold;
+            font-size: 1.1rem;
         }
 
         .btn-upload {
             background: #c5a059;
             color: #000;
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
         }
+
+        .btn-upload:hover { background: #d4af66; }
 
         .btn-action {
             background: #333;
             color: #fff;
-            border: 1px solid #666;
-            padding: 8px 14px;
+            border: 1px solid #555;
+            padding: 8px 16px;
             border-radius: 4px;
             cursor: pointer;
+            margin-left: 8px;
         }
+
+        .btn-action:hover { border-color: #c5a059; }
 
         input[type="file"] { display: none; }
 
-        /* Area Render Halaman Buku */
-        #render-output {
-            margin-top: 60px;
-            padding: 20px;
+        /* Workspace Area Tempat Lembaran Buku Muncul */
+        .workspace {
+            margin-top: 70px;
+            padding: 40px 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            background-color: #1a1a1a;
+            min-height: calc(100vh - 70px);
         }
 
-        /* ==========================================================================
-           2. FORMAT ELEMEN DOKUMEN (JUDUL, DAFTAR ISI, TABEL, FOOTNOTE)
-           ========================================================================== */
-        
-        /* Judul Awal / H1 / Cover Title */
+        /* Container Kertas Buku (A5 Format) */
+        .book-container {
+            width: 148mm;
+            min-height: 210mm;
+            background-color: var(--paper-bg);
+            color: var(--paper-text);
+            padding: 20mm 15mm 20mm 15mm;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+            border: 1px solid #dcd4c5;
+            box-sizing: border-box;
+        }
+
+        /* ==========================================
+           2. FORMAT ISI BUKU PROFESIONAL
+           ========================================== */
+
+        /* Judul Awal & Judul Bab Seimbang */
         .book-title-header {
             text-align: center;
-            margin: 40px 0 30px 0;
+            margin: 30px 0 25px 0;
             page-break-before: always;
         }
 
+        .book-title-header:first-child { page-break-before: avoid; }
+
         .book-title-header h1 {
             font-family: var(--font-title);
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 10px;
-            color: #000;
+            letter-spacing: 1.2px;
+            color: #111;
+            margin-bottom: 8px;
         }
 
-        .book-title-header .author-name {
-            font-family: var(--font-body);
-            font-size: 1rem;
-            font-style: italic;
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        /* Paragraf & Tipografi Bersih (Teks Hitam Netral, Bebas Warna Biru) */
+        /* Paragraf Teks Murni (Bebas Warna Biru & Font Seragam) */
         p {
             font-family: var(--font-body) !important;
             font-size: 9.5pt !important;
             line-height: 1.8 !important;
             text-align: justify !important;
             text-indent: 1.5em;
-            margin-bottom: 8px;
-            color: #111 !important;
+            margin-bottom: 10px;
+            color: #1a1a1a !important;
         }
 
-        /* Hilangkan warna biru link pada teks biasa */
+        /* Sembunyikan Link Biru Netral */
         a {
             color: inherit !important;
             text-decoration: none !important;
         }
 
-        /* Format Daftar Isi Rapi (Dot Leaders & No Blue Text) */
-        .toc-container {
-            margin: 30px 0;
-            page-break-after: always;
-        }
-
+        /* Daftar Isi Rapi Tanpa Warna Biru */
         .toc-entry {
             display: flex;
             justify-content: space-between;
@@ -136,26 +150,23 @@
             font-family: var(--font-body);
             font-size: 9.5pt;
             margin-bottom: 8px;
+            color: #111;
         }
 
-        .toc-entry .toc-title {
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .toc-entry .toc-dots {
+        .toc-dots {
             flex: 1;
-            border-bottom: 1px dotted #666;
+            border-bottom: 1px dotted #777;
             margin: 0 8px;
         }
 
-        /* Format Tabel Elegan (Header Hitam Tipis / Minimalis Sesuai Permintaan) */
+        /* Format Tabel Elegan - Header Hitam Tipis Minimalis */
         table {
             width: 100% !important;
             border-collapse: collapse !important;
             margin: 20px 0 !important;
             font-size: 8.5pt !important;
             font-family: var(--font-body) !important;
+            background: #ffffff;
         }
 
         th {
@@ -170,83 +181,81 @@
 
         td {
             border: 1px solid #cccccc !important;
-            padding: 7px 10px !important;
+            padding: 8px 10px !important;
             vertical-align: top !important;
+            color: #222 !important;
         }
 
         tr:nth-child(even) td {
-            background-color: #f9f9f9;
+            background-color: #f7f5f0;
         }
 
-        /* Format Angka Rujukan Footnote Dalam Teks */
-        sup.footnote-ref {
+        /* Format Catatan Kaki (Footnote) Bawah Halaman */
+        .footnote-area {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #444;
+            font-size: 8pt;
+            line-height: 1.6;
+        }
+
+        .footnote-area ol {
+            padding-left: 18px;
+        }
+
+        .footnote-area li {
+            margin-bottom: 4px;
+            text-align: justify;
+            color: #333;
+        }
+
+        /* Angka Footnote di dalam Teks */
+        sup {
             font-size: 0.7em;
             vertical-align: super;
-            line-height: 0;
             font-weight: bold;
-            padding: 0 2px;
+            padding: 0 1px;
         }
 
-        /* Format Footnote Di Bagian Bawah Halaman (Sesuai Gambar 5) */
-        .footnote-item {
-            font-family: var(--font-body);
-            font-size: 7.5pt;
-            line-height: 1.5;
-            color: #333;
-            margin-top: 4px;
-            text-indent: 0;
-            text-align: justify;
-        }
-
-        /* ==========================================================================
-           3. ATURAN HALAMAN BUKU (A5 PAGE MARGINS & PRINT CLEANING)
-           ========================================================================== */
-        @page {
-            size: A5;
-            margin: 20mm 15mm 20mm 15mm;
-
-            @bottom-center {
-                content: counter(page);
-                font-family: 'Cinzel', serif;
-                font-size: 9pt;
-            }
-        }
-
-        /* Area Footnote Otomatis Di Bawah Halaman Oleh Paged.js */
-        @page {
-            @footnote {
-                border-top: 0.5pt solid #333;
-                padding-top: 8px;
-                margin-top: 15px;
-            }
-        }
-
+        /* ==========================================
+           3. CETAK / SAVE PDF BERSIH
+           ========================================== */
         @media print {
             .control-panel { display: none !important; }
-            #render-output { margin-top: 0 !important; padding: 0 !important; }
+            body { background: white !important; }
+            .workspace { padding: 0 !important; background: transparent !important; }
+            .book-container {
+                width: 100% !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+            }
+            @page {
+                size: A5;
+                margin: 20mm 15mm 20mm 15mm;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="control-panel">
-        <div style="color:#c5a059; font-weight:bold; font-family:'Cinzel',serif;">✨ BUKU PROFESIONAL ENGINE</div>
+        <div class="brand-title">✨ BUKU PROFESIONAL ENGINE</div>
         <div>
             <label class="btn-upload">
                 📂 Upload DOCX
                 <input type="file" id="docxInput" accept=".docx">
             </label>
-            <button class="btn-action" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+            <button class="btn-action" onclick="window.print()">🖨️ Simpan PDF</button>
         </div>
     </div>
 
-    <div id="render-output">
-        <div id="book-src">
+    <div class="workspace">
+        <div class="book-container" id="bookRenderArea">
             <div class="book-title-header">
-                <h1>Pratinjau Dokumen</h1>
-                <div class="author-name">Silakan upload file .docx Anda</div>
+                <h1>Pratinjau Layout Buku</h1>
             </div>
-            <p>Sistem akan memformat ulang dokumen secara rapi: Judul seimbang, Daftar Isi bersih tanpa warna biru, Tabel ber-header hitam tipis elegan, serta Footnote yang otomatis mengunci di bagian paling bawah halaman.</p>
+            <p>Silakan upload file .docx Anda menggunakan tombol di atas. Sistem akan menyusun isi buku menjadi format cetak A5 yang rapi, terang, dan nyaman dibaca.</p>
         </div>
     </div>
 
@@ -258,65 +267,50 @@
             const reader = new FileReader();
             reader.onload = function(event) {
                 mammoth.convertToHtml({arrayBuffer: event.target.result})
-                    .then(cleanAndFormatDocument)
+                    .then(formatDocument)
                     .catch(err => alert("Gagal membaca file: " + err.message));
             };
             reader.readAsArrayBuffer(file);
         });
 
-        function cleanAndFormatDocument(result) {
+        function formatDocument(result) {
             let rawHtml = result.value;
             let parser = new DOMParser();
             let doc = parser.parseFromString(rawHtml, 'text/html');
 
-            let outputContainer = document.createElement('div');
+            let output = document.createElement('div');
             let elements = doc.body.children;
-
             let inToc = false;
 
             for (let i = 0; i < elements.length; i++) {
                 let el = elements[i];
                 let text = el.innerText.trim();
 
-                // 1. Bersihkan Judul Utama / Bab
+                // 1. Judul Bab & Cover
                 if (el.tagName === 'H1' || el.tagName === 'H2') {
                     if (text.toUpperCase().includes("DAFTAR ISI")) {
                         inToc = true;
-                        let tocHeader = document.createElement('div');
-                        tocHeader.className = 'book-title-header';
-                        tocHeader.innerHTML = `<h1>DAFTAR ISI</h1>`;
-                        outputContainer.appendChild(tocHeader);
+                        output.innerHTML += `<div class="book-title-header"><h1>DAFTAR ISI</h1></div>`;
                         continue;
                     }
-
                     inToc = false;
-                    let chapterHeader = document.createElement('div');
-                    chapterHeader.className = 'book-title-header';
-                    chapterHeader.innerHTML = `<h1>${text}</h1>`;
-                    outputContainer.appendChild(chapterHeader);
-                } 
-                // 2. Format Daftar Isi Rapi Tanpa Warna Biru
+                    output.innerHTML += `<div class="book-title-header"><h1>${text}</h1></div>`;
+                }
+                // 2. Format Daftar Isi
                 else if (inToc && el.tagName === 'P') {
                     if (text !== '') {
-                        let tocItem = document.createElement('div');
-                        tocItem.className = 'toc-entry';
-                        
-                        // Pisahkan judul dan nomor halaman jika ada
                         let pageMatch = text.match(/(.*?)\s*(\d+)$/);
                         if (pageMatch) {
-                            tocItem.innerHTML = `<span class="toc-title">${pageMatch[1]}</span><span class="toc-dots"></span><span>${pageMatch[2]}</span>`;
+                            output.innerHTML += `<div class="toc-entry"><span>${pageMatch[1]}</span><span class="toc-dots"></span><span>${pageMatch[2]}</span></div>`;
                         } else {
-                            tocItem.innerHTML = `<span class="toc-title">${text}</span>`;
+                            output.innerHTML += `<div class="toc-entry"><span>${text}</span></div>`;
                         }
-                        outputContainer.appendChild(tocItem);
                     }
                 }
-                // 3. Format Tabel Rapi Dengan Header Hitam Tipis
+                // 3. Format Tabel Header Hitam Tipis
                 else if (el.tagName === 'TABLE') {
                     inToc = false;
                     let table = el.cloneNode(true);
-                    
-                    // Pastikan baris pertama tabel diubah jadi TH (Header)
                     let firstRow = table.querySelector('tr');
                     if (firstRow) {
                         let cells = firstRow.querySelectorAll('td, th');
@@ -326,27 +320,25 @@
                             cell.replaceWith(th);
                         });
                     }
-                    outputContainer.appendChild(table);
+                    output.appendChild(table);
                 }
-                // 4. Format Paragraf & Footnote
+                // 4. Paragraf Biasa
                 else if (el.tagName === 'P') {
                     inToc = false;
                     if (text !== '') {
-                        let p = document.createElement('p');
-                        p.innerHTML = el.innerHTML;
-                        outputContainer.appendChild(p);
+                        output.innerHTML += `<p>${el.innerHTML}</p>`;
                     }
-                } else {
-                    outputContainer.appendChild(el.cloneNode(true));
+                }
+                // 5. Footnote Area
+                else if (el.tagName === 'OL' || el.classList.contains('footnotes')) {
+                    output.innerHTML += `<div class="footnote-area">${el.outerHTML}</div>`;
+                }
+                else {
+                    output.appendChild(el.cloneNode(true));
                 }
             }
 
-            // Rendert ulang tampilan dengan Paged.js
-            let srcContainer = document.getElementById('book-src');
-            srcContainer.innerHTML = outputContainer.innerHTML;
-
-            // Jalankan Paged.js untuk membagi halaman A5 dan menyusun Footnote di bawah
-            window.PagedPolyfill.preview();
+            document.getElementById('bookRenderArea').innerHTML = output.innerHTML;
         }
     </script>
 </body>
