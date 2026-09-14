@@ -3,370 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buku Profesional</title>
+    <title>Buku Profesional Engine</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
     
+    <!-- Mammoth.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    
+    <!-- Paged.js Engine (Membuat Layout Buku & Footnote Bottom-Page Otomatis) -->
+    <script src="https://unpkg.com/pagedjs/dist/paged.polyline.js"></script>
 
     <style>
+        /* ==========================================================================
+           1. LAYOUT & TIPOGRAFI BUKU PROFESIONAL (KONSISTEN 100%)
+           ========================================================================== */
         :root {
-            --bg-body: #1a1a1a;
-            --panel-bg: #2a2a2a;
-            --accent-gold: #c5a059;
-            --paper-bg: #fbf7ee;
-            --paper-text: #2c2523;
-            --paper-border: #e2d9c8;
-            --ornament-color: #4a3b32;
+            --font-title: 'Cinzel', serif;
+            --font-body: 'Merriweather', serif;
+            --text-color: #111111;
+            --border-color: #333333;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg-body);
-            color: #fff;
-            min-height: 100vh;
+            font-family: var(--font-body);
+            color: var(--text-color);
+            background: #222;
         }
 
-        /* Control Panel Header UI */
+        /* Control Panel Top UI */
         .control-panel {
-            background-color: var(--panel-bg);
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #1a1a1a;
             padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--accent-gold);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            z-index: 99999;
+            border-bottom: 2px solid #c5a059;
         }
-
-        .logo {
-            font-family: 'Cinzel', serif;
-            color: var(--accent-gold);
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .btn-group { display: flex; gap: 10px; align-items: center; }
 
         .btn-upload {
-            background: linear-gradient(135deg, #c5a059, #9e7d3b);
-            color: #fff;
+            background: #c5a059;
+            color: #000;
             padding: 8px 16px;
-            border-radius: 5px;
+            border-radius: 4px;
+            font-weight: bold;
             cursor: pointer;
-            font-weight: 600;
         }
 
         .btn-action {
-            background: #3a3a3a;
+            background: #333;
             color: #fff;
-            border: 1px solid #555;
+            border: 1px solid #666;
             padding: 8px 14px;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
         }
 
-        .btn-action:hover { border-color: var(--accent-gold); }
-
         input[type="file"] { display: none; }
 
-        /* Workspace & Canvas Buku */
-        .workspace {
-            padding: 40px 20px;
+        /* Area Render Halaman Buku */
+        #render-output {
+            margin-top: 60px;
+            padding: 20px;
             display: flex;
-            justify-content: center;
-            background: #111;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .book-page {
-            width: 148mm;
-            min-height: 210mm;
-            background-color: var(--paper-bg);
-            color: var(--paper-text);
-            padding: 20mm 15mm 20mm 15mm;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            border: 1px solid var(--paper-border);
-            position: relative;
-        }
-
-        /* Tipografi & Paragraf */
-        .book-content p {
-            font-family: 'Merriweather', serif;
-            font-size: 9.5pt;
-            line-height: 1.85;
-            text-align: justify;
-            text-indent: 1.5em;
-            margin-bottom: 10px;
-        }
-
-        /* Header Bab & Ornamen Lengkung */
-        .chapter-header {
+        /* ==========================================================================
+           2. FORMAT ELEMEN DOKUMEN (JUDUL, DAFTAR ISI, TABEL, FOOTNOTE)
+           ========================================================================== */
+        
+        /* Judul Awal / H1 / Cover Title */
+        .book-title-header {
             text-align: center;
-            margin: 35px 0 25px 0;
+            margin: 40px 0 30px 0;
             page-break-before: always;
         }
 
-        .chapter-header:first-child { page-break-before: avoid; }
-
-        .chapter-ornament-svg {
-            width: 100px;
-            height: 30px;
-            margin: 0 auto 10px auto;
-            fill: var(--ornament-color);
-            display: block;
-        }
-
-        .chapter-number {
-            font-family: 'Cinzel', serif;
-            font-size: 2.2rem;
+        .book-title-header h1 {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--paper-text);
-        }
-
-        .chapter-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            text-transform: uppercase;
             letter-spacing: 1.5px;
-            margin-top: 8px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: #000;
         }
 
-        /* Drop Cap di Awal Bab */
-        .chapter-header + p::first-letter {
-            font-family: 'Cinzel', serif;
-            font-size: 3.2em;
-            float: left;
-            line-height: 0.8;
-            padding-right: 8px;
-            padding-top: 2px;
-            color: var(--ornament-color);
-            font-weight: bold;
+        .book-title-header .author-name {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-style: italic;
+            margin-top: 15px;
+            text-align: center;
         }
 
-        /* Formatting Angka Rujukan Footnote [1], [2] di dalam Teks */
-        .book-content sup, .book-content a[href*="#fn"], .book-content a[id*="fnref"] {
-            font-family: 'Merriweather', serif;
-            font-size: 0.75em;
+        /* Paragraf & Tipografi Bersih (Teks Hitam Netral, Bebas Warna Biru) */
+        p {
+            font-family: var(--font-body) !important;
+            font-size: 9.5pt !important;
+            line-height: 1.8 !important;
+            text-align: justify !important;
+            text-indent: 1.5em;
+            margin-bottom: 8px;
+            color: #111 !important;
+        }
+
+        /* Hilangkan warna biru link pada teks biasa */
+        a {
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+
+        /* Format Daftar Isi Rapi (Dot Leaders & No Blue Text) */
+        .toc-container {
+            margin: 30px 0;
+            page-break-after: always;
+        }
+
+        .toc-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: var(--font-body);
+            font-size: 9.5pt;
+            margin-bottom: 8px;
+        }
+
+        .toc-entry .toc-title {
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .toc-entry .toc-dots {
+            flex: 1;
+            border-bottom: 1px dotted #666;
+            margin: 0 8px;
+        }
+
+        /* Format Tabel Elegan (Header Hitam Tipis / Minimalis Sesuai Permintaan) */
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 20px 0 !important;
+            font-size: 8.5pt !important;
+            font-family: var(--font-body) !important;
+        }
+
+        th {
+            background-color: #222222 !important;
+            color: #ffffff !important;
+            font-family: var(--font-title) !important;
+            font-weight: 600 !important;
+            text-align: left !important;
+            padding: 8px 10px !important;
+            border: 1px solid #222 !important;
+        }
+
+        td {
+            border: 1px solid #cccccc !important;
+            padding: 7px 10px !important;
+            vertical-align: top !important;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        /* Format Angka Rujukan Footnote Dalam Teks */
+        sup.footnote-ref {
+            font-size: 0.7em;
             vertical-align: super;
-            color: var(--ornament-color);
-            text-decoration: none;
+            line-height: 0;
             font-weight: bold;
             padding: 0 2px;
         }
 
-        /* Formatting Area Footnote / Catatan Kaki Bawah */
-        .book-content ol[id*="fn"], .book-content .footnotes, .footnotes-list {
-            margin-top: 30px;
-            padding-top: 12px;
-            border-top: 1px solid var(--ornament-color);
-            font-size: 8pt;
-            line-height: 1.6;
-        }
-
-        .book-content ol[id*="fn"] li, .footnotes-list li {
-            font-family: 'Merriweather', serif;
-            margin-bottom: 6px;
-            text-align: justify;
+        /* Format Footnote Di Bagian Bawah Halaman (Sesuai Gambar 5) */
+        .footnote-item {
+            font-family: var(--font-body);
+            font-size: 7.5pt;
+            line-height: 1.5;
             color: #333;
-        }
-
-        /* Sembunyikan Panah Kembalian (↑) dari Mammoth */
-        .book-content a[href*="#fnref"], .book-content .footnote-backlink {
-            display: none !important;
-        }
-
-        /* Formatting Daftar Pustaka / Bibliography (Hanging Indent) */
-        .bibliography-section p, .daftar-pustaka p {
-            text-indent: -2em !important;
-            padding-left: 2em !important;
-            margin-bottom: 8px !important;
-            text-align: left !important;
-        }
-
-        /* Scene Break / Pembatas Elegan */
-        .scene-break {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 1.2rem;
-            color: var(--ornament-color);
-        }
-
-        /* Footer & Nomor Halaman */
-        .page-footer {
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        .page-number {
-            display: inline-block;
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            font-weight: bold;
-            padding: 2px 12px;
+            margin-top: 4px;
+            text-indent: 0;
+            text-align: justify;
         }
 
         /* ==========================================================================
-           PENGATURAN CETAK / PDF BERSIH KELAS BUKU CETAK (BEBAS TEXT BROWSER)
+           3. ATURAN HALAMAN BUKU (A5 PAGE MARGINS & PRINT CLEANING)
            ========================================================================== */
-        @media print {
-            /* Sembunyikan Navigasi Web */
-            .control-panel { display: none !important; }
-            
-            body { 
-                background: white !important; 
-                color: black !important;
-            }
-            
-            .workspace { 
-                padding: 0 !important; 
-                background: transparent !important; 
-                display: block !important; 
-            }
-            
-            .book-page {
-                width: 100% !important;
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
+        @page {
+            size: A5;
+            margin: 20mm 15mm 20mm 15mm;
 
-            /* MENGHILANGKAN HEADER/FOOTER BROWSERS (URL, TANGGAL, JUDUL) BERSIH 100% */
-            @page {
-                size: A5;
-                margin: 15mm 12mm 15mm 12mm;
+            @bottom-center {
+                content: counter(page);
+                font-family: 'Cinzel', serif;
+                font-size: 9pt;
             }
+        }
+
+        /* Area Footnote Otomatis Di Bawah Halaman Oleh Paged.js */
+        @page {
+            @footnote {
+                border-top: 0.5pt solid #333;
+                padding-top: 8px;
+                margin-top: 15px;
+            }
+        }
+
+        @media print {
+            .control-panel { display: none !important; }
+            #render-output { margin-top: 0 !important; padding: 0 !important; }
         }
     </style>
 </head>
 <body>
 
     <div class="control-panel">
-        <div class="logo">✨ PUBLISHER BOOK ENGINE</div>
-        <div class="btn-group">
+        <div style="color:#c5a059; font-weight:bold; font-family:'Cinzel',serif;">✨ BUKU PROFESIONAL ENGINE</div>
+        <div>
             <label class="btn-upload">
                 📂 Upload DOCX
                 <input type="file" id="docxInput" accept=".docx">
             </label>
-            <button class="btn-action" onclick="downloadPDF()">🖨️ Simpan ke PDF Bersih</button>
-            <button class="btn-action" onclick="exportWord()">📝 Download Word</button>
+            <button class="btn-action" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
         </div>
     </div>
 
-    <div class="workspace">
-        <div class="book-page" id="bookRenderArea">
-            <div class="book-content" id="bookContent">
-                <div class="chapter-header">
-                    <svg class="chapter-ornament-svg" viewBox="0 0 200 40">
-                        <path d="M20,20 Q100,0 180,20 Q100,40 20,20 Z" />
-                    </svg>
-                    <div class="chapter-number">1</div>
-                    <div class="chapter-title">Pratinjau Layout</div>
-                </div>
-                <p>Silakan unggah dokumen Word (.docx) Anda. Sistem akan langsung mengurutkan catatan kaki (footnote), menghapus simbol tautan aneh, serta memberikan format daftar pustaka profesional secara otomatis.</p>
+    <div id="render-output">
+        <div id="book-src">
+            <div class="book-title-header">
+                <h1>Pratinjau Dokumen</h1>
+                <div class="author-name">Silakan upload file .docx Anda</div>
             </div>
-            <div class="page-footer">
-                <div class="page-number">1</div>
-            </div>
+            <p>Sistem akan memformat ulang dokumen secara rapi: Judul seimbang, Daftar Isi bersih tanpa warna biru, Tabel ber-header hitam tipis elegan, serta Footnote yang otomatis mengunci di bagian paling bawah halaman.</p>
         </div>
     </div>
 
     <script>
-        let filename = "Buku_Profesional";
-
         document.getElementById('docxInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
 
-            filename = file.name.replace('.docx', '');
-
             const reader = new FileReader();
             reader.onload = function(event) {
-                // Konversi Mammoth dengan penanganan Footnote
                 mammoth.convertToHtml({arrayBuffer: event.target.result})
-                    .then(processAndCleanHtml)
-                    .catch(err => alert("Error membaca file: " + err.message));
+                    .then(cleanAndFormatDocument)
+                    .catch(err => alert("Gagal membaca file: " + err.message));
             };
             reader.readAsArrayBuffer(file);
         });
 
-        function processAndCleanHtml(result) {
+        function cleanAndFormatDocument(result) {
             let rawHtml = result.value;
             let parser = new DOMParser();
             let doc = parser.parseFromString(rawHtml, 'text/html');
 
-            let formattedHtml = "";
-            let chapIndex = 1;
-            let isBiblioSection = false;
-
+            let outputContainer = document.createElement('div');
             let elements = doc.body.children;
+
+            let inToc = false;
 
             for (let i = 0; i < elements.length; i++) {
                 let el = elements[i];
-                let textContent = el.innerText.trim();
+                let text = el.innerText.trim();
 
-                // Deteksi Judul Bab (H1 / H2)
+                // 1. Bersihkan Judul Utama / Bab
                 if (el.tagName === 'H1' || el.tagName === 'H2') {
-                    if (textContent.toUpperCase().includes("DAFTAR PUSTAKA") || textContent.toUpperCase().includes("BIBLIOGRAFI")) {
-                        isBiblioSection = true;
+                    if (text.toUpperCase().includes("DAFTAR ISI")) {
+                        inToc = true;
+                        let tocHeader = document.createElement('div');
+                        tocHeader.className = 'book-title-header';
+                        tocHeader.innerHTML = `<h1>DAFTAR ISI</h1>`;
+                        outputContainer.appendChild(tocHeader);
+                        continue;
                     }
 
-                    formattedHtml += `
-                        <div class="chapter-header">
-                            <svg class="chapter-ornament-svg" viewBox="0 0 200 40">
-                                <path d="M20,20 Q100,0 180,20 Q100,40 20,20 Z" />
-                            </svg>
-                            <div class="chapter-title">${el.innerText}</div>
-                        </div>
-                    `;
+                    inToc = false;
+                    let chapterHeader = document.createElement('div');
+                    chapterHeader.className = 'book-title-header';
+                    chapterHeader.innerHTML = `<h1>${text}</h1>`;
+                    outputContainer.appendChild(chapterHeader);
                 } 
-                // Deteksi Pembatas Halaman/Bagian
-                else if (textContent === '***' || textContent === '---') {
-                    formattedHtml += `<div class="scene-break">❖ ❖ ❖</div>`;
-                }
-                // Deteksi Paragraf / Daftar Pustaka
-                else if (el.tagName === 'P') {
-                    if (textContent !== '') {
-                        if (isBiblioSection) {
-                            formattedHtml += `<div class="bibliography-section"><p>${el.innerHTML}</p></div>`;
+                // 2. Format Daftar Isi Rapi Tanpa Warna Biru
+                else if (inToc && el.tagName === 'P') {
+                    if (text !== '') {
+                        let tocItem = document.createElement('div');
+                        tocItem.className = 'toc-entry';
+                        
+                        // Pisahkan judul dan nomor halaman jika ada
+                        let pageMatch = text.match(/(.*?)\s*(\d+)$/);
+                        if (pageMatch) {
+                            tocItem.innerHTML = `<span class="toc-title">${pageMatch[1]}</span><span class="toc-dots"></span><span>${pageMatch[2]}</span>`;
                         } else {
-                            formattedHtml += `<p>${el.innerHTML}</p>`;
+                            tocItem.innerHTML = `<span class="toc-title">${text}</span>`;
                         }
+                        outputContainer.appendChild(tocItem);
                     }
-                } 
-                // Komponen lainnya (Tabel, Ol, Ul)
-                else {
-                    formattedHtml += el.outerHTML;
+                }
+                // 3. Format Tabel Rapi Dengan Header Hitam Tipis
+                else if (el.tagName === 'TABLE') {
+                    inToc = false;
+                    let table = el.cloneNode(true);
+                    
+                    // Pastikan baris pertama tabel diubah jadi TH (Header)
+                    let firstRow = table.querySelector('tr');
+                    if (firstRow) {
+                        let cells = firstRow.querySelectorAll('td, th');
+                        cells.forEach(cell => {
+                            let th = document.createElement('th');
+                            th.innerHTML = cell.innerHTML;
+                            cell.replaceWith(th);
+                        });
+                    }
+                    outputContainer.appendChild(table);
+                }
+                // 4. Format Paragraf & Footnote
+                else if (el.tagName === 'P') {
+                    inToc = false;
+                    if (text !== '') {
+                        let p = document.createElement('p');
+                        p.innerHTML = el.innerHTML;
+                        outputContainer.appendChild(p);
+                    }
+                } else {
+                    outputContainer.appendChild(el.cloneNode(true));
                 }
             }
 
-            // Bersihkan simbol panah ↑ dan format footnote
-            document.getElementById('bookContent').innerHTML = formattedHtml;
-        }
+            // Rendert ulang tampilan dengan Paged.js
+            let srcContainer = document.getElementById('book-src');
+            srcContainer.innerHTML = outputContainer.innerHTML;
 
-        function downloadPDF() {
-            window.print();
-        }
-
-        function exportWord() {
-            const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
-            const footer = "</body></html>";
-            const sourceHTML = header + document.getElementById("bookRenderArea").innerHTML + footer;
-            
-            const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-            const fileDownload = document.createElement("a");
-            document.body.appendChild(fileDownload);
-            fileDownload.href = source;
-            fileDownload.download = `${filename}_Formatted.doc`;
-            fileDownload.click();
-            document.body.removeChild(fileDownload);
+            // Jalankan Paged.js untuk membagi halaman A5 dan menyusun Footnote di bawah
+            window.PagedPolyfill.preview();
         }
     </script>
 </body>
