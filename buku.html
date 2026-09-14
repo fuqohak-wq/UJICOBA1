@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layout Buku Profesional</title>
+    <title>Layout Buku Profesional A5</title>
     
-    <!-- Paged.js Engine (Wajib untuk membuat Footnote di bawah halaman & Layout A5) -->
+    <!-- Paged.js Engine & Mammoth -->
     <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 
     <style>
         /* ==========================================
-           1. SETUP HALAMAN BUKU (A5 & FOOTNOTE BOTTOM)
+           1. FIX UTAMA: KERTAS A5 PUTIH BERSIH
            ========================================== */
         @page {
             size: A5;
@@ -21,43 +21,58 @@
                 content: counter(page, lower-roman);
                 font-family: 'Times New Roman', serif;
                 font-size: 10pt;
+                color: #000;
             }
         }
 
-        /* Khusus area Footnote di bagian bawah halaman */
+        /* Footnote di bagian bawah setiap halaman */
         @page {
             @footnote {
-                border-top: 0.5pt solid #888;
+                border-top: 0.5pt solid #000;
                 padding-top: 6px;
                 margin-top: 15px;
             }
         }
 
-        /* ==========================================
-           2. DESAIN ELEMEN SESUAI GAMBAR RUJUKAN
-           ========================================== */
+        /* Latar Belakang Aplikasi */
         body {
+            background-color: #333333 !important;
             font-family: 'Times New Roman', Times, serif;
-            color: #000;
-            line-height: 1.6;
-            background: #2a2a2a;
+            color: #000000;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Halaman 1: Judul Utama (Gambar 1) */
+        /* PAKSA LEMBARAN PAGED.JS MENJADI KERTAS PUTIH */
+        .pagedjs_page {
+            background-color: #ffffff !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin: 20px auto !important;
+        }
+
+        .pagedjs_pagebox {
+            background-color: #ffffff !important;
+        }
+
+        .pagedjs_margin {
+            color: #000000 !important;
+        }
+
+        /* ==========================================
+           2. FORMAT ELEMEN ISI BUKU
+           ========================================== */
+        
+        /* Halaman 1: Judul Utama */
         .page-title {
             page-break-before: always;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             text-align: center;
-            min-height: 160mm;
+            padding-top: 120px;
         }
 
         .page-title h1 {
             font-size: 22pt;
             font-weight: bold;
+            color: #000000 !important;
             margin-bottom: 20px;
             line-height: 1.3;
         }
@@ -65,14 +80,16 @@
         .page-title .author {
             font-size: 12pt;
             font-weight: bold;
+            color: #000000 !important;
             margin-top: 60px;
         }
 
-        /* Halaman 2: Copyright Page (Gambar 2) */
+        /* Halaman 2: Copyright Page */
         .page-copyright {
             page-break-before: always;
             font-size: 10pt;
             line-height: 1.5;
+            color: #000;
         }
 
         .copyright-header {
@@ -84,44 +101,37 @@
         .copyright-header h2 {
             font-size: 13pt;
             font-weight: bold;
+            color: #000;
         }
 
         .meta-table {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
         .meta-table td {
             padding: 2px 5px;
             vertical-align: top;
             border: none !important;
+            color: #000;
         }
 
-        .copyright-footer {
-            margin-top: 80px;
-            font-size: 9pt;
-        }
-
-        /* Halaman 3: Bab & Tabel (Gambar 3) */
+        /* Halaman 3: Bab & Tabel Kuning */
         .chapter-header {
             text-align: center;
             margin: 20px 0 30px 0;
             page-break-before: always;
         }
 
-        .chapter-header h2 {
-            font-size: 14pt;
+        .chapter-header h2, .chapter-header h3 {
+            font-size: 13pt;
             font-weight: bold;
             text-transform: uppercase;
+            color: #000;
+            margin: 2px 0;
         }
 
-        .chapter-header h3 {
-            font-size: 12pt;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-
-        /* Format Tabel Seperti Gambar 3 */
+        /* Format Tabel Elegan Sesuai Gambar 3 */
         table.custom-table {
             width: 100%;
             border-collapse: collapse;
@@ -130,37 +140,39 @@
         }
 
         table.custom-table th {
-            background-color: #ffff00; /* Warna Kuning seperti Gambar 3 */
-            color: #000;
-            border: 1.5pt solid #000;
+            background-color: #ffff00 !important; /* Header Kuning */
+            color: #000000 !important;
+            border: 1.5pt solid #000000 !important;
             padding: 8px;
             text-align: center;
             font-weight: bold;
         }
 
         table.custom-table td {
-            border: 1.5pt solid #000;
+            border: 1.5pt solid #000000 !important;
             padding: 8px;
             vertical-align: top;
+            color: #000000 !important;
         }
 
-        /* Format Footnote Terkunci di Bawah */
+        /* Footnote Terkunci Bawah Halaman */
         fn, span.footnote {
             float: footnote;
             font-size: 8pt;
             line-height: 1.4;
             text-align: justify;
+            color: #000000;
         }
 
-        /* Halaman 4: Motif Ornamen Bab (Gambar 4) */
+        /* Halaman 4: Motif Ornamen Bab */
         .ornament-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .ornament-svg {
             width: 100%;
-            max-width: 250px;
+            max-width: 220px;
             height: auto;
             display: block;
             margin: 0 auto;
@@ -172,162 +184,182 @@
             font-size: 16pt;
             font-style: italic;
             margin: 15px 0;
+            color: #000;
         }
 
-        /* Navbar Control Panel */
+        p {
+            font-size: 10pt;
+            line-height: 1.6;
+            text-align: justify;
+            text-indent: 1.5em;
+            margin-bottom: 10px;
+            color: #000000 !important;
+        }
+
+        /* Top Bar Navigation UI */
         .top-bar {
             position: fixed;
             top: 0; left: 0; right: 0;
-            background: #111;
-            padding: 10px 20px;
+            background: #111111;
+            padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 99999;
-            color: #fff;
+            z-index: 999999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
         .btn {
             background: #c5a059;
             color: #000;
             border: none;
-            padding: 8px 15px;
+            padding: 8px 16px;
             font-weight: bold;
             border-radius: 4px;
             cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .btn-outline {
+            background: #ffffff;
+            color: #000;
         }
 
         @media print {
             .top-bar { display: none !important; }
+            body { background: #ffffff !important; }
+            .pagedjs_page { box-shadow: none !important; margin: 0 !important; }
         }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        <div style="font-weight:bold;">📖 LAYOUT BUKU PRESISI A5</div>
+        <div style="color:#c5a059; font-weight:bold; font-size:1.1rem;">📖 LAYOUT BUKU PRESISI A5</div>
         <div>
-            <label class="btn" style="background:#fff; margin-right:5px;">
-                📂 Pilih File DOCX
+            <label class="btn btn-outline">
+                📂 Import DOCX
                 <input type="file" id="docxInput" accept=".docx" style="display:none;">
             </label>
+            <button class="btn" onclick="exportDOC()">💾 Export DOC</button>
             <button class="btn" onclick="window.print()">🖨️ Cetak PDF</button>
         </div>
     </div>
 
-    <div id="book-content">
-        
-        <!-- HALAMAN 1: JUDUL UTAMA (Persis Gambar 1) -->
-        <section class="page-title">
-            <h1>Studi Integrasi Islam<br>dan Sains</h1>
-            <div class="author">Mukhamad Agus Zuhurul Fuqohak</div>
-        </section>
-
-        <!-- HALAMAN 2: COPYRIGHT / HAK CIPTA (Persis Gambar 2) -->
-        <section class="page-copyright">
-            <div class="copyright-header">
-                <h2>Studi Integrasi Islam dan Sains</h2>
-                <div>copyright © Oktober 2024</div>
-            </div>
-
-            <table class="meta-table">
-                <tr><td width="130">penulis</td><td>: Mukhamad Agus Zuhurul Fuqohak</td></tr>
-                <tr><td>editor</td><td>: Abuna Y.</td></tr>
-                <tr><td>proofreader</td><td>: Ummuna I.</td></tr>
-                <tr><td>Setting dan layout</td><td>: Ummuna I.</td></tr>
-                <tr><td>desain cover</td><td>: Maktabah</td></tr>
-            </table>
-
-            <p>Hak Penerbitan ada pada © Maktabah Yahyawiyyah 2024<br>
-            Hakcipta © 2024 pada penulis<br>
-            Isi diluar tanggung jawab percetakan</p>
-            <br>
-            <p>Ukuran 21 cm x 29.7 cm<br>
-            Halaman : vii + 150 hal</p>
-            <br>
-            <p>Hak cipta dilindungi Undang-undang<br>
-            Dilarang mengutip, memperbanyak dan menerjemahkan sebagian atau seluruh isi buku ini tanpa izin tertulis dari Bening media Publishing</p>
-            <br>
-            <p>Cet I, Oktober 2024</p>
-
-            <div class="copyright-footer">
-                Ds. Talun,<br>
-                Pati – Indonesia<br>
-                Telp. 0853 26311019<br>
-                E-mail : ppmuy@gmail.com<br>
-                Website: <a href="http://www.ppmuy.com">www.ppmuy.com</a>
-            </div>
-        </section>
-
-        <!-- HALAMAN 3: BAB ISI, TABEL KUNING & FOOTNOTE (Persis Gambar 3) -->
-        <section>
-            <div class="chapter-header">
-                <h2>BAB I:</h2>
-                <h3>RELASI ISLAM DAN SAINS</h3>
-                <h3>(IBNU AL-HAYTHAM)</h3>
-            </div>
-
-            <p><b>A. TEORI-TEORI TENTANG RELASI ISLAM DAN SAINS</b></p>
+    <div style="margin-top: 70px;">
+        <div id="book-content">
             
-            <p>Hubungan Islam dan Sains dimulai dari relasi sains dan agama. Dua faktor ini menjadi penting bagi peradaban umat manusia. Setidaknya ada tiga hal yang menguatkan statement tersebut sebagaimana berikut ini:<fn>Aini Qolbiyah, dkk, <i>Konsep Integrasi Agama Dan Sains, Makna, Dan Sasaranannya</i>, Jurnal Basicedu, hlm. 1-12.</fn></p>
+            <!-- HALAMAN 1: JUDUL UTAMA -->
+            <section class="page-title">
+                <h1>Studi Integrasi Islam<br>dan Sains</h1>
+                <div class="author">Mukhamad Agus Zuhurul Fuqohak</div>
+            </section>
 
-            <table class="custom-table">
-                <thead>
-                    <tr>
-                        <th width="10%">No</th>
-                        <th width="45%">Agama</th>
-                        <th width="45%">Sains</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td align="center">1</td>
-                        <td>Agama untuk mencari kebenaran dengan asas doktrin dan keimanan</td>
-                        <td>Sains untuk mencari kebenaran dengan asas analisis, skeptis, dan penelitian.</td>
-                    </tr>
-                    <tr>
-                        <td align="center">2</td>
-                        <td>Agama membutuhkan sains untuk berkembang.</td>
-                        <td>Sains membutuhkan agama untuk mengontrol.</td>
-                    </tr>
-                    <tr>
-                        <td align="center">3</td>
-                        <td>Agama untuk membina kesehatan mental dan psikis.</td>
-                        <td>Sains untuk membina peradaban lahir manusia.</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- HALAMAN 2: COPYRIGHT PAGE -->
+            <section class="page-copyright">
+                <div class="copyright-header">
+                    <h2>Studi Integrasi Islam dan Sains</h2>
+                    <div>copyright © Oktober 2024</div>
+                </div>
 
-            <p>Ada empat dinamika yang terjadi.<fn>Hidayatullah, Syarif. "Agama dan sains: sebuah kajian tentang relasi dan metodologi." <i>Jurnal Filsafat</i> 29.1 (2019): 102-133.</fn> <i>Pertama</i>, konflik. Ini terjadi di sekitar abad ke-16 hingga ke-17. Di masa ini, agama dan sains bersitegang dan membentuk permusuhan, keduanya tidak bisa disatukan bahkan terkesan berlawanan.</p>
-        </section>
+                <table class="meta-table">
+                    <tr><td width="130">penulis</td><td>: Mukhamad Agus Zuhurul Fuqohak</td></tr>
+                    <tr><td>editor</td><td>: Abuna Y.</td></tr>
+                    <tr><td>proofreader</td><td>: Ummuna I.</td></tr>
+                    <tr><td>Setting dan layout</td><td>: Ummuna I.</td></tr>
+                    <tr><td>desain cover</td><td>: Maktabah</td></tr>
+                </table>
 
-        <!-- HALAMAN 4: ORNAMEN MOTIF AWAL BAB (Persis Gambar 4) -->
-        <section style="page-break-before: always;">
-            <div class="ornament-header">
-                <!-- SVG Ukiran Motif Seperti Gambar 4 -->
-                <svg class="ornament-svg" viewBox="0 0 300 100" fill="none" stroke="black" stroke-width="2">
-                    <path d="M 150 10 C 100 10, 50 40, 20 20 C 60 80, 120 40, 150 70 C 180 40, 240 80, 280 20 C 250 40, 200 10, 150 10 Z"/>
-                    <circle cx="150" cy="70" r="5" fill="black"/>
-                </svg>
-            </div>
+                <p style="text-indent:0;">Hak Penerbitan ada pada © Maktabah Yahyawiyyah 2024<br>
+                Hakcipta © 2024 pada penulis<br>
+                Isi diluar tanggung jawab percetakan</p>
+                <br>
+                <p style="text-indent:0;">Ukuran 21 cm x 29.7 cm<br>
+                Halaman : vii + 150 hal</p>
+                <br>
+                <p style="text-indent:0;">Hak cipta dilindungi Undang-undang<br>
+                Dilarang mengutip, memperbanyak dan menerjemahkan sebagian atau seluruh isi buku ini tanpa izin tertulis dari Bening media Publishing</p>
+                <br>
+                <p style="text-indent:0;">Cet I, Oktober 2024</p>
 
-            <div class="chapter-decorated">
-                2 &nbsp; Diary Perasaan Jiwa
-            </div>
+                <div style="margin-top:40px; font-size:9pt;">
+                    Ds. Talun,<br>
+                    Pati – Indonesia<br>
+                    Telp. 0853 26311019<br>
+                    E-mail : ppmuy@gmail.com<br>
+                    Website: www.ppmuy.com
+                </div>
+            </section>
 
-            <p style="text-align: center; font-style: italic; margin-bottom: 25px;">
-                Pukul 7 malam, tepat di tanggal 16 Juli 2007, hari Minggu.
-            </p>
+            <!-- HALAMAN 3: BAB, TABEL KUNING & FOOTNOTE -->
+            <section>
+                <div class="chapter-header">
+                    <h2>BAB I:</h2>
+                    <h3>RELASI ISLAM DAN SAINS</h3>
+                    <h3>(IBNU AL-HAYTHAM)</h3>
+                </div>
 
-            <p>Bagaimana aku harus memulai kembali sebuah catatan luka dalam hidupku setelah bersusah payah melupakannya? Apakah mungkin sebuah goresan luka yang seseorang torehkan itu mampu membangun fondasi ketegaran pada setiap insan yang tersakiti?</p>
-            
-            <p>Oh Tuhan, rasanya aku ingin menghapus ingatanku untuk sebuah babak kehidupan yang membawaku pada sekuntum keterpurukan. Kenapa faktanya harus orang yang kusayangi yang justru menyakitiku begitu dalam?</p>
-        </section>
+                <p style="text-indent:0;"><b>A. TEORI-TEORI TENTANG RELASI ISLAM DAN SAINS</b></p>
+                
+                <p>Hubungan Islam dan Sains dimulai dari relasi sains dan agama. Dua faktor ini menjadi penting bagi peradaban umat manusia. Setidaknya ada tiga hal yang menguatkan statement tersebut sebagaimana berikut ini:<fn>Aini Qolbiyah, dkk, <i>Konsep Integrasi Agama Dan Sains, Makna, Dan Sasaranannya</i>, Jurnal Basicedu, hlm. 1-12.</fn></p>
 
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th width="10%">No</th>
+                            <th width="45%">Agama</th>
+                            <th width="45%">Sains</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td align="center">1</td>
+                            <td>Agama untuk mencari kebenaran dengan asas doktrin dan keimanan</td>
+                            <td>Sains untuk mencari kebenaran dengan asas analisis, skeptis, dan penelitian.</td>
+                        </tr>
+                        <tr>
+                            <td align="center">2</td>
+                            <td>Agama membutuhkan sains untuk berkembang.</td>
+                            <td>Sains membutuhkan agama untuk mengontrol.</td>
+                        </tr>
+                        <tr>
+                            <td align="center">3</td>
+                            <td>Agama untuk membina kesehatan mental dan psikis.</td>
+                            <td>Sains untuk membina peradaban lahir manusia.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Ada empat dinamika yang terjadi.<fn>Hidayatullah, Syarif. "Agama dan sains: sebuah kajian tentang relasi dan metodologi." <i>Jurnal Filsafat</i> 29.1 (2019): 102-133.</fn> <i>Pertama</i>, konflik. Ini terjadi di sekitar abad ke-16 hingga ke-17. Di masa ini, agama dan sains bersitegang dan membentuk permusuhan, keduanya tidak bisa disatukan bahkan terkesan berlawanan.</p>
+            </section>
+
+            <!-- HALAMAN 4: ORNAMEN MOTIF AWAL BAB -->
+            <section style="page-break-before: always;">
+                <div class="ornament-header">
+                    <svg class="ornament-svg" viewBox="0 0 300 100" fill="none" stroke="black" stroke-width="2">
+                        <path d="M 150 10 C 100 10, 50 40, 20 20 C 60 80, 120 40, 150 70 C 180 40, 240 80, 280 20 C 250 40, 200 10, 150 10 Z"/>
+                        <circle cx="150" cy="70" r="5" fill="black"/>
+                    </svg>
+                </div>
+
+                <div class="chapter-decorated">
+                    2 &nbsp; Diary Perasaan Jiwa
+                </div>
+
+                <p style="text-align: center; font-style: italic; margin-bottom: 25px; text-indent:0;">
+                    Pukul 7 malam, tepat di tanggal 16 Juli 2007, hari Minggu.
+                </p>
+
+                <p>Bagaimana aku harus memulai kembali sebuah catatan luka dalam hidupku setelah bersusah payah melupakannya? Apakah mungkin sebuah goresan luka yang seseorang torehkan itu mampu membangun fondasi ketegaran pada setiap insan yang tersakiti?</p>
+                
+                <p>Oh Tuhan, rasanya aku ingin menghapus ingatanku untuk sebuah babak kehidupan yang membawaku pada sekuntum keterpurukan. Kenapa faktanya harus orang yang kusayangi yang justru menyakitiku begitu dalam?</p>
+            </section>
+
+        </div>
     </div>
 
     <script>
-        // Fungsi membaca DOCX
+        // Import file DOCX
         document.getElementById('docxInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -337,12 +369,29 @@
                 mammoth.convertToHtml({arrayBuffer: event.target.result})
                     .then(function(result) {
                         document.getElementById('book-content').innerHTML = result.value;
-                        // Trigger paged.js untuk menyusun ulang layout A5
                         window.PagedPolyfill.preview();
                     });
             };
             reader.readAsArrayBuffer(file);
         });
+
+        // Export ke DOC/Word
+        function exportDOC() {
+            var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+                "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+                "xmlns='http://www.w3.org/TR/REC-html40'>"+
+                "<head><meta charset='utf-8'><title>Export DOC</title></head><body>";
+            var footer = "</body></html>";
+            var sourceHTML = header + document.getElementById("book-content").innerHTML + footer;
+            
+            var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+            var fileDownload = document.createElement("a");
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            fileDownload.download = 'buku-layout.doc';
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+        }
     </script>
 </body>
 </html>
